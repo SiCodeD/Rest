@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>EduPulse | Modern School Management OS</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    
+    <!-- Design System Variables -->
+    <link rel="stylesheet" href="shared/main.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <style>
+        :root {
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.15);
+            --bg: #050c15;
+            --surface: rgba(10, 22, 40, 0.7);
+            --card: rgba(13, 31, 53, 0.4);
+            --border: rgba(255,255,255,0.06);
+            --text: #e8f4f0;
+            --text-muted: #5c7a8a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
+        body { 
+            font-family: 'Sora', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 100; opacity: 0.3;
+        }
+
+        .glow-sphere {
+            position: fixed; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+            border-radius: 50%; z-index: -1; pointer-events: none;
+            filter: blur(60px);
+        }
+
+        /* ─── NAVIGATION ─── */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            background: rgba(5, 12, 21, 0.6); backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 8%; z-index: 1000;
+        }
+
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon {
+            width: 42px; height: 42px; 
+            background: linear-gradient(135deg, var(--emerald), #34d399); 
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; color: #fff;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+        }
+        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+
+        .nav-links { display: flex; gap: 40px; align-items: center; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 700; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links a:hover { color: var(--emerald); }
+
+        .btn-premium {
+            padding: 12px 28px; border-radius: 14px; font-weight: 800; font-size: 13px;
+            cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-premium.primary { background: var(--emerald); color: #fff; border: none; box-shadow: 0 4px 20px var(--emerald-glow); }
+        .btn-premium.primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px var(--emerald-glow); background: #0ea573; }
+        .btn-premium.outline { border: 1px solid var(--border); color: var(--text); background: rgba(255,255,255,0.02); }
+        .btn-premium.outline:hover { background: rgba(255,255,255,0.05); border-color: var(--emerald-border); }
+
+        /* ─── HERO ─── */
+        .hero {
+            padding: 220px 8% 140px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 18px; background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.15); border-radius: 40px;
+            color: var(--emerald); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 9vw, 88px); font-weight: 900; line-height: 1.05; letter-spacing: -3px;
+            margin-bottom: 40px; background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.7));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 700px; margin: 0 auto 56px;
+            font-size: clamp(16px, 2vw, 20px); color: var(--text-muted); font-weight: 500;
+        }
+
+        /* ─── GRID SYSTEMS ─── */
+        .section { padding: 120px 8%; position: relative; }
+        .section-header { text-align: center; margin-bottom: 80px; }
+        .section-header h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
+        
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--card); backdrop-filter: blur(12px); border: 1px solid var(--border); padding: 48px; border-radius: 32px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;
+        }
+        .feature-card:hover { border-color: var(--emerald-border); transform: translateY(-10px); background: rgba(13, 31, 53, 0.6); }
+
+        .feature-card .icon-box {
+            width: 60px; height: 60px; border-radius: 18px; background: rgba(16,185,129,0.06);
+            display: flex; align-items: center; justify-content: center; color: var(--emerald); margin-bottom: 32px;
+            border: 1px solid rgba(16,185,129,0.1); transition: all 0.3s;
+        }
+        .feature-card:hover .icon-box { background: var(--emerald); color: #fff; transform: scale(1.1); box-shadow: 0 8px 20px var(--emerald-glow); }
+
+        .feature-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+        .feature-card p { font-size: 15px; color: var(--text-muted); font-weight: 500; }
+
+        /* ─── PRICING ─── */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; max-width: 1200px; margin: 0 auto; }
+        .pricing-card {
+            background: rgba(10, 22, 40, 0.4); backdrop-filter: blur(16px); border: 1px solid var(--border); padding: 56px; border-radius: 40px;
+            display: flex; flex-direction: column; transition: all 0.4s;
+        }
+        .pricing-card.premium { border: 2px solid var(--emerald); transform: scale(1.05); background: rgba(16, 185, 129, 0.02); }
+
+        .price-val { font-size: 56px; font-weight: 900; margin: 32px 0; display: flex; align-items: baseline; gap: 8px; }
+        .price-val span { font-size: 16px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+
+        .price-features { list-style: none; margin-bottom: 48px; flex: 1; space-y: 20px; }
+        .price-features li { display: flex; align-items: center; gap: 14px; font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 18px; }
+        .price-features li span { color: var(--emerald); font-variation-settings: 'FILL' 1; }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 100px 8% 50px; border-top: 1px solid var(--border); text-align: center; background: rgba(0,0,0,0.2); }
+        .footer-brand { font-size: 28px; font-weight: 900; margin-bottom: 40px; letter-spacing: -1px; }
+
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .hero { padding-top: 160px; }
+            .pricing-card.premium { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-sphere" style="top: -10%; left: -10%;"></div>
+    <div class="glow-sphere" style="bottom: 10%; right: -10%; opacity: 0.5;"></div>
+
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+            </div>
+            <div class="logo-text">EduPulse</div>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Experience</a>
+            <a href="#pricing">Licensing</a>
+            <a href="login.html" class="btn-premium outline">Terminal Access</a>
+            <a href="login.html" class="btn-premium primary">Initialize Hub</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-badge">
+            <span class="material-symbols-outlined" style="font-size: 14px;">bolt</span>
+            <span>Version 4.0 Live</span>
+        </div>
+        <h1>Next-Gen <span style="background: linear-gradient(135deg, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">School OS</span><br>For Global Leaders</h1>
+        <p>The ultimate institution management ecosystem. High-fidelity data, automated operations, and enterprise-grade security unified in one terminal.</p>
+        <div class="flex flex-wrap gap-5 justify-center">
+            <a href="login.html" class="btn-premium primary" style="padding: 18px 48px; font-size: 15px;">Launch Terminal</a>
+            <a href="#features" class="btn-premium outline" style="padding: 18px 48px; font-size: 15px;">Explore Ecosystem</a>
+        </div>
+    </header>
+
+    <section id="features" class="section">
+        <div class="section-header">
+            <div class="hero-badge">Core Capabilities</div>
+            <h2>Unified Control System</h2>
+            <p>Architected for performance. Built for scale.</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon-box"><span class="material-symbols-outlined text-3xl">hub</span></div>
+                <h3>Institutional Hub</h3>
+                <p>Command every aspect of your school network from a centralized, high-performance dashboard with role-based mission control.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box"><span class="material-symbols-outlined text-3xl">insights</span></div>
+                <h3>Deep Intel</h3>
+                <p>Advanced predictive analytics for student performance, attendance patterns, and institutional fiscal health.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box"><span class="material-symbols-outlined text-3xl">encrypted</span></div>
+                <h3>Fortified Core</h3>
+                <p>Quantum-ready encryption safeguarding student dossiers and institutional data with 99.9% operational uptime.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section" style="background: rgba(16,185,129,0.015);">
+        <div class="section-header">
+            <div class="hero-badge">Global Access</div>
+            <h2>Institutional Licensing</h2>
+            <p>Secure the future of your institution today.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="stat-label">Foundation</h3>
+                <div class="price-val">$49<span>/mo</span></div>
+                <ul class="price-features">
+                    <li><span class="material-symbols-outlined">check_circle</span> Up to 200 Students</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Core Management Suite</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Standard Support</li>
+                </ul>
+                <a href="login.html" class="btn-premium outline text-center justify-center">Initialize</a>
+            </div>
+            <div class="pricing-card premium">
+                <h3 class="stat-label text-[var(--emerald)]">Professional</h3>
+                <div class="price-val">$129<span>/mo</span></div>
+                <ul class="price-features">
+                    <li><span class="material-symbols-outlined">check_circle</span> Up to 1,000 Students</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Full Analytics Engine</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Priority Support Link</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Custom Data Relays</li>
+                </ul>
+                <a href="login.html" class="btn-premium primary text-center justify-center">Select License</a>
+            </div>
+            <div class="pricing-card">
+                <h3 class="stat-label">Enterprise</h3>
+                <div class="price-val">Quota<span>Custom</span></div>
+                <ul class="price-features">
+                    <li><span class="material-symbols-outlined">check_circle</span> Unlimited Node Access</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Private Cloud Link</li>
+                    <li><span class="material-symbols-outlined">check_circle</span> Dedicated Mission Lead</li>
+                </ul>
+                <a href="login.html" class="btn-premium outline text-center justify-center">Request Quote</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-brand">EduPulse</div>
+        <div class="flex justify-center gap-10 md:gap-20 mb-12">
+            <div class="text-left space-y-3">
+                <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Platform</p>
+                <a href="#" class="block text-xs font-bold text-slate-400 hover:text-[var(--emerald)]">Changelog</a>
+                <a href="#" class="block text-xs font-bold text-slate-400 hover:text-[var(--emerald)]">Status</a>
+            </div>
+            <div class="text-left space-y-3">
+                <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Legal</p>
+                <a href="#" class="block text-xs font-bold text-slate-400 hover:text-[var(--emerald)]">Privacy</a>
+                <a href="#" class="block text-xs font-bold text-slate-400 hover:text-[var(--emerald)]">Security</a>
+            </div>
+        </div>
+        <p class="text-[10px] font-bold text-slate-700 uppercase tracking-[4px]">© 2024 EduPulse OS • End-to-End Encryption Enabled</p>
+    </footer>
+
+</body>
+</html>

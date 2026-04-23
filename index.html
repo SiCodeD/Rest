@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8"/>
+    <title>EduPulse | Redirecting...</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check for invite tokens in the URL hash
+        if (window.location.hash.includes('type=invite') || window.location.hash.includes('access_token=')) {
+            // Do nothing, let Auth.init() in auth.js handle the redirect to setup-password.html
+            console.log("Invite detected, waiting for redirect...");
+        } else {
+            const currentUser = Auth.getCurrentUser();
+            if (currentUser) {
+                Auth.redirectByRole(currentUser);
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</head>
+<body></body>
+</html>
