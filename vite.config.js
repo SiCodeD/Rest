@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { cpSync, mkdirSync } from 'node:fs';
 
 function publicMenuSlugPlugin() {
   const rewrite = function (req, _res, next) {
@@ -25,8 +26,21 @@ function publicMenuSlugPlugin() {
   };
 }
 
+function copyRuntimeScriptsPlugin() {
+  return {
+    name: "copy-runtime-scripts",
+    closeBundle() {
+      const distDir = resolve(__dirname, "dist");
+      mkdirSync(distDir, { recursive: true });
+      cpSync(resolve(__dirname, "js"), resolve(distDir, "js"), {
+        recursive: true,
+      });
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [publicMenuSlugPlugin()],
+  plugins: [publicMenuSlugPlugin(), copyRuntimeScriptsPlugin()],
   server: {
     allowedHosts: [
       "gentleman-writer-patches-director.trycloudflare.com"
