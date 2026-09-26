@@ -1,0 +1,641 @@
+/* =========================================================
+   BUTTONS & ACTIONS
+   ========================================================= */
+
+/* =========================
+   ICON BUTTON
+========================= */
+
+.icon-btn {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 14px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--text);
+    background: var(--icon-btn-bg);
+    border: 1px solid var(--icon-btn-border);
+
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.icon-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(135deg,
+            var(--primary-soft),
+            transparent);
+
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    pointer-events: none;
+}
+
+.icon-btn:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary);
+
+    transform: translateY(-3px) scale(1.08);
+
+    box-shadow: 0 8px 24px var(--primary-soft);
+}
+
+.icon-btn:hover::before {
+    opacity: 1;
+}
+
+.icon-btn:active {
+    transform: translateY(-1px) scale(1.04);
+}
+
+
+/* =========================
+   DELETE ICON BUTTON
+========================= */
+
+.icon-btn-delete {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 14px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--text);
+    background: var(--icon-btn-bg);
+    border: 1px solid var(--icon-btn-border);
+
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    cursor: pointer;
+}
+
+.icon-btn-delete:hover {
+    background: var(--primary);
+    color: white;
+
+    transform: translateY(-3px) scale(1.08);
+
+    border-color: var(--primary);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
+.btn-primary,
+.button-primary,
+.btn-premium {
+    min-height: 52px;
+    padding: 0 18px;
+
+    border-radius: 16px;
+
+    background: var(--primary);
+    color: #fff;
+
+    font-weight: 800;
+
+    border: none;
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font: inherit;
+
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.btn-primary:hover,
+.button-primary:hover,
+.btn-premium:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   SECONDARY BUTTON
+========================= */
+
+.btn-secondary,
+.button-secondary {
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    padding: 8px 18px;
+    min-height: 40px;
+
+    border-radius: 12px;
+
+    font-size: 0.85rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font: inherit;
+
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.btn-secondary:hover,
+.button-secondary:hover {
+    background: var(--primary);
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.btn-secondary:active,
+.button-secondary:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   OUTLINE BUTTON
+========================= */
+
+.btn-outline {
+    background: transparent;
+    color: var(--muted);
+
+    border: 1px solid var(--stroke);
+
+    padding: 8px 18px;
+    min-height: 40px;
+
+    border-radius: 12px;
+
+    font-size: 0.85rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font: inherit;
+
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-soft);
+}
+
+
+/* =========================
+   DANGER BUTTON
+========================= */
+
+.btn-danger,
+.button-danger {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+
+    color: var(--danger);
+
+    padding: 8px 16px;
+    min-height: 40px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font: inherit;
+
+    transition: all 0.2s;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-weight: 700;
+
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.btn-danger:hover,
+.button-danger:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+
+/* =========================
+   PILL
+========================= */
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 12px;
+
+    border-radius: 999px;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    box-sizing: border-box;
+}
+
+.pill.light {
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+}
+
+.pill.good {
+    background: rgba(50, 205, 50, 0.1);
+    color: var(--primary-deep);
+}
+
+.pill.warn {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warn);
+}
+
+.pill.danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   TABLET
+   <= 768px
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .icon-btn,
+    .icon-btn-delete {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+        border-radius: 12px;
+    }
+
+    .btn-primary,
+    .button-primary,
+    .btn-premium {
+        min-height: 48px;
+        padding-inline: 16px;
+        border-radius: 14px;
+    }
+
+    .btn-secondary,
+    .button-secondary,
+    .btn-outline,
+    .btn-danger,
+    .button-danger {
+        min-height: 40px;
+        padding-inline: 14px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .icon-btn,
+    .icon-btn-delete {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+        border-radius: 11px;
+    }
+
+    .btn-primary,
+    .button-primary,
+    .btn-premium {
+        min-height: 46px;
+        padding-inline: 14px;
+        border-radius: 13px;
+
+        gap: 7px;
+
+        font-size: 0.9rem;
+    }
+
+    .btn-secondary,
+    .button-secondary,
+    .btn-outline,
+    .btn-danger,
+    .button-danger {
+        min-height: 40px;
+        padding-inline: 12px;
+
+        gap: 6px;
+
+        font-size: 0.82rem;
+    }
+
+    .pill {
+        padding: 7px 9px;
+        font-size: 0.78rem;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   <= 380px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .btn-primary,
+    .button-primary,
+    .btn-premium {
+        min-height: 44px;
+        padding-inline: 12px;
+        font-size: 0.86rem;
+    }
+
+    .btn-secondary,
+    .button-secondary,
+    .btn-outline,
+    .btn-danger,
+    .button-danger {
+        padding-inline: 10px;
+        font-size: 0.78rem;
+    }
+
+    .pill {
+        padding: 6px 8px;
+        font-size: 0.74rem;
+    }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+   Don't apply hover transforms on touch screens
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .icon-btn:hover,
+    .icon-btn-delete:hover,
+    .btn-primary:hover,
+    .button-primary:hover,
+    .btn-premium:hover,
+    .btn-secondary:hover,
+    .button-secondary:hover {
+        transform: none;
+    }
+}
+
+/* System-wide button sizing */
+.btn-primary,
+.button-primary,
+.btn-premium,
+.btn-secondary,
+.button-secondary,
+.btn-outline,
+.btn-danger,
+.button-danger,
+.table-btn,
+.order-action-btn,
+.table-icon-btn,
+.icon-btn-delete,
+.department-actions .icon-btn,
+.department-actions .icon-btn-delete,
+.employee-actions .icon-btn,
+.employee-actions .icon-btn-delete,
+.employee-credentials-list .icon-btn {
+    height: 36px;
+    min-height: 36px;
+    border-radius: 9px;
+}
+
+.btn-primary,
+.button-primary,
+.btn-premium,
+.btn-secondary,
+.button-secondary,
+.btn-outline,
+.btn-danger,
+.button-danger,
+.table-btn,
+.order-action-btn {
+    padding-block: 0;
+}
+
+.icon-btn-delete,
+.department-actions .icon-btn,
+.department-actions .icon-btn-delete,
+.employee-actions .icon-btn,
+.employee-actions .icon-btn-delete,
+.employee-credentials-list .icon-btn {
+    width: 36px;
+    min-width: 36px;
+    flex: 0 0 36px;
+    padding: 0;
+}
+
+.order-action-btn:has(> .material-symbols-outlined:only-child) {
+    width: 36px;
+    min-width: 36px;
+    flex: 0 0 36px;
+    padding: 0;
+}
+
+
+/* =========================================================
+   UNIFIED COMPACT ACTION BUTTONS
+   Same visual language as the table action buttons:
+   compact square, soft border, subtle hover state.
+   ========================================================= */
+
+.icon-btn-delete,
+.department-actions .icon-btn,
+.department-actions .icon-btn-delete,
+.employee-actions .icon-btn,
+.employee-actions .icon-btn-delete,
+.employee-credentials-list .icon-btn,
+.order-action-btn,
+.table-icon-btn {
+    box-sizing: border-box;
+    min-height: 34px;
+    border: 1px solid var(--stroke);
+    border-radius: 9px;
+    background: var(--panel);
+    color: var(--muted);
+    box-shadow: none;
+    transition: color 0.18s ease, background 0.18s ease,
+        border-color 0.18s ease, transform 0.18s ease;
+}
+
+.icon-btn-delete,
+.department-actions .icon-btn,
+.department-actions .icon-btn-delete,
+.employee-actions .icon-btn,
+.employee-actions .icon-btn-delete,
+.employee-credentials-list .icon-btn {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    padding: 0;
+}
+
+.order-action-btn {
+    height: 36px;
+    padding: 0 10px;
+    gap: 5px;
+}
+
+.order-action-btn:has(> .material-symbols-outlined:only-child) {
+    width: 36px;
+    padding: 0;
+    flex: 0 0 36px;
+}
+
+.table-icon-btn {
+    height: 36px;
+    border-radius: 9px;
+}
+
+.icon-btn-delete:hover,
+.department-actions .icon-btn-delete:hover,
+.employee-actions .icon-btn-delete:hover,
+.table-icon-btn.danger:hover,
+.order-action-btn.oa-cancel:hover {
+    background: rgba(239, 68, 68, 0.09);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: var(--danger);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+.department-actions .icon-btn:hover,
+.employee-actions .icon-btn:hover,
+.employee-credentials-list .icon-btn:hover,
+.order-action-btn:hover,
+.table-icon-btn:not(.danger):hover {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+@media (hover: none) and (pointer: coarse) {
+
+    .icon-btn-delete:hover,
+    .department-actions .icon-btn:hover,
+    .department-actions .icon-btn-delete:hover,
+    .employee-actions .icon-btn:hover,
+    .employee-actions .icon-btn-delete:hover,
+    .employee-credentials-list .icon-btn:hover,
+    .order-action-btn:hover,
+    .table-icon-btn:hover {
+        transform: none;
+    }
+}
+
+/* Final icon-button language: notification, table actions and row actions
+   share the same compact shape and interaction. */
+.icon-btn,
+.icon-btn-delete,
+.department-actions .icon-btn,
+.department-actions .icon-btn-delete,
+.employee-actions .icon-btn,
+.employee-actions .icon-btn-delete,
+.employee-credentials-list .icon-btn,
+.order-action-btn:has(> .material-symbols-outlined:only-child),
+.table-icon-btn {
+    box-sizing: border-box;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    flex: 0 0 36px !important;
+    padding: 0 !important;
+    border-radius: 9px !important;
+}
+
+.icon-btn:hover,
+.icon-btn-delete:hover,
+.department-actions .icon-btn:hover,
+.department-actions .icon-btn-delete:hover,
+.employee-actions .icon-btn:hover,
+.employee-actions .icon-btn-delete:hover,
+.employee-credentials-list .icon-btn:hover,
+.order-action-btn:has(> .material-symbols-outlined:only-child):hover,
+.table-icon-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+
+    .icon-btn:hover,
+    .icon-btn-delete:hover,
+    .department-actions .icon-btn:hover,
+    .department-actions .icon-btn-delete:hover,
+    .employee-actions .icon-btn:hover,
+    .employee-actions .icon-btn-delete:hover,
+    .employee-credentials-list .icon-btn:hover,
+    .order-action-btn:has(> .material-symbols-outlined:only-child):hover,
+    .table-icon-btn:hover {
+        transform: none;
+    }
+}

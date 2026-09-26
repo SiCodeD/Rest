@@ -1,0 +1,658 @@
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+/* =========================
+   BASE CARD
+========================= */
+
+.card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--stroke);
+    background: var(--panel);
+
+    /* Removed backdrop-filter for better performance */
+    box-shadow: var(--shadow);
+
+    padding: 24px;
+
+    direction: rtl;
+    text-align: right;
+    position: relative;
+}
+
+.card.dropdown-open {
+    z-index: 999999 !important;
+}
+
+
+/* =========================
+   TABLE CARD
+========================= */
+
+.table-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--stroke);
+    background: var(--panel);
+
+    /* Removed backdrop-filter for better performance */
+    box-shadow: var(--shadow);
+
+    position: relative;
+}
+
+.table-card.dropdown-open {
+    z-index: 999999 !important;
+}
+
+.table-card>table {
+    overflow-x: auto;
+}
+
+.table-card .table-head,
+.table-card .section-head {
+    padding: 24px 24px 0 24px;
+    margin: 0 0 16px 0;
+}
+
+
+/* =========================
+   STAT CARD
+========================= */
+
+.card-stat {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    border-radius: 22px;
+    padding: 18px;
+
+    background: var(--panel-strong);
+    border: 1px solid var(--stroke);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 180px;
+
+    position: relative;
+    overflow: hidden;
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    cursor: pointer;
+}
+
+.card-stat:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.card-stat .bg-icon {
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+
+    font-size: 100px;
+    opacity: 0.03;
+
+    transform: rotate(-15deg);
+
+    pointer-events: none;
+
+    transition: all 0.5s ease;
+}
+
+.card-stat:hover .bg-icon {
+    opacity: 0.08;
+    transform: rotate(0deg) scale(1.1);
+}
+
+.card-stat .card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    min-width: 0;
+}
+
+.card-stat .card-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+
+    color: var(--text);
+    line-height: 1;
+
+    overflow-wrap: anywhere;
+}
+
+.card-stat .card-label {
+    font-size: 0.95rem;
+    font-weight: 800;
+
+    color: var(--text);
+
+    line-height: 1.4;
+}
+
+.card-stat .card-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+.card-stat .top,
+.summary-card .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+    margin-bottom: 20px;
+
+    min-width: 0;
+}
+
+
+/* =========================
+   SUMMARY CARD
+========================= */
+
+.summary-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    border-radius: 22px;
+    padding: 18px;
+
+    background: var(--card);
+    border: 1px solid var(--stroke);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 180px;
+
+    position: relative;
+    overflow: hidden;
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    cursor: pointer;
+    text-align: right;
+
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--stroke);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+}
+
+
+/* =========================
+   DASHBOARD / REPORTS CARDS
+========================= */
+
+.dashboard-sales-card,
+#section-reports .summary-card {
+    background: var(--card) !important;
+    border: 1px solid var(--stroke) !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.dashboard-sales-card:hover,
+#section-reports .summary-card:hover {
+    border-color: var(--stroke) !important;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+}
+
+#section-reports .summary-card .card-value {
+    color: var(--text) !important;
+}
+
+#section-reports .summary-card .card-label {
+    color: var(--text) !important;
+}
+
+#section-reports .summary-card .card-desc {
+    color: var(--muted) !important;
+}
+
+
+/* =========================
+   SUMMARY BACKGROUND ICON
+========================= */
+
+.summary-card .bg-icon {
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+
+    font-size: 100px;
+    opacity: 0.03;
+
+    transform: rotate(-15deg);
+
+    pointer-events: none;
+
+    transition: all 0.5s ease;
+}
+
+.summary-card:hover .bg-icon {
+    opacity: 0.08;
+    transform: rotate(0deg) scale(1.1);
+}
+
+.summary-card .card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    min-width: 0;
+}
+
+.summary-card .card-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+
+    color: var(--text);
+    line-height: 1;
+
+    overflow-wrap: anywhere;
+}
+
+.summary-card .card-label {
+    font-size: 0.95rem;
+    font-weight: 800;
+
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.summary-card .card-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+
+/* =========================
+   SOFT ICON
+========================= */
+
+.soft-icon {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 16px;
+
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+}
+
+
+/* =========================
+   DATA NOTE
+========================= */
+
+.data-note {
+    padding: 22px;
+
+    display: grid;
+    gap: 10px;
+
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.data-note .label {
+    color: var(--muted);
+
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.data-note strong {
+    font-size: 1.9rem;
+    line-height: 1;
+
+    overflow-wrap: anywhere;
+}
+
+.data-note p {
+    margin: 10px 0 0;
+    line-height: 1.8;
+}
+
+
+/* =========================
+   PLACEHOLDER CARD
+========================= */
+
+.placeholder-card {
+    padding: 34px 24px;
+
+    text-align: center;
+
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.placeholder-card p {
+    margin: 10px auto 0;
+
+    max-width: 620px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   HEADERS
+   ========================================================= */
+
+.section-head,
+.form-head,
+.table-head {
+    margin: 0 0 16px 0;
+    padding: 0;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    direction: rtl;
+
+    min-width: 0;
+}
+
+.section-head>*,
+.form-head>*,
+.table-head>* {
+    min-width: 0;
+}
+
+.section-head h3,
+.form-head h3,
+.table-head h3 {
+    margin: 0;
+
+    font-size: 1.5rem;
+    font-weight: 900;
+
+    color: var(--text);
+
+    line-height: 1.2;
+}
+
+.section-head p,
+.form-head p,
+.table-head p {
+    margin: 6px 0 0;
+
+    line-height: 1.6;
+
+    color: var(--muted);
+
+    font-size: 0.98rem;
+    font-weight: 600;
+}
+
+.form-head.border-top {
+    border-top: 1px solid var(--stroke);
+
+    margin-top: 24px;
+    padding-top: 24px;
+}
+
+
+/* =========================================================
+   TABLET
+   <= 768px
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .card {
+        padding: 20px;
+        border-radius: 18px;
+    }
+
+    .table-card {
+        border-radius: 18px;
+    }
+
+    .table-card .table-head,
+    .table-card .section-head {
+        padding: 20px 20px 0;
+        margin-bottom: 14px;
+    }
+
+    .card-stat,
+    .summary-card {
+        min-height: 160px;
+        border-radius: 18px;
+        padding: 16px;
+    }
+
+    .card-stat .card-value,
+    .summary-card .card-value {
+        font-size: 2rem;
+    }
+
+    .card-stat .card-label,
+    .summary-card .card-label {
+        font-size: 0.9rem;
+    }
+
+    .soft-icon {
+        width: 44px;
+        height: 44px;
+        flex-basis: 44px;
+        border-radius: 14px;
+    }
+
+    .data-note {
+        padding: 18px;
+    }
+
+    .placeholder-card {
+        padding: 28px 20px;
+    }
+
+    .section-head,
+    .form-head,
+    .table-head {
+        gap: 12px;
+    }
+
+    .section-head h3,
+    .form-head h3,
+    .table-head h3 {
+        font-size: 1.3rem;
+    }
+
+    .section-head p,
+    .form-head p,
+    .table-head p {
+        font-size: 0.88rem;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .table-card {
+        border-radius: 16px;
+    }
+
+    .table-card .table-head,
+    .table-card .section-head {
+        padding: 16px 16px 0;
+        margin-bottom: 12px;
+    }
+
+    .card-stat,
+    .summary-card {
+        min-height: 145px;
+        padding: 15px;
+
+        border-radius: 16px;
+    }
+
+    .card-stat .card-value,
+    .summary-card .card-value {
+        font-size: 1.8rem;
+    }
+
+    .card-stat .card-label,
+    .summary-card .card-label {
+        font-size: 0.86rem;
+    }
+
+    .card-stat .card-desc,
+    .summary-card .card-desc {
+        font-size: 0.72rem;
+    }
+
+    .card-stat .top,
+    .summary-card .top {
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .card-stat .bg-icon,
+    .summary-card .bg-icon {
+        font-size: 80px;
+    }
+
+    .soft-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+        border-radius: 13px;
+    }
+
+    .data-note {
+        padding: 16px;
+    }
+
+    .data-note strong {
+        font-size: 1.6rem;
+    }
+
+    .placeholder-card {
+        padding: 24px 16px;
+    }
+
+    .section-head,
+    .form-head,
+    .table-head {
+        gap: 10px;
+    }
+
+    .section-head h3,
+    .form-head h3,
+    .table-head h3 {
+        font-size: 1.15rem;
+    }
+
+    .section-head p,
+    .form-head p,
+    .table-head p {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   <= 380px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .card {
+        padding: 14px;
+    }
+
+    .table-card .table-head,
+    .table-card .section-head {
+        padding: 14px 14px 0;
+    }
+
+    .card-stat,
+    .summary-card {
+        padding: 14px;
+        min-height: 135px;
+    }
+
+    .card-stat .card-value,
+    .summary-card .card-value {
+        font-size: 1.65rem;
+    }
+
+    .section-head h3,
+    .form-head h3,
+    .table-head h3 {
+        font-size: 1.05rem;
+    }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+   Avoid hover transforms on touch screens
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .card-stat:hover,
+    .summary-card:hover {
+        transform: none;
+    }
+
+    .card-stat:hover .bg-icon,
+    .summary-card:hover .bg-icon {
+        opacity: 0.03;
+        transform: rotate(-15deg);
+    }
+}

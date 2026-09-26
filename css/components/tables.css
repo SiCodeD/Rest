@@ -1,0 +1,174 @@
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+/* =========================
+   RESPONSIVE TABLE WRAPPERS
+========================= */
+
+.table-responsive,
+.departments-table-wrap,
+.employees-table-wrap,
+.attention-table-responsive {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   TABLE CELLS
+========================= */
+
+th,
+td {
+    text-align: right;
+
+    padding: 15px 22px;
+
+    border-bottom: 1px solid var(--stroke);
+
+    vertical-align: middle;
+
+    box-sizing: border-box;
+}
+
+th {
+    color: var(--muted);
+
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================
+   EMPTY ROW
+========================= */
+
+.empty-row {
+    text-align: center;
+
+    color: var(--muted);
+
+    padding: 30px 22px;
+}
+
+
+/* =========================
+   TABLE SCROLLBAR
+========================= */
+
+.table-responsive::-webkit-scrollbar,
+.departments-table-wrap::-webkit-scrollbar,
+.employees-table-wrap::-webkit-scrollbar,
+.attention-table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track,
+.departments-table-wrap::-webkit-scrollbar-track,
+.employees-table-wrap::-webkit-scrollbar-track,
+.attention-table-responsive::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.table-responsive::-webkit-scrollbar-thumb,
+.departments-table-wrap::-webkit-scrollbar-thumb,
+.employees-table-wrap::-webkit-scrollbar-thumb,
+.attention-table-responsive::-webkit-scrollbar-thumb {
+    background: var(--stroke);
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   TABLET
+   <= 768px
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    th,
+    td {
+        padding: 13px 16px;
+    }
+
+    th {
+        font-size: 0.84rem;
+    }
+
+    td {
+        font-size: 0.9rem;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 640px
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    th,
+    td {
+        padding: 12px 14px;
+        font-size: 0.88rem;
+    }
+
+    th {
+        font-size: 0.8rem;
+    }
+
+    .table-responsive,
+    .departments-table-wrap,
+    .employees-table-wrap,
+    .attention-table-responsive {
+        overflow-x: auto;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    th,
+    td {
+        padding: 11px 12px;
+        font-size: 0.84rem;
+    }
+
+    th {
+        font-size: 0.76rem;
+    }
+
+    .empty-row {
+        padding: 26px 14px;
+    }
+}

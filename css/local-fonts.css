@@ -1,0 +1,68 @@
+@import '../node_modules/@fontsource/cairo/index.css';
+@import '../node_modules/@fontsource/sora/index.css';
+@import '../node_modules/@fontsource/tajawal/index.css';
+@import '../node_modules/@fontsource/jetbrains-mono/index.css';
+@import '../node_modules/material-symbols/index.css';
+
+:root {
+    --font-cairo: 'Cairo', sans-serif;
+    --font-sora: 'Sora', sans-serif;
+    --font-tajawal: 'Tajawal', sans-serif;
+    --font-jetbrains: 'JetBrains Mono', monospace;
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select {
+    font-family: var(--font-cairo);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-tajawal,
+.font-price,
+.font-playfair {
+    font-family: var(--font-cairo);
+}
+
+.font-playfair {
+    font-family: 'Playfair Display', serif;
+}
+
+code,
+pre,
+.mono,
+.font-mono {
+    font-family: var(--font-jetbrains);
+}
+
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Lucide icons (SVG, rendered locally via js/vendor/lucide.min.js).
+   Sizing follows font-size so existing icon rules keep working. */
+i[data-lucide],
+svg.lucide {
+    display: inline-block;
+    vertical-align: -0.22em;
+    flex-shrink: 0;
+}
+
+i[data-lucide] {
+    width: 1em;
+    height: 1em;
+}
+
+svg.lucide {
+    width: 1em;
+    height: 1em;
+}

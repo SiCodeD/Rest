@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>| مساحة القرصون</title>
+    <meta name="theme-color" content="#9f1d20" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="" />
+    <link rel="manifest" href="/waiter-manifest.json" />
+    <link rel="apple-touch-icon" href="/pwa/waiter-icon.svg" />
+    <link rel="stylesheet" href="../css/local-fonts.css" />
+    <link rel="stylesheet" href="../css/pages/waiter.css" />
+    <script src="../js/theme-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/employee-auth.js"></script>
+    <script src="../js/waiter-dashboard.js"></script>
+  </head>
+  <body class="waiter-page">
+    <div
+      class="waiter-loading-screen"
+      id="waiterDashboardLoading"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="waiter-loading-copy">
+        <span class="waiter-spinner"></span
+        ><span>جاري التحقق من الجلسة...</span>
+      </div>
+    </div>
+
+    <main class="waiter-dashboard" id="waiterDashboard" hidden>
+      <header class="waiter-dashboard-bar">
+        <div class="waiter-dashboard-brand">
+          <span class="material-symbols-outlined">local_dining</span
+          ><span></span>
+        </div>
+        <div class="waiter-dashboard-actions">
+          <span class="waiter-live-status"
+            ><span></span
+            ><span id="waiterReadyLiveStatus">جاري الاتصال</span></span
+          >
+          <button
+            class="waiter-install"
+            id="waiterInstallButton"
+            type="button"
+            hidden
+          >
+            <span class="material-symbols-outlined">install_mobile</span>
+            <span class="waiter-btn-label">تثبيت التطبيق</span>
+          </button>
+          <button
+            class="waiter-notification-toggle"
+            id="waiterNotificationButton"
+            type="button"
+          >
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="waiter-btn-label">تفعيل الإشعارات</span>
+          </button>
+          <button class="waiter-logout" id="waiterLogoutButton" type="button">
+            <span class="material-symbols-outlined">logout</span>
+            <span class="waiter-btn-label">تسجيل الخروج</span>
+          </button>
+        </div>
+      </header>
+      <div
+        class="waiter-notification-toasts"
+        id="waiterNotificationToasts"
+        aria-live="polite"
+        aria-atomic="true"
+      ></div>
+      <section class="waiter-calls-section" aria-labelledby="waiterCallsTitle">
+        <div class="waiter-calls-heading">
+          <div>
+            <span class="waiter-card-eyebrow"
+              ><span class="material-symbols-outlined"
+                >notifications_active</span
+              >
+              نداءات العملاء</span
+            >
+            <h2 id="waiterCallsTitle">يوجد عميل يحتاج إلى خدمة</h2>
+            <p>تصل النداءات من منيو هذا المطعم فقط.</p>
+          </div>
+          <strong class="waiter-calls-count" id="waiterCallsCount">0</strong>
+        </div>
+        <div class="waiter-calls-state" id="waiterCallsLoading">
+          <span class="waiter-spinner"></span
+          ><strong>جاري تحميل النداءات...</strong>
+        </div>
+        <div class="waiter-calls-state" id="waiterCallsEmpty" hidden>
+          <span class="material-symbols-outlined">notifications_off</span
+          ><strong>لا توجد نداءات حالية</strong>
+          <p>ستظهر هنا مناداة العميل عند إرسالها من المنيو.</p>
+        </div>
+        <div class="waiter-calls-state" id="waiterCallsError" hidden>
+          <span class="material-symbols-outlined">cloud_off</span
+          ><strong>تعذر تحميل النداءات</strong>
+          <p id="waiterCallsErrorMessage">حاول مرة أخرى.</p>
+        </div>
+        <div class="waiter-calls-list" id="waiterCallsList" hidden></div>
+      </section>
+      <section class="waiter-ready-section" aria-labelledby="waiterReadyTitle">
+        <div class="waiter-ready-heading">
+          <div>
+            <span class="waiter-card-eyebrow"
+              ><span class="material-symbols-outlined">room_service</span>
+              متابعة المطبخ</span
+            >
+            <h1 id="waiterReadyTitle">طلبات جاهزة للتسليم</h1>
+            <p>ستظهر هنا الطلبات فور ضغط المطبخ على «جاهز للتسليم».</p>
+          </div>
+          <div class="waiter-ready-counter">
+            <strong id="waiterReadyCount">0</strong
+            ><span>طلبات تنتظر الاستلام</span>
+          </div>
+        </div>
+        <div
+          class="waiter-action-message"
+          id="waiterReadyActionMessage"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+        <div class="waiter-ready-state" id="waiterReadyLoading" role="status">
+          <span class="waiter-spinner"></span
+          ><strong>جاري تحميل الطلبات...</strong>
+        </div>
+        <div class="waiter-ready-state" id="waiterReadyEmpty" hidden>
+          <span class="material-symbols-outlined">check_circle</span
+          ><strong>لا توجد طلبات جاهزة</strong>
+          <p>سننبهك هنا عند تجهيز طلب جديد.</p>
+        </div>
+        <div
+          class="waiter-ready-state waiter-ready-error"
+          id="waiterReadyError"
+          hidden
+        >
+          <span class="material-symbols-outlined">cloud_off</span
+          ><strong>تعذر تحديث الطلبات</strong>
+          <p id="waiterReadyErrorMessage">حاول تحديث الصفحة مرة أخرى.</p>
+          <button class="waiter-refresh" id="waiterRefreshOrders" type="button">
+            <span class="material-symbols-outlined">refresh</span>إعادة المحاولة
+          </button>
+        </div>
+        <div class="waiter-ready-orders" id="waiterReadyOrders" hidden></div>
+      </section>
+    </main>
+
+    <script>
+      (async function () {
+        const loading = document.getElementById("waiterDashboardLoading");
+        const dashboard = document.getElementById("waiterDashboard");
+        const logoutButton = document.getElementById("waiterLogoutButton");
+        const session = await EmployeeAuth.requireSession();
+        if (!session) return;
+        loading.hidden = true;
+        dashboard.hidden = false;
+        logoutButton.addEventListener("click", async function () {
+          logoutButton.disabled = true;
+          logoutButton.innerHTML =
+            '<span class="material-symbols-outlined waiter-spin-icon">progress_activity</span><span class="waiter-btn-label">جاري الخروج...</span>';
+          await EmployeeAuth.logout();
+        });
+      })();
+    </script>
+    <script src="../js/waiter-push.js"></script>
+    <script src="../js/waiter-pwa.js"></script>
+  </body>
+</html>

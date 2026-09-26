@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>مائدة | تسجيل الدخول</title>
+
+    <!-- Fonts: خط الشعار (Aref Ruqaa). يمكنك استضافته محلياً داخل local-fonts.css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap"
+    />
+
+    <!-- External Resources -->
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/local-fonts.css" />
+    <link rel="stylesheet" href="../css/edupulse.css" />
+    <link rel="stylesheet" href="../css/pages/auth.css" />
+
+    <!-- Scripts -->
+    <script src="../js/theme-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/dark-mode.js"></script>
+  </head>
+
+  <body class="login-page">
+    <div class="auth-shell">
+      <!-- ═════════ جهة النموذج ═════════ -->
+      <main class="auth-form-side">
+        <!-- <button
+          type="button"
+          onclick="I18N.toggleLanguage()"
+          class="lang-switch"
+        >
+          <span class="material-symbols-outlined">language</span>
+          <span id="langSwitchLabel">English</span>
+        </button> -->
+
+        <div class="auth-form-inner">
+          <div class="brand">
+            <div class="brand-mark">
+              <span class="material-symbols-outlined">restaurant_menu</span>
+            </div>
+            <!-- <p class="brand-name" data-t="brand_name"></p> -->
+          </div>
+
+          <h1 class="login-title" data-t="login_title">تسجيل الدخول</h1>
+          <p class="login-sub" data-t="login_sub">
+            أدخل بياناتك لمتابعة الطلبات والطاولات.
+          </p>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label" for="username">اسم المستخدم</label>
+              </div>
+              <div class="input-wrapper">
+                <span class="material-symbols-outlined field-icon">person</span>
+                <input
+                  type="text"
+                  id="username"
+                  placeholder="اسم المستخدم"
+                  autocomplete="username"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label" for="password" data-i18n="password"
+                  >كلمة المرور</label
+                >
+                <a
+                  href="#"
+                  class="forgot-password"
+                  id="forgotPasswordLink"
+                  data-i18n="forgot_password"
+                  >نسيت كلمة المرور؟</a
+                >
+              </div>
+              <div class="input-wrapper has-toggle">
+                <span class="material-symbols-outlined field-icon">lock</span>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="pw-toggle"
+                  id="pwToggle"
+                  aria-pressed="false"
+                  aria-label="إظهار كلمة المرور"
+                >
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="login-btn">
+              <span data-i18n="sign_in">تسجيل الدخول</span>
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+          </form>
+
+          <!--
+            الدخول السريع: للتجربة فقط — احذف هذا القسم كاملاً قبل الإنتاج.
+            البريد الإلكتروني لكل زر هو نفسه القديم، غيّره حسب حسابات
+            التجربة الفعلية لكل دور في نظام المطعم.
+          -->
+          <!-- <div class="demo-section">
+            <h2 class="demo-title" data-i18n="quick_access">
+              الدخول السريع للنظام
+            </h2>
+            <div class="demo-grid">
+              <button
+                type="button"
+                onclick="demoLogin('a@a.ca')"
+                class="demo-btn"
+              >
+                <span class="material-symbols-outlined">hub</span>
+                <span data-t="role_platform">المنصة</span>
+              </button>
+              <button
+                type="button"
+                onclick="demoLogin('admin@test.com')"
+                class="demo-btn"
+              >
+                <span class="material-symbols-outlined"
+                  >admin_panel_settings</span
+                >
+                <span data-t="role_manager">المدير</span>
+              </button>
+              <button
+                type="button"
+                onclick="demoLogin('te@test.com')"
+                class="demo-btn"
+              >
+                <span class="material-symbols-outlined">point_of_sale</span>
+                <span data-t="role_cashier">الكاشير</span>
+              </button>
+              <button
+                type="button"
+                onclick="demoLogin('se@test.com')"
+                class="demo-btn"
+              >
+                <span class="material-symbols-outlined">room_service</span>
+                <span data-t="role_waiter">النادل</span>
+              </button>
+              <button
+                type="button"
+                onclick="demoLogin('smarting2002@gmail.com')"
+                class="demo-btn"
+              >
+                <span class="material-symbols-outlined">skillet</span>
+                <span data-t="role_kitchen">المطبخ</span>
+              </button>
+            </div>
+          </div> -->
+        </div>
+      </main>
+
+      <!-- ═════════ جهة التذكرة (زخرفية) ═════════ -->
+      <aside class="auth-hero-side">
+        <div class="stage" aria-hidden="true">
+          <div class="rail"></div>
+
+          <!-- تذكرة خلفية -->
+          <div class="ticket-hang ticket-side">
+            <div class="ticket">
+              <div class="ticket-head">
+                <div class="ticket-table">
+                  <small data-t="t_table">طاولة</small>
+                  <strong>5</strong>
+                </div>
+                <div class="ticket-meta">
+                  <span><span data-t="t_order">طلب</span> #247</span>
+                  <span data-t="t_time_2">8:39 م</span>
+                </div>
+              </div>
+              <ul class="ticket-items">
+                <li><b>1</b><span data-t="i_kabsa">كبسة لحم</span></li>
+                <li><b>2</b><span data-t="i_orange">عصير برتقال</span></li>
+              </ul>
+              <div class="ticket-foot">
+                <div class="status">
+                  <span class="status-idle" data-t="t_new">جديد</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- التذكرة الرئيسية -->
+          <div class="ticket-hang ticket-main">
+            <div class="ticket">
+              <div class="ticket-head">
+                <div class="ticket-table">
+                  <small data-t="t_table">طاولة</small>
+                  <strong>12</strong>
+                </div>
+                <div class="ticket-meta">
+                  <span><span data-t="t_order">طلب</span> #248</span>
+                  <span data-t="t_time_1">8:42 م</span>
+                </div>
+              </div>
+              <ul class="ticket-items">
+                <li><b>2</b><span data-t="i_shawarma">شاورما دجاج</span></li>
+                <li><b>1</b><span data-t="i_hummus">حمص بالطحينة</span></li>
+                <li><b>3</b><span data-t="i_lemon">ليمون بالنعناع</span></li>
+              </ul>
+              <p class="ticket-note" data-t="t_note">بدون بصل</p>
+              <div class="ticket-foot">
+                <div class="status">
+                  <span class="status-prep" data-t="t_prep">قيد التحضير</span>
+                  <span class="status-ready" data-t="t_ready_chip">جاهز</span>
+                </div>
+                <span class="ticket-time">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span data-t="t_min">6 د</span>
+                </span>
+              </div>
+              <div class="stamp" data-t="t_ready">جاهز</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-copy">
+          <h2 class="hero-title" data-t="hero_title">
+            يصل الطلب إلى المطبخ قبل أن يبتعد النادل عن الطاولة
+          </h2>
+          <p class="hero-sub" data-t="hero_sub">
+            الطاولات والكاشير والمطبخ في نظام واحد.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===== Forgot Password Modal ===== -->
+    <div
+      class="modal-overlay"
+      id="forgotPasswordModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fpModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="closeModalBtn"
+          data-t-aria="close"
+          aria-label="إغلاق"
+        >
+          <span class="material-symbols-outlined" style="font-size: 20px"
+            >close</span
+          >
+        </button>
+
+        <!-- Form View -->
+        <div id="fpFormView">
+          <div class="modal-icon">
+            <span class="material-symbols-outlined">lock_reset</span>
+          </div>
+          <h2 id="fpModalTitle" data-t="fp_title">استعادة كلمة المرور</h2>
+          <p data-t="fp_text">
+            أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور.
+          </p>
+
+          <div class="input-wrapper">
+            <span class="material-symbols-outlined field-icon">mail</span>
+            <input
+              type="email"
+              id="resetEmail"
+              placeholder="name@restaurant.com"
+              autocomplete="email"
+              aria-label="Email"
+            />
+          </div>
+
+          <button type="button" class="modal-submit-btn" id="sendResetBtn">
+            <span class="material-symbols-outlined">send</span>
+            <span id="sendResetBtnText" data-t="fp_btn"
+              >إرسال رابط الاستعادة</span
+            >
+          </button>
+        </div>
+
+        <!-- Success View -->
+        <div id="fpSuccessView" style="display: none">
+          <div class="modal-success">
+            <div class="success-icon">
+              <span class="material-symbols-outlined">mark_email_read</span>
+            </div>
+            <h3 data-t="fp_ok_title">تم الإرسال بنجاح!</h3>
+            <p data-t="fp_ok_text">
+              تحقق من بريدك الإلكتروني، ستجد رابطاً لإعادة تعيين كلمة المرور
+              خلال دقائق.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ═════════ نصوص الصفحة الجديدة (عربي / إنجليزي) ═════════
+         العناصر ذات data-i18n يتولاها i18n.js كما كان.
+         العناصر ذات data-t هي نصوص هذا التصميم الجديد فقط. */
+      const LOGIN_TEXT = {
+        ar: {
+          brand_name: "مائدة",
+          page_title: "مائدة | تسجيل الدخول",
+          login_title: "تسجيل الدخول",
+          login_sub: "أدخل بياناتك لمتابعة الطلبات والطاولات.",
+          show_password: "إظهار كلمة المرور",
+          hide_password: "إخفاء كلمة المرور",
+          role_platform: "المنصة",
+          role_manager: "المدير",
+          role_cashier: "الكاشير",
+          role_waiter: "النادل",
+          role_kitchen: "المطبخ",
+          hero_title: "يصل الطلب إلى المطبخ قبل أن يبتعد النادل عن الطاولة",
+          hero_sub: "الطاولات والكاشير والمطبخ في نظام واحد.",
+          t_table: "طاولة",
+          t_order: "طلب",
+          t_time_1: "8:42 م",
+          t_time_2: "8:39 م",
+          t_new: "جديد",
+          t_prep: "قيد التحضير",
+          t_ready_chip: "جاهز",
+          t_ready: "جاهز",
+          t_min: "6 د",
+          t_note: "بدون بصل",
+          i_shawarma: "شاورما دجاج",
+          i_hummus: "حمص بالطحينة",
+          i_lemon: "ليمون بالنعناع",
+          i_kabsa: "كبسة لحم",
+          i_orange: "عصير برتقال",
+          close: "إغلاق",
+          fp_title: "استعادة كلمة المرور",
+          fp_text:
+            "أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور.",
+          fp_btn: "إرسال رابط الاستعادة",
+          fp_sending: "جاري الإرسال...",
+          fp_ok_title: "تم الإرسال بنجاح!",
+          fp_ok_text:
+            "تحقق من بريدك الإلكتروني، ستجد رابطاً لإعادة تعيين كلمة المرور خلال دقائق.",
+          err_login: "خطأ في تسجيل الدخول",
+          err_unexpected: "حدث خطأ غير متوقع",
+          err_send: "فشل الإرسال: ",
+        },
+        en: {
+          brand_name: "Maida",
+          page_title: "Maida | Sign in",
+          login_title: "Sign in",
+          login_sub: "Enter your details to continue to orders and tables.",
+          show_password: "Show password",
+          hide_password: "Hide password",
+          role_platform: "Platform",
+          role_manager: "Manager",
+          role_cashier: "Cashier",
+          role_waiter: "Waiter",
+          role_kitchen: "Kitchen",
+          hero_title:
+            "Orders reach the kitchen before the waiter leaves the table",
+          hero_sub: "Tables, cashier and kitchen in one system.",
+          t_table: "Table",
+          t_order: "Order",
+          t_time_1: "8:42 PM",
+          t_time_2: "8:39 PM",
+          t_new: "New",
+          t_prep: "Preparing",
+          t_ready_chip: "Ready",
+          t_ready: "Ready",
+          t_min: "6 min",
+          t_note: "No onions",
+          i_shawarma: "Chicken shawarma",
+          i_hummus: "Hummus",
+          i_lemon: "Lemon mint",
+          i_kabsa: "Lamb kabsa",
+          i_orange: "Orange juice",
+          close: "Close",
+          fp_title: "Reset your password",
+          fp_text:
+            "Enter your email and we'll send you a link to reset your password.",
+          fp_btn: "Send reset link",
+          fp_sending: "Sending...",
+          fp_ok_title: "Link sent",
+          fp_ok_text:
+            "Check your inbox. The reset link should arrive within a few minutes.",
+          err_login: "Sign-in failed",
+          err_unexpected: "Something went wrong. Please try again.",
+          err_send: "Could not send the link: ",
+        },
+      };
+
+      function t(key) {
+        const lang = document.documentElement.dir === "ltr" ? "en" : "ar";
+        return LOGIN_TEXT[lang][key] ?? key;
+      }
+
+      function applyLoginText() {
+        document.querySelectorAll("[data-t]").forEach((el) => {
+          el.textContent = t(el.dataset.t);
+        });
+        document.querySelectorAll("[data-t-aria]").forEach((el) => {
+          el.setAttribute("aria-label", t(el.dataset.tAria));
+        });
+        document.title = t("page_title");
+        syncPasswordToggleLabel();
+      }
+    </script>
+
+    <script>
+      /* ═════════ تسجيل الدخول ═════════ */
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          const btn = e.target.querySelector('button[type="submit"]');
+          const originalContent = btn.innerHTML;
+
+          btn.disabled = true;
+          btn.setAttribute("aria-busy", "true");
+          btn.innerHTML =
+            '<span class="material-symbols-outlined animate-spin">sync</span>';
+
+          const restore = () => {
+            btn.disabled = false;
+            btn.removeAttribute("aria-busy");
+            btn.innerHTML = originalContent;
+            updateIcons();
+          };
+
+          try {
+            const result = await Auth.login(username, password);
+            if (result.success) {
+              Auth.redirectByRole(result.user);
+            } else {
+              restore();
+              Notifications.error(result.message || t("err_login"));
+            }
+          } catch (error) {
+            restore();
+            Notifications.error(t("err_unexpected"));
+          }
+        });
+
+      function demoLogin(username) {
+        const form = document.getElementById("loginForm");
+        document.getElementById("username").value = username;
+        document.getElementById("password").value = "123456";
+        if (form.requestSubmit) form.requestSubmit();
+        else form.dispatchEvent(new Event("submit", { cancelable: true }));
+      }
+
+      /* ═════════ إظهار / إخفاء كلمة المرور ═════════ */
+      const passwordEl = document.getElementById("password");
+      const pwToggle = document.getElementById("pwToggle");
+
+      function syncPasswordToggleLabel() {
+        const visible = passwordEl.type === "text";
+        pwToggle.setAttribute(
+          "aria-label",
+          t(visible ? "hide_password" : "show_password"),
+        );
+      }
+
+      pwToggle.addEventListener("click", function () {
+        const show = passwordEl.type === "password";
+        passwordEl.type = show ? "text" : "password";
+        pwToggle.setAttribute("aria-pressed", String(show));
+        pwToggle.querySelector(".material-symbols-outlined").textContent = show
+          ? "visibility_off"
+          : "visibility";
+        syncPasswordToggleLabel();
+      });
+
+      /* ═════════ أيقونة السهم حسب الاتجاه + نصوص اللغة ═════════ */
+      function updateIcons() {
+        const isRtl = document.documentElement.dir === "rtl";
+        const loginIcon = document.querySelector(
+          ".login-btn .material-symbols-outlined:last-child",
+        );
+        if (loginIcon && !loginIcon.classList.contains("animate-spin")) {
+          loginIcon.textContent = isRtl ? "arrow_back" : "arrow_forward";
+        }
+      }
+
+      function onDirectionChange() {
+        updateIcons();
+        applyLoginText();
+      }
+
+      onDirectionChange();
+
+      new MutationObserver(onDirectionChange).observe(
+        document.documentElement,
+        { attributes: true, attributeFilter: ["dir", "lang"] },
+      );
+    </script>
+
+    <script>
+      /* ═════════ نافذة استعادة كلمة المرور ═════════ */
+      const modal = document.getElementById("forgotPasswordModal");
+      const fpFormView = document.getElementById("fpFormView");
+      const fpSuccessView = document.getElementById("fpSuccessView");
+      const resetEmailEl = document.getElementById("resetEmail");
+      const sendResetBtn = document.getElementById("sendResetBtn");
+      const sendResetBtnText = document.getElementById("sendResetBtnText");
+      const forgotLink = document.getElementById("forgotPasswordLink");
+
+      forgotLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        fpFormView.style.display = "block";
+        fpSuccessView.style.display = "none";
+        resetEmailEl.value = "";
+        modal.classList.add("open");
+        setTimeout(() => resetEmailEl.focus(), 100);
+      });
+
+      function closeModal() {
+        modal.classList.remove("open");
+        forgotLink.focus();
+      }
+
+      document
+        .getElementById("closeModalBtn")
+        .addEventListener("click", closeModal);
+
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.classList.contains("open"))
+          closeModal();
+      });
+
+      sendResetBtn.addEventListener("click", async function () {
+        const email = resetEmailEl.value.trim();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          resetEmailEl.classList.add("is-invalid");
+          resetEmailEl.setAttribute("aria-invalid", "true");
+          resetEmailEl.focus();
+          setTimeout(() => {
+            resetEmailEl.classList.remove("is-invalid");
+            resetEmailEl.removeAttribute("aria-invalid");
+          }, 2500);
+          return;
+        }
+
+        sendResetBtn.disabled = true;
+        sendResetBtnText.textContent = t("fp_sending");
+
+        const resetLabel = () => {
+          sendResetBtn.disabled = false;
+          sendResetBtnText.textContent = t("fp_btn");
+        };
+
+        try {
+          const redirectURL =
+            window.location.origin +
+            window.location.pathname.replace(
+              "Login.html",
+              "SetupPassword.html",
+            );
+
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: redirectURL,
+          });
+
+          if (error) {
+            Notifications.error(t("err_send") + error.message);
+            resetLabel();
+          } else {
+            fpFormView.style.display = "none";
+            fpSuccessView.style.display = "block";
+            resetLabel();
+          }
+        } catch (err) {
+          Notifications.error(t("err_unexpected"));
+          resetLabel();
+        }
+      });
+
+      resetEmailEl.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") sendResetBtn.click();
+      });
+    </script>
+  </body>
+</html>

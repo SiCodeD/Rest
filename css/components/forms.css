@@ -1,0 +1,929 @@
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+/* =========================
+   FORM GRID
+========================= */
+
+.form-grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+    width: 100%;
+    min-width: 0;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================
+   FIELD LABEL
+========================= */
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 10px;
+
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text);
+
+    letter-spacing: 0.2px;
+}
+
+.field-label::before {
+    content: '';
+
+    width: 4px;
+    height: 20px;
+    flex: 0 0 4px;
+
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.input-modern {
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+
+    padding: 13px 16px;
+
+    border-radius: 16px;
+    border: 1px solid var(--stroke);
+
+    background: var(--panel-strong);
+
+    font: inherit;
+    color: var(--text);
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    direction: rtl;
+    text-align: right;
+
+    box-sizing: border-box;
+}
+
+.input-modern:hover {
+    border-color: var(--primary);
+}
+
+.input-modern:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-soft);
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+.select-modern {
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+
+    padding: 13px 40px 13px 16px;
+
+    border-radius: 16px;
+    border: 1px solid var(--stroke);
+
+    background-color: var(--panel-strong);
+
+    font: inherit;
+    color: var(--text);
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    direction: rtl;
+    text-align: right;
+
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+    background-position: left 12px center;
+    background-size: 18px;
+
+    box-sizing: border-box;
+}
+
+.select-modern:hover {
+    border-color: var(--primary);
+}
+
+.select-modern:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-soft);
+}
+
+
+/* =========================================================
+   IMAGE UPLOAD
+   ========================================================= */
+
+.image-upload-field {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 74px;
+
+    padding: 10px 12px;
+
+    border: 1px dashed var(--stroke);
+    border-radius: 16px;
+
+    background: var(--panel-strong);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.image-upload-field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-soft);
+}
+
+.image-upload-input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.image-upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 44px;
+
+    padding: 0 14px;
+
+    border-radius: 12px;
+
+    background: var(--primary);
+    color: #fff;
+
+    font-size: 0.88rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+.image-upload-button:hover {
+    background: var(--primary-deep);
+    transform: translateY(-1px);
+}
+
+.image-upload-name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: var(--text);
+
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.image-upload-hint {
+    grid-column: 2;
+
+    color: var(--muted);
+    font-size: 0.75rem;
+
+    min-width: 0;
+}
+
+.image-upload-error {
+    display: block;
+
+    grid-column: 2;
+
+    min-height: 0;
+
+    color: #dc2626;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   DATE INPUTS
+   ========================================================= */
+
+.date-inputs-group {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1.2fr;
+
+    gap: 10px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.date-inputs-group select {
+    width: 100%;
+    min-width: 0;
+
+    padding: 12px 32px 12px 10px;
+
+    border-radius: 14px;
+
+    background-color: var(--panel-strong);
+    border: 1px solid var(--stroke);
+
+    color: var(--text);
+
+    font-size: 0.9rem;
+    font: inherit;
+
+    outline: none;
+
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+    background-size: 16px;
+
+    direction: rtl;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+.date-inputs-group select:hover {
+    border-color: var(--primary);
+}
+
+.date-inputs-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-soft);
+}
+
+
+/* =========================================================
+   MULTI SELECT
+   ========================================================= */
+
+.multi-select-container {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.multi-select-box {
+    min-height: 52px;
+
+    padding: 13px 16px;
+
+    border-radius: 16px;
+    border: 1px solid var(--stroke);
+
+    background: var(--panel-strong);
+
+    font: inherit;
+    color: var(--text);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-sizing: border-box;
+}
+
+.multi-select-box:hover {
+    border-color: rgba(15, 159, 114, 0.46);
+}
+
+.multi-select-box:focus-within {
+    border-color: rgba(15, 159, 114, 0.46);
+
+    box-shadow:
+        0 0 0 4px rgba(15, 159, 114, 0.10);
+}
+
+.multi-select-dropdown {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+
+    background: var(--panel-strong);
+
+    border: 1px solid var(--stroke);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-lg);
+
+    z-index: 1000;
+
+    overflow: hidden;
+
+    display: none;
+    flex-direction: column;
+
+    max-height: 250px;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+}
+
+.multi-select-dropdown.open {
+    display: flex;
+}
+
+.multi-select-option {
+    padding: 12px 16px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+
+    color: var(--text);
+
+    min-width: 0;
+}
+
+.multi-select-option:hover {
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+}
+
+.multi-select-option.selected {
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+}
+
+.multi-select-option .check-icon {
+    opacity: 0;
+
+    transition: opacity 0.2s ease;
+}
+
+.multi-select-option.selected .check-icon {
+    opacity: 1;
+}
+
+.multi-select-tag {
+    max-width: 100%;
+
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+
+    padding: 4px 10px;
+
+    border-radius: 12px;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    box-sizing: border-box;
+}
+
+.multi-select-tag button {
+    background: none;
+    border: none;
+
+    padding: 0;
+
+    cursor: pointer;
+
+    color: var(--primary-deep);
+
+    display: flex;
+    align-items: center;
+}
+
+
+/* =========================================================
+   CUSTOM SINGLE SELECT
+   ========================================================= */
+
+.custom-select-wrapper {
+    position: relative;
+
+    width: 100%;
+    min-width: 180px;
+
+    flex-shrink: 0;
+}
+
+.custom-select-wrapper.open {
+    z-index: 999999 !important;
+}
+
+.custom-select-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+
+    padding: 13px 44px 13px 16px;
+
+    border-radius: 16px;
+    border: 1px solid var(--stroke);
+
+    background: var(--panel-strong);
+
+    font: inherit;
+    color: var(--text);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+
+    text-align: right;
+
+    box-sizing: border-box;
+}
+
+.custom-select-value {
+    flex: 1;
+    min-width: 0;
+
+    font-size: 0.95rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-select-value.placeholder {
+    color: var(--muted);
+}
+
+.custom-select-button:hover {
+    border-color: var(--primary);
+}
+
+.custom-select-wrapper.open .custom-select-button {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px var(--primary-soft);
+}
+
+.custom-select-arrow {
+    color: var(--muted);
+
+    font-size: 1.3rem;
+
+    flex: 0 0 auto;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
+}
+
+.custom-select-wrapper.open .custom-select-arrow {
+    transform: rotate(180deg);
+    color: var(--primary);
+}
+
+
+/* =========================
+   CUSTOM SELECT DROPDOWN
+========================= */
+
+.custom-select-dropdown {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    background: var(--panel);
+
+    border: 1px solid var(--stroke);
+    border-radius: 20px;
+
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+
+    z-index: 99999999 !important;
+
+    overflow: hidden;
+
+    display: none;
+    flex-direction: column;
+
+    max-height: 280px;
+    overflow-y: auto;
+
+    /* Removed backdrop-filter for better performance */
+}
+
+.custom-select-dropdown.open {
+    display: flex;
+}
+
+.custom-select-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+    background: var(--stroke);
+    border-radius: 10px;
+}
+
+.custom-select-option {
+    padding: 14px 20px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+
+    color: var(--text);
+
+    font-weight: 600;
+    font-size: 0.95rem;
+
+    min-width: 0;
+}
+
+.custom-select-option:hover {
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+}
+
+.custom-select-option.selected {
+    background: var(--primary-soft);
+    color: var(--primary-deep);
+}
+
+.custom-select-option.selected::after {
+    content: 'check';
+
+    font-family: 'Material Symbols Outlined';
+
+    font-size: 1.2rem;
+
+    color: var(--primary);
+
+    font-weight: normal;
+
+    flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   TABLET
+   <= 768px
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .form-grid {
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .form-row-2 {
+        gap: 12px;
+    }
+
+    .input-modern,
+    .select-modern,
+    .custom-select-button,
+    .multi-select-box {
+        min-height: 48px;
+    }
+
+    .input-modern,
+    .select-modern {
+        border-radius: 14px;
+    }
+
+    .custom-select-button {
+        border-radius: 14px;
+    }
+
+    .multi-select-box {
+        border-radius: 14px;
+    }
+
+    .date-inputs-group {
+        gap: 8px;
+    }
+
+    .date-inputs-group select {
+        padding-top: 11px;
+        padding-bottom: 11px;
+    }
+
+    .image-upload-field {
+        padding: 9px 10px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 640px
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .form-row-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .date-inputs-group {
+        grid-template-columns: 1fr;
+    }
+
+    .image-upload-field {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .image-upload-button {
+        width: 100%;
+    }
+
+    .image-upload-hint,
+    .image-upload-error {
+        grid-column: 1;
+    }
+
+    .custom-select-wrapper {
+        min-width: 0;
+    }
+
+    .custom-select-dropdown {
+        border-radius: 16px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .form-grid {
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .form-row-2 {
+        gap: 10px;
+    }
+
+    .field-label {
+        margin-bottom: 8px;
+        font-size: 0.84rem;
+    }
+
+    .field-label::before {
+        width: 3px;
+        height: 17px;
+        flex-basis: 3px;
+    }
+
+    .input-modern,
+    .select-modern,
+    .custom-select-button,
+    .multi-select-box {
+        min-height: 46px;
+        border-radius: 13px;
+        font-size: 0.88rem;
+    }
+
+    .input-modern {
+        padding: 11px 13px;
+    }
+
+    .select-modern {
+        padding: 11px 36px 11px 13px;
+        background-position: left 10px center;
+        background-size: 17px;
+    }
+
+    .custom-select-button {
+        padding: 11px 38px 11px 13px;
+    }
+
+    .custom-select-value {
+        font-size: 0.88rem;
+    }
+
+    .multi-select-box {
+        padding: 11px 13px;
+    }
+
+    .multi-select-tag {
+        font-size: 0.78rem;
+        padding: 4px 8px;
+    }
+
+    .multi-select-dropdown {
+        max-height: 220px;
+        border-radius: 14px;
+    }
+
+    .multi-select-option {
+        padding: 11px 13px;
+        font-size: 0.86rem;
+    }
+
+    .custom-select-dropdown {
+        max-height: 240px;
+        border-radius: 14px;
+    }
+
+    .custom-select-option {
+        padding: 12px 14px;
+        font-size: 0.86rem;
+    }
+
+    .date-inputs-group select {
+        min-height: 44px;
+        padding: 10px 30px 10px 10px;
+        font-size: 0.84rem;
+        background-position: left 9px center;
+        background-size: 15px;
+    }
+
+    .image-upload-field {
+        min-height: 0;
+        padding: 10px;
+    }
+
+    .image-upload-button {
+        min-height: 42px;
+        font-size: 0.84rem;
+    }
+
+    .image-upload-name {
+        font-size: 0.82rem;
+    }
+
+    .image-upload-hint,
+    .image-upload-error {
+        font-size: 0.7rem;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   <= 380px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .input-modern,
+    .select-modern,
+    .custom-select-button,
+    .multi-select-box {
+        min-height: 44px;
+    }
+
+    .input-modern {
+        padding-inline: 11px;
+    }
+
+    .select-modern {
+        padding-inline-start: 11px;
+        padding-inline-end: 34px;
+    }
+
+    .custom-select-button {
+        padding-inline-start: 11px;
+        padding-inline-end: 35px;
+    }
+
+    .field-label {
+        font-size: 0.8rem;
+    }
+
+    .custom-select-option,
+    .multi-select-option {
+        font-size: 0.82rem;
+    }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .image-upload-button:hover {
+        transform: none;
+    }
+}

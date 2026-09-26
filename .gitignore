@@ -12,6 +12,25 @@ dist
 dist-ssr
 *.local
 
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Supabase project files and local state
+supabase/
+
+# Local agent/tooling configuration
+.agents/
+.claude/
+skills-lock.json
+netlify.toml
+
+# Backup archives
+*.rar
+*.zip
+*.7z
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

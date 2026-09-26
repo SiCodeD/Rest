@@ -1,0 +1,97 @@
+/* ═══════════════════════════════════════════════════════════
+   waiter-login.css — إضافات صفحة دخول القرصون
+   • يُحمَّل بعد login.css ويعيد استخدام نفس التصميم
+     (الورقة، التذاكر، الأزرار…) ويضيف فقط ما تحتاجه هذه الصفحة.
+   • لا يمسّ waiter.css الذي تعتمد عليه لوحة القرصون.
+   ═══════════════════════════════════════════════════════════ */
+
+/* حقول اسم المستخدم و PIN مكتوبة بـ dir="ltr" لأن محتواها لاتيني/أرقام،
+   لكن الأيقونة على يمين الصفحة، فنُحاذي النص لليمين بجانبها. */
+.waiter-login .input-wrapper input {
+    padding: 0 46px 0 16px;
+    text-align: right;
+}
+
+.waiter-login .input-wrapper.has-toggle input {
+    padding-left: 52px;
+}
+
+.waiter-pin-input {
+    font-family: var(--font-jetbrains, ui-monospace, "SF Mono", Menlo, monospace);
+    font-size: 18px;
+    letter-spacing: 0.3em;
+}
+
+.waiter-pin-input::placeholder {
+    letter-spacing: 0.3em;
+}
+
+/* ── رسالة الخطأ ── */
+
+.waiter-message {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.waiter-message.show {
+    display: flex;
+}
+
+.waiter-message.error {
+    background: var(--danger-soft, rgba(166, 27, 31, 0.08));
+    color: var(--danger, #a61b1f);
+}
+
+.waiter-message .material-symbols-outlined {
+    flex: none;
+    font-size: 20px;
+}
+
+/* أيقونة التحميل داخل زر الدخول */
+.login-btn.is-loading .material-symbols-outlined {
+    animation: spin 1s linear infinite;
+}
+
+/* ── تنبيه أمني ── */
+
+.waiter-security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 28px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted, #7b706b);
+    text-align: center;
+}
+
+.waiter-security-note .material-symbols-outlined {
+    flex: none;
+    font-size: 17px;
+    color: var(--primary, #0f6b5a);
+}
+
+/* ── تذكرة «نداء الطاولة» (التذكرة الجانبية) ── */
+
+.ticket-items b .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.status>.status-call {
+    background: rgba(183, 121, 31, 0.15);
+    color: #8a5a12;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-btn.is-loading .material-symbols-outlined {
+        animation-duration: 2s;
+    }
+}

@@ -1,0 +1,4188 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>المنيو الرقمي</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231e1b2e'/%3E%3Cpath d='M18 22c0-4 3-7 7-7h14c4 0 7 3 7 7v6c0 5-3 9-7 11v9h-7v-9c-4-2-7-6-7-11v-6zm7-4c-2 0-3 1-3 3v6c0 5 4 9 9 9h2c5 0 9-4 9-9v-6c0-2-1-3-3-3H25z' fill='%23f7c873'/%3E%3Cpath d='M22 46h20v4H22z' fill='%23f7c873'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="../css/pages/menu.css" />
+    <style>
+      body.public-menu-mode #header-waiter-call,
+      body.public-menu-mode #floating-cart-fab,
+      body.public-menu-mode .menu-order-action {
+        display: none !important;
+      }
+
+      body.public-menu-mode .menu-product-trigger {
+        cursor: default;
+      }
+
+      body.menu-data-loading #main-header,
+      body.menu-data-loading #screen-menu {
+        visibility: hidden;
+      }
+    </style>
+    <script>
+      /* Early theme bootstrap: use only the current restaurant's cached theme.
+         This runs before the body is painted, so there is no dark/light flash. */
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var pathname = decodeURIComponent(window.location.pathname).replace(
+            /\/+$/,
+            "",
+          );
+          var restaurantId =
+            params.get("restaurant_id") || window.MENU_RESTAURANT_ID || "";
+          var isSlugRoute =
+            params.has("slug") ||
+            (!pathname.includes("/Pages/") &&
+              pathname.split("/").filter(Boolean).length > 0);
+          var key = restaurantId
+            ? "EduPulse_MenuColors_" + restaurantId
+            : "EduPulse_MenuColors";
+          var stored = null;
+          if (!stored && !restaurantId && !isSlugRoute) {
+            stored = localStorage.getItem("EduPulse_MenuColors");
+          }
+          if (!stored) {
+            stored = JSON.stringify({ light: {}, dark: {} });
+          }
+
+          var colors = JSON.parse(stored);
+          var brandFont = [
+            "default",
+            "telma",
+            "chillax",
+            "kidzhood",
+            "naveid",
+          ].includes(String(colors && colors.brandFont).toLowerCase())
+            ? String(colors.brandFont).toLowerCase()
+            : "default";
+          document.documentElement.dataset.menuBrandFont = brandFont;
+          if (!colors || !colors.light || !colors.dark) return;
+
+          function hexToRgbStr(hex) {
+            var h = String(hex || "#000000").replace("#", "");
+            if (h.length === 3)
+              h = h
+                .split("")
+                .map(function (c) {
+                  return c + c;
+                })
+                .join("");
+            var r = parseInt(h.substring(0, 2), 16);
+            var g = parseInt(h.substring(2, 4), 16);
+            var b = parseInt(h.substring(4, 6), 16);
+            return r + " " + g + " " + b;
+          }
+          function darken(hex, pct) {
+            var h = String(hex || "#000000").replace("#", "");
+            if (h.length === 3)
+              h = h
+                .split("")
+                .map(function (c) {
+                  return c + c;
+                })
+                .join("");
+            var rgb = [0, 2, 4].map(function (i) {
+              return parseInt(h.substring(i, i + 2), 16);
+            });
+            var f = 1 - pct;
+            return (
+              "#" +
+              rgb
+                .map(function (x) {
+                  var v = Math.max(
+                    0,
+                    Math.min(255, Math.round(x * f)),
+                  ).toString(16);
+                  return v.length === 1 ? "0" + v : v;
+                })
+                .join("")
+            );
+          }
+          function lighten(hex, pct) {
+            var h = String(hex || "#000000").replace("#", "");
+            if (h.length === 3)
+              h = h
+                .split("")
+                .map(function (c) {
+                  return c + c;
+                })
+                .join("");
+            var rgb = [0, 2, 4].map(function (i) {
+              return parseInt(h.substring(i, i + 2), 16);
+            });
+            return (
+              "#" +
+              rgb
+                .map(function (x) {
+                  var v = Math.max(
+                    0,
+                    Math.min(255, Math.round(x + (255 - x) * pct)),
+                  ).toString(16);
+                  return v.length === 1 ? "0" + v : v;
+                })
+                .join("")
+            );
+          }
+          function buildThemeVars(t, isDark) {
+            var primary = t.primary || (isDark ? "#f2ca50" : "#b8860b");
+            var primaryContainer =
+              t.primaryContainer ||
+              (isDark ? darken(primary, 0.12) : darken(primary, 0.16));
+            var onPrimary = t.onPrimary || (isDark ? "#3c2f00" : "#ffffff");
+            var background = t.background || (isDark ? "#131313" : "#fffdf7");
+            var surface = t.surface || (isDark ? "#20201f" : "#f7f1e2");
+            var surfaceContainerLowest = isDark
+              ? lighten(background, 0.04)
+              : lighten(background, 0.02);
+            var surfaceContainerLow = isDark
+              ? lighten(background, 0.08)
+              : lighten(background, 0.06);
+            var surfaceContainer = surface;
+            var surfaceContainerHigh = isDark
+              ? lighten(background, 0.16)
+              : darken(background, 0.04);
+            var surfaceContainerHighest = isDark
+              ? lighten(background, 0.22)
+              : darken(background, 0.08);
+            var surfaceVariant = surfaceContainerHighest;
+            var onBackground = isDark ? "#e5e2e1" : "#262013";
+            var onSurface = onBackground;
+            var onSurfaceVariant = isDark
+              ? lighten(background, 0.55)
+              : darken(background, 0.55);
+            var primaryFixedDim = isDark ? darken(primary, 0.04) : primary;
+            var outline = isDark
+              ? lighten(background, 0.4)
+              : darken(primary, 0.3);
+            var outlineVariant = isDark
+              ? lighten(background, 0.2)
+              : darken(background, 0.15);
+            var glassPanel = isDark ? surfaceContainerLow : "#ffffff";
+            var glassHeader = isDark ? background : lighten(background, 0.01);
+            var ambientShadow = isDark ? "#000000" : darken(primary, 0.4);
+            return (
+              "--primary:" +
+              hexToRgbStr(primary) +
+              ";" +
+              "--primary-container:" +
+              hexToRgbStr(primaryContainer) +
+              ";" +
+              "--on-primary:" +
+              hexToRgbStr(onPrimary) +
+              ";" +
+              "--primary-fixed-dim:" +
+              hexToRgbStr(primaryFixedDim) +
+              ";" +
+              "--background:" +
+              hexToRgbStr(background) +
+              ";" +
+              "--surface:" +
+              hexToRgbStr(background) +
+              ";" +
+              "--surface-container-lowest:" +
+              hexToRgbStr(surfaceContainerLowest) +
+              ";" +
+              "--surface-container-low:" +
+              hexToRgbStr(surfaceContainerLow) +
+              ";" +
+              "--surface-container:" +
+              hexToRgbStr(surfaceContainer) +
+              ";" +
+              "--surface-container-high:" +
+              hexToRgbStr(surfaceContainerHigh) +
+              ";" +
+              "--surface-container-highest:" +
+              hexToRgbStr(surfaceContainerHighest) +
+              ";" +
+              "--surface-variant:" +
+              hexToRgbStr(surfaceVariant) +
+              ";" +
+              "--on-background:" +
+              hexToRgbStr(onBackground) +
+              ";" +
+              "--on-surface:" +
+              hexToRgbStr(onSurface) +
+              ";" +
+              "--on-surface-variant:" +
+              hexToRgbStr(onSurfaceVariant) +
+              ";" +
+              "--outline:" +
+              hexToRgbStr(outline) +
+              ";" +
+              "--outline-variant:" +
+              hexToRgbStr(outlineVariant) +
+              ";" +
+              "--glass-panel:" +
+              hexToRgbStr(glassPanel) +
+              ";" +
+              "--glass-header:" +
+              hexToRgbStr(glassHeader) +
+              ";" +
+              "--ambient-shadow:" +
+              hexToRgbStr(ambientShadow) +
+              ";"
+            );
+          }
+          var style = document.createElement("style");
+          style.id = "menu-custom-colors-preload";
+          style.textContent =
+            ':root,[data-theme="light"]{' +
+            buildThemeVars(colors.light, false) +
+            '}html.dark,[data-theme="dark"]{' +
+            buildThemeVars(colors.dark, true) +
+            "}";
+          document.head.appendChild(style);
+
+          var defaultMode = colors.defaultMode || colors.mode || "light";
+          var allowGuestThemeToggle =
+            typeof colors.allowGuestThemeToggle === "boolean"
+              ? colors.allowGuestThemeToggle
+              : true;
+          var guestPref = localStorage.getItem("king-beach-user-theme");
+          var resolved =
+            allowGuestThemeToggle &&
+            (guestPref === "dark" || guestPref === "light")
+              ? guestPref
+              : defaultMode;
+          document.documentElement.classList.toggle(
+            "dark",
+            resolved === "dark",
+          );
+
+          window.applyMenuThemeColors = function (nextColors) {
+            if (!nextColors?.light || !nextColors?.dark) return;
+
+            var themeStyle = document.getElementById(
+              "menu-custom-colors-runtime",
+            );
+            if (!themeStyle) {
+              themeStyle = document.createElement("style");
+              themeStyle.id = "menu-custom-colors-runtime";
+              document.head.appendChild(themeStyle);
+            }
+
+            themeStyle.textContent =
+              ':root,[data-theme="light"]{' +
+              buildThemeVars(nextColors.light, false) +
+              '}html.dark,[data-theme="dark"]{' +
+              buildThemeVars(nextColors.dark, true) +
+              "}";
+
+            var nextMode = nextColors.defaultMode || nextColors.mode || "light";
+            var nextGuestPref = localStorage.getItem("king-beach-user-theme");
+            var nextResolved =
+              nextColors.allowGuestThemeToggle !== false &&
+              (nextGuestPref === "dark" || nextGuestPref === "light")
+                ? nextGuestPref
+                : nextMode;
+            document.documentElement.classList.toggle(
+              "dark",
+              nextResolved === "dark",
+            );
+          };
+        } catch (e) {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+  </head>
+
+  <body
+    class="menu-data-loading antialiased min-h-screen flex flex-col relative selection:bg-primary selection:text-on-primary"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+      <defs>
+        <symbol
+          id="circle-user-round"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M17.925 20.056a6 6 0 0 0-11.851.001" />
+          <circle cx="12" cy="11" r="4" />
+          <circle cx="12" cy="12" r="10" />
+        </symbol>
+        <symbol
+          id="plus"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14" />
+          <path d="M12 5v14" />
+        </symbol>
+        <symbol
+          id="shopping-cart"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="8" cy="21" r="1" />
+          <circle cx="19" cy="21" r="1" />
+          <path
+            d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+          />
+        </symbol>
+        <symbol
+          id="badge"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+          />
+        </symbol>
+        <symbol
+          id="calendar-clock"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M16 14v2.2l1.6 1" />
+          <path d="M16 2v3" />
+          <path
+            d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"
+          />
+          <path d="M3 9h5.859" />
+          <path d="M8 2v3" />
+          <circle cx="16" cy="16" r="6" />
+        </symbol>
+        <symbol
+          id="armchair"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3" />
+          <path
+            d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"
+          />
+          <path d="M5 18v2" />
+          <path d="M19 18v2" />
+        </symbol>
+        <symbol
+          id="message-circle"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"
+          />
+        </symbol>
+        <symbol
+          id="check"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M20 6 9 17l-5-5" />
+        </symbol>
+        <symbol
+          id="circle-check"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m9 12 2 2 4-4" />
+        </symbol>
+        <symbol
+          id="x"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </symbol>
+        <symbol
+          id="code"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m16 18 6-6-6-6" />
+          <path d="m8 6-6 6 6 6" />
+        </symbol>
+        <symbol
+          id="moon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
+          />
+        </symbol>
+        <symbol
+          id="trash-2"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M10 11v6" />
+          <path d="M14 11v6" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+          <path d="M3 6h18" />
+          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </symbol>
+        <symbol
+          id="notebook-pen"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"
+          />
+          <path d="M2 6h4" />
+          <path d="M2 10h4" />
+          <path d="M2 14h4" />
+          <path d="M2 18h4" />
+          <path
+            d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"
+          />
+        </symbol>
+        <symbol
+          id="calendar-check"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M8 2v3" />
+          <path d="M16 2v3" />
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M3 9h18" />
+          <path d="m9 15 2 2 4-4" />
+        </symbol>
+        <symbol
+          id="chevron-down"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </symbol>
+        <symbol
+          id="hourglass"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 22h14" />
+          <path d="M5 2h14" />
+          <path
+            d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"
+          />
+          <path
+            d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"
+          />
+        </symbol>
+        <symbol
+          id="info"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </symbol>
+        <symbol
+          id="globe"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+          <path d="M2 12h20" />
+        </symbol>
+        <symbol
+          id="sun"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </symbol>
+        <symbol
+          id="map-pin"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+          />
+          <circle cx="12" cy="10" r="3" />
+        </symbol>
+        <symbol
+          id="bell-ring"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+          <path d="M22 8c0-2.3-.8-4.3-2-6" />
+          <path
+            d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"
+          />
+          <path d="M4 2C2.8 3.7 2 5.7 2 8" />
+        </symbol>
+        <symbol
+          id="user"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </symbol>
+        <symbol
+          id="user-plus"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <line x1="19" x2="19" y1="8" y2="14" />
+          <line x1="22" x2="16" y1="11" y2="11" />
+        </symbol>
+        <symbol
+          id="minus"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14" />
+        </symbol>
+        <symbol
+          id="utensils"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+          <path d="M7 2v20" />
+          <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+        </symbol>
+        <symbol
+          id="search"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m21 21-4.34-4.34" />
+          <circle cx="11" cy="11" r="8" />
+        </symbol>
+        <symbol
+          id="search-x"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m13.5 8.5-5 5" />
+          <path d="m8.5 8.5 5 5" />
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </symbol>
+        <symbol
+          id="send"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+          />
+          <path d="m21.854 2.147-10.94 10.939" />
+        </symbol>
+        <symbol
+          id="payment-bank"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m3 10 9-6 9 6" />
+          <path d="M5 10h14" />
+          <path d="M6 10v8" />
+          <path d="M10 10v8" />
+          <path d="M14 10v8" />
+          <path d="M18 10v8" />
+          <path d="M3 20h18" />
+        </symbol>
+        <symbol
+          id="payment-wallet"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M4 6.5A2.5 2.5 0 0 1 6.5 4H19a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 1 4 17.5z"
+          />
+          <path d="M4 7h14" />
+          <path d="M16 13h4" />
+          <circle cx="16" cy="13" r=".5" fill="currentColor" />
+        </symbol>
+        <symbol
+          id="payment-phone"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="7" y="2.5" width="10" height="19" rx="2" />
+          <path d="M10 5h4" />
+          <path d="M11 18.5h2" />
+        </symbol>
+        <symbol
+          id="shopping-bag"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M16 10a4 4 0 0 1-8 0" />
+          <path d="M3.103 6.034h17.794" />
+          <path
+            d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"
+          />
+        </symbol>
+        <symbol
+          id="star"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+          />
+        </symbol>
+        <symbol
+          id="headset"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"
+          />
+          <path d="M21 16v2a4 4 0 0 1-4 4h-5" />
+        </symbol>
+        <symbol
+          id="circle-check-big"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+          <path d="m9 11 3 3L22 4" />
+        </symbol>
+        <symbol
+          id="terminal"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 19h8" />
+          <path d="m4 17 6-6-6-6" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header
+      id="main-header"
+      class="fixed top-0 w-full z-40 glass-header transition-all duration-500 transform translate-y-0"
+    >
+      <div
+        class="relative flex justify-center items-center px-6 py-4 w-full max-w-7xl mx-auto"
+      >
+        <button
+          id="theme-toggle"
+          type="button"
+          onclick="toggleTheme()"
+          class="theme-toggle absolute left-4 sm:left-6 w-11 h-11 text-primary rounded-full flex items-center justify-center transition-all duration-300"
+          aria-label="تفعيل الوضع الفاتح"
+          title="تفعيل الوضع الفاتح"
+        >
+          <svg
+            id="theme-toggle-icon"
+            class="lucide-icon text-[22px]"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#sun"></use>
+          </svg>
+        </button>
+        <button
+          id="header-waiter-call"
+          type="button"
+          onclick="openWaiterCallModal()"
+          class="absolute right-4 sm:right-6 flex h-11 w-11 items-center justify-center gap-2 text-primary transition-all duration-300"
+          aria-label="مناداة القرصون"
+          title="مناداة القرصون"
+        >
+          <svg
+            class="lucide-icon text-[21px]"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#bell-ring"></use>
+          </svg>
+          <span class="hidden text-sm font-bold lg:inline"></span>
+        </button>
+        <div class="text-center justify-center">
+          <h1
+            class="menu-brand-title font-playfair text-2xl md:text-3xl tracking-[0.25em] text-primary font-bold uppercase"
+            dir="ltr"
+          >
+            مطعمنا
+          </h1>
+          <p
+            class="py-1 text-[10px] text-on-surface-variant tracking-widest uppercase -mt-1"
+          >
+            Lounge & Restaurant
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="theme-transition-overlay"
+      class="theme-transition-overlay"
+      aria-hidden="true"
+    ></div>
+
+    <main class="flex-grow relative">
+      <section
+        id="screen-menu"
+        class="min-h-screen pt-28 pb-32 px-4 sm:px-8 max-w-7xl mx-auto w-full animate-fade-in"
+      >
+        <div class="flex justify-center">
+          <div
+            id="menu-table-context"
+            class="hidden mt-2 mb-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary"
+          >
+            طاولة
+          </div>
+        </div>
+        <div class="mb-10">
+          <div class="relative w-full max-w-2xl mx-auto mb-8">
+            <svg
+              class="lucide-icon absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#search"></use>
+            </svg>
+            <input
+              id="search-input"
+              oninput="filterDishes()"
+              type="text"
+              placeholder="البحث عن طبق أو مشروب..."
+              class="w-full bg-surface-container-low border border-outline-variant/40 rounded-2xl px-12 py-4 text-on-surface placeholder-on-surface-variant/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-300 text-base"
+            />
+            <button
+              id="clear-search"
+              onclick="clearSearch()"
+              class="hidden absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary"
+            >
+              <svg
+                class="lucide-icon text-xl"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use href="#x"></use>
+              </svg>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto hide-scrollbar pb-2">
+            <div
+              id="category-pills"
+              class="flex gap-3 min-w-max justify-start md:justify-center"
+            ></div>
+          </div>
+
+          <div
+            id="drink-category-pills-wrapper"
+            class="hidden mt-2 pt-3 border-t border-outline-variant/20"
+          >
+            <div
+              id="drink-category-pills"
+              class="flex flex-wrap gap-2 justify-center"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          id="dishes-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        ></div>
+
+        <div id="empty-search-state" class="hidden text-center py-20">
+          <svg
+            class="lucide-icon text-6xl text-outline-variant mb-4"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#search-x"></use>
+          </svg>
+          <h3 class="text-xl font-bold text-on-surface mb-2">
+            لم نجد أي نتائج متطابقة
+          </h3>
+          <p class="text-on-surface-variant text-sm">
+            جرب البحث بكلمات أخرى أو اختر تصنيفاً مختلفاً.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div id="floating-cart-fab" class="fixed bottom-6 left-6 z-40">
+      <button
+        onclick="openCartModal()"
+        aria-label="عرض السلة"
+        class="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center gold-glow gold-breath hover:scale-110 active:scale-95 transition-all duration-300 relative shadow-2xl cursor-pointer"
+      >
+        <svg class="lucide-icon text-3xl" aria-hidden="true" focusable="false">
+          <use href="#shopping-cart"></use>
+        </svg>
+        <span
+          id="fab-badge-count"
+          class="absolute -top-1 -right-1 bg-error text-on-error w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 border-background hidden"
+          >0</span
+        >
+      </button>
+    </div>
+
+    <div
+      id="product-modal"
+      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <div
+        id="product-modal-content"
+        class="w-full max-w-xl max-h-[90vh] glass-panel rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col relative overflow-hidden transform translate-y-full sm:translate-y-0 transition-transform duration-300"
+      >
+        <button
+          onclick="closeProductModal()"
+          class="absolute top-4 left-4 z-30 p-2 bg-surface-container/80 rounded-full text-on-surface hover:text-primary transition-colors"
+        >
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
+        </button>
+
+        <div class="overflow-y-auto p-6 md:p-8 flex-1">
+          <div
+            class="w-full h-60 md:h-72 rounded-2xl overflow-hidden relative mb-6 shadow-xl bg-surface-container-low"
+          >
+            <img
+              id="modal-dish-img"
+              src=""
+              alt=""
+              class="w-full h-full object-cover"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent pointer-events-none"
+            ></div>
+          </div>
+
+          <div id="modal-dish-tags" class="flex gap-2 mb-3"></div>
+
+          <div id="modal-dish-sizes" class="flex flex-wrap gap-2 mb-5"></div>
+
+          <div class="flex justify-between items-start mb-4 gap-4">
+            <h2
+              id="modal-dish-title"
+              class="font-tajawal text-2xl md:text-3xl text-primary font-bold"
+            ></h2>
+            <span
+              id="modal-dish-price"
+              class="font-price font-bold text-2xl md:text-3xl text-primary shrink-0"
+            ></span>
+          </div>
+
+          <p
+            id="modal-dish-desc"
+            class="text-on-surface-variant text-sm md:text-base leading-relaxed mb-8"
+          ></p>
+
+          <hr class="border-outline-variant/30 mb-6" />
+
+          <div class="space-y-6">
+            <div class="flex items-center justify-between">
+              <span
+                class="text-xs font-bold uppercase tracking-widest text-on-surface"
+                >الكمية</span
+              >
+              <div
+                class="flex items-center gap-4 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/40"
+              >
+                <button
+                  onclick="adjustModalQty(-1)"
+                  class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  <svg
+                    class="lucide-icon text-lg"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <use href="#minus"></use>
+                  </svg>
+                </button>
+                <span
+                  id="modal-dish-qty"
+                  class="font-bold text-on-surface w-6 text-center"
+                  >1</span
+                >
+                <button
+                  onclick="adjustModalQty(1)"
+                  class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  <svg
+                    class="lucide-icon text-lg"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <use href="#plus"></use>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col space-y-2">
+              <label
+                for="modal-notes"
+                class="text-xs font-bold uppercase tracking-widest text-on-surface"
+                >تعليمات خاصة</label
+              >
+              <textarea
+                id="modal-notes"
+                placeholder="حساسية طعام، خيارات خاصة، أو تفضيلات الوجبة..."
+                rows="2"
+                class="custom-input w-full text-on-surface text-sm placeholder-on-surface-variant/40 p-2 resize-none"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="p-6 bg-surface-container-lowest/90 border-t border-outline-variant/20"
+        >
+          <button
+            onclick="addModalItemToCart()"
+            class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold uppercase tracking-widest py-4 rounded-xl flex justify-center items-center gap-3 transition-all duration-300 gold-glow"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#shopping-bag"></use>
+            </svg>
+            <span id="modal-add-btn-text" class="font-price font-bold"
+              >إضافة إلى السلة</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="cart-drawer"
+      class="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <div
+        id="cart-drawer-content"
+        class="w-full max-w-xl h-full glass-panel flex flex-col relative transform translate-x-full rtl:-translate-x-full transition-transform duration-300"
+      >
+        <div
+          class="p-6 border-b border-outline-variant/30 flex justify-between items-center"
+        >
+          <div class="flex items-center gap-3">
+            <svg
+              class="lucide-icon text-primary text-2xl"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#shopping-cart"></use>
+            </svg>
+            <h2 class="font-tajawal text-xl font-bold text-on-surface">
+              طلبك الحالي
+            </h2>
+          </div>
+          <button
+            onclick="closeCartModal()"
+            class="p-2 text-on-surface-variant hover:text-primary"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#x"></use>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          <div id="cart-items-list" class="space-y-4"></div>
+
+          <div id="empty-cart-state" class="hidden text-center py-16">
+            <svg
+              class="lucide-icon text-6xl text-outline-variant/50 mb-4"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#shopping-bag"></use>
+            </svg>
+            <h3 class="text-lg font-bold text-on-surface mb-2">
+              سلتك فارغة حالياً
+            </h3>
+            <p class="text-sm text-on-surface-variant mb-6">
+              استكشف قائمة الأصناف وأضف أطباقك المفضلة.
+            </p>
+            <button
+              onclick="closeCartModal()"
+              class="inline-flex items-center justify-center gap-2 bg-primary/10 border border-primary text-primary px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary hover:text-on-primary transition-all duration-300 shadow-lg hover:shadow-primary/20"
+            >
+              <svg
+                class="lucide-icon text-lg"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use href="#utensils"></use>
+              </svg>
+              <span>تصفح الأصناف</span>
+            </button>
+          </div>
+
+          <div
+            id="cart-summary-section"
+            class="border-t border-outline-variant/30 pt-6 space-y-3"
+          >
+            <div class="flex justify-between text-sm text-on-surface-variant">
+              <span>المجموع الفرعي</span>
+              <span
+                id="summary-subtotal"
+                class="font-price font-bold text-on-surface text-base"
+                >₪0.00</span
+              >
+            </div>
+            <div
+              class="flex justify-between text-lg font-bold border-t border-outline-variant/30 pt-3"
+            >
+              <span class="text-on-surface">الإجمالي</span>
+              <span
+                id="summary-total"
+                class="text-primary font-price text-2xl font-bold"
+                >₪0.00</span
+              >
+            </div>
+          </div>
+
+          <div
+            id="cart-form-section"
+            class="border-t border-outline-variant/30 pt-6 space-y-5"
+          >
+            <h3
+              class="text-xs font-bold uppercase tracking-widest text-primary/80 flex items-center gap-2"
+            >
+              <svg
+                class="lucide-icon text-sm"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use href="#badge"></use>
+              </svg>
+              <span>معلومات الطلب والتوصيل</span>
+            </h3>
+
+            <div class="space-y-2">
+              <label
+                for="customer-name"
+                class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary"
+              >
+                <svg
+                  class="lucide-icon text-base"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#user"></use>
+                </svg>
+                <span>اسم الضيف الكريم</span>
+                <span class="text-error">*</span>
+              </label>
+              <div class="relative flex items-center">
+                <svg
+                  class="lucide-icon absolute right-3.5 text-on-surface-variant/50 pointer-events-none text-xl"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#circle-user-round"></use>
+                </svg>
+                <input
+                  id="customer-name"
+                  type="text"
+                  placeholder="أدخل اسمك الكريم..."
+                  class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl pr-11 pl-4 py-3 text-on-surface text-sm placeholder-on-surface-variant/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 transition-all duration-300 shadow-sm"
+                />
+              </div>
+            </div>
+
+            <!-- <div class="space-y-2">
+              <label
+                for="customer-location"
+                class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary"
+              >
+                <svg
+                  class="lucide-icon text-base"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#map-pin"></use>
+                </svg>
+                <span>موقع الجلوس</span>
+                <span class="text-error">*</span>
+              </label>
+              <div class="relative flex items-center">
+                <svg
+                  class="lucide-icon absolute right-3.5 text-on-surface-variant/50 pointer-events-none text-xl z-10"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#armchair"></use>
+                </svg>
+                <select
+                  id="customer-location"
+                  class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl pr-11 pl-4 py-3 text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 transition-all duration-300 shadow-sm appearance-none cursor-pointer"
+                >
+                  <option value="" disabled selected>اختر موقعك...</option>
+                  <optgroup label="الأقسام العامة">
+                    <option value="families">قسم العائلات</option>
+                    <option value="youth">قسم الشباب</option>
+                    <option value="shade">المظلة</option>
+                  </optgroup>
+                  <optgroup label="الشمسيات الداخلية">
+                    <option value="umbrella-1">شمسية رقم واحد</option>
+                    <option value="umbrella-2">شمسية رقم اثنين</option>
+                    <option value="umbrella-3">شمسية رقم ثلااثة</option>
+                    <option value="umbrella-4">شمسية رقم أربعة</option>
+                    <option value="umbrella-5">شمسية رقم خمسة</option>
+                    <option value="umbrella-6">شمسية رقم ستة</option>
+                    <option value="umbrella-7">شمسية رقم سبعة</option>
+                    <option value="umbrella-8">شمسية رقم ثمانية</option>
+                    <option value="umbrella-9">شمسية رقم تسعة</option>
+                    <option value="umbrella-10">شمسية رقم عشرة</option>
+                    <option value="umbrella-11">شمسية رقم احدى عشر</option>
+                    <option value="umbrella-12">شمسية رقم اثنى عشر</option>
+                  </optgroup>
+                  <optgroup label="الشمسيات على البحر">
+                    <option value="beach-1">شمسية على البحر واحد</option>
+                    <option value="beach-2">شمسية على البحر اثنين</option>
+                    <option value="beach-3">شمسية على البحر ثلاثة</option>
+                    <option value="beach-4">شمسية على البحر أربعة</option>
+                    <option value="beach-5">شمسية على البحر خمسة</option>
+                    <option value="beach-6">شمسية على البحر ستة</option>
+                    <option value="beach-7">شمسية على البحر سبعة</option>
+                    <option value="beach-8">شمسية على البحر ثمانية</option>
+                    <option value="beach-9">شمسية على البحر تسعة</option>
+                  </optgroup>
+                </select>
+                <svg
+                  class="lucide-icon absolute left-3.5 text-on-surface-variant/50 pointer-events-none text-xl"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#chevron-down"></use>
+                </svg>
+              </div>
+            </div> -->
+
+            <div class="space-y-2">
+              <label
+                for="order-notes"
+                class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+              >
+                <svg
+                  class="lucide-icon text-base"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#notebook-pen"></use>
+                </svg>
+                <span>ملاحظات عامة على الطلب (اختياري)</span>
+              </label>
+              <div class="relative">
+                <textarea
+                  id="order-notes"
+                  placeholder="أي تفضيلات أو طلبات خاصة للمطبخ..."
+                  rows="2"
+                  class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl p-3 text-on-surface text-sm placeholder-on-surface-variant/40 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 transition-all duration-300 resize-none"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="cart-checkout-footer"
+          class="p-6 border-t border-outline-variant/30 bg-surface-container-lowest/90"
+        >
+          <button
+            onclick="openCheckoutConfirmModal()"
+            class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold uppercase tracking-widest py-4 rounded-xl flex justify-center items-center gap-3 transition-all duration-300 gold-glow"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#circle-check-big"></use>
+            </svg>
+            <span>تأكيد الطلب </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="checkout-confirm-modal"
+      class="payment-modal fixed inset-0 z-[90] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="payment-modal-card payment-modal-card--choice w-full max-w-md glass-panel rounded-3xl p-6 md:p-8 relative animate-fade-in border border-primary/30 shadow-2xl"
+      >
+        <button
+          onclick="closeCheckoutConfirmModal()"
+          class="payment-modal-close absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors"
+          aria-label="إغلاق"
+        >
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
+        </button>
+
+        <div class="payment-modal-kicker">
+          <span class="payment-modal-kicker-line"></span>
+          <span>خطوة أخيرة</span>
+          <span class="payment-modal-kicker-line"></span>
+        </div>
+
+        <div class="payment-modal-icon">
+          <svg
+            class="lucide-icon text-2xl"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#circle-check-big"></use>
+          </svg>
+        </div>
+
+        <div class="payment-modal-heading">
+          <h3 class="font-tajawal text-2xl text-on-surface font-bold mb-2">
+            كيف تود الدفع؟
+          </h3>
+          <p class="text-sm text-on-surface-variant leading-relaxed">
+            اختر الطريقة الأنسب لإرسال طلبك.
+          </p>
+          <div class="payment-total-pill">
+            <span>الإجمالي</span>
+            <strong id="checkout-confirm-total"></strong>
+          </div>
+        </div>
+
+        <div class="payment-choice-grid pt-2">
+          <button
+            onclick="chooseCashPayment()"
+            class="payment-choice payment-choice--primary"
+          >
+            <span class="payment-choice-icon"
+              ><svg class="lucide-icon" aria-hidden="true" focusable="false">
+                <use href="#payment-wallet"></use></svg
+            ></span>
+            <span class="payment-choice-copy"
+              ><strong>الدفع عند الكاشير</strong
+              ><small>أكمل الدفع عند الاستلام</small></span
+            >
+            <span class="payment-choice-arrow" aria-hidden="true">←</span>
+          </button>
+          <button onclick="chooseElectronicPayment()" class="payment-choice">
+            <span class="payment-choice-icon"
+              ><svg class="lucide-icon" aria-hidden="true" focusable="false">
+                <use href="#payment-bank"></use></svg
+            ></span>
+            <span class="payment-choice-copy"
+              ><strong>الدفع الإلكتروني</strong
+              ><small>حوّل وأرفق إشعار الدفع</small></span
+            >
+            <span class="payment-choice-arrow" aria-hidden="true">←</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="electronic-payment-modal"
+      class="payment-modal fixed inset-0 z-[95] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="payment-modal-card payment-modal-card--electronic w-full max-w-lg max-h-[90vh] overflow-y-auto glass-panel rounded-3xl p-6 md:p-8 relative animate-fade-in border border-primary/30 shadow-2xl"
+      >
+        <button
+          onclick="closeElectronicPaymentModal()"
+          class="payment-modal-close absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors"
+          aria-label="إغلاق"
+        >
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
+        </button>
+
+        <div class="payment-modal-heading text-center mb-6">
+          <div class="payment-modal-icon payment-modal-icon--small">
+            <svg
+              class="lucide-icon text-2xl"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#payment-bank"></use>
+            </svg>
+          </div>
+          <div class="payment-modal-kicker justify-center mb-2">
+            <span>دفع آمن</span>
+          </div>
+          <h3 class="font-tajawal text-2xl text-on-surface font-bold mb-2">
+            الدفع الإلكتروني
+          </h3>
+          <p class="text-sm text-on-surface-variant leading-relaxed">
+            اختر مزود الدفع، حوّل المبلغ، ثم أرفق صورة الإشعار.
+          </p>
+        </div>
+
+        <div class="payment-total-pill payment-total-pill--transfer">
+          <span>الإجمالي المطلوب تحويله</span>
+          <strong id="electronic-payment-total"></strong>
+        </div>
+
+        <div class="payment-section-label">
+          <span>01</span><strong>اختر مزود الدفع</strong>
+        </div>
+        <div
+          id="payment-provider-list"
+          class="payment-provider-list grid grid-cols-1 gap-3"
+        ></div>
+
+        <div id="payment-provider-details" class="hidden mt-5 space-y-4">
+          <div
+            class="payment-transfer-card rounded-2xl bg-primary/10 border border-primary/20 p-4"
+          >
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <div>
+                <span class="payment-mini-label">المزود المختار</span>
+                <h4
+                  id="selected-payment-provider-title"
+                  class="font-bold text-primary"
+                ></h4>
+              </div>
+              <button
+                type="button"
+                onclick="backToPaymentProviders()"
+                class="payment-change-provider text-xs text-on-surface-variant hover:text-primary"
+              >
+                تغيير
+              </button>
+            </div>
+            <div
+              id="selected-payment-provider-info"
+              class="space-y-2 text-sm text-on-surface"
+            ></div>
+          </div>
+
+          <div class="payment-section-label">
+            <span>02</span><strong>أرفق إشعار التحويل</strong>
+          </div>
+          <label class="payment-upload-zone" for="payment-proof-input">
+            <span class="payment-upload-icon" aria-hidden="true"
+              ><svg class="lucide-icon" focusable="false">
+                <use href="#send"></use></svg
+            ></span>
+            <span class="payment-upload-copy"
+              ><strong>اضغط لاختيار صورة الإشعار</strong
+              ><small>JPG أو PNG أو WEBP، بحد أقصى 3MB</small></span
+            >
+            <input
+              id="payment-proof-input"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onchange="handlePaymentProofChange(event)"
+            />
+          </label>
+          <div
+            id="payment-proof-preview"
+            class="hidden rounded-2xl overflow-hidden border border-outline-variant/30 bg-surface-container-low p-2"
+          >
+            <img
+              id="payment-proof-preview-image"
+              src=""
+              alt="معاينة إشعار الدفع"
+              class="max-h-48 w-full object-contain rounded-xl"
+            />
+          </div>
+
+          <button
+            type="button"
+            onclick="submitElectronicPayment()"
+            class="payment-submit-button w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl hover:bg-primary-container transition-all gold-glow"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#send"></use>
+            </svg>
+            إرسال الطلب وإشعار الدفع
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="name-warning-modal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
+    >
+      <div
+        class="w-full max-w-sm glass-panel rounded-3xl p-6 md:p-8 text-center space-y-5 relative animate-fade-in border border-primary/30 shadow-2xl"
+      >
+        <button
+          onclick="closeNameWarningModal()"
+          class="absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors"
+        >
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
+        </button>
+
+        <div
+          class="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center mx-auto text-primary gold-glow"
+        >
+          <svg
+            class="lucide-icon text-3xl"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#badge"></use>
+          </svg>
+        </div>
+
+        <div>
+          <h3
+            id="name-warning-title"
+            class="font-tajawal text-xl text-primary font-bold mb-2"
+          >
+            يرجى إدخال اسمك الكريم
+          </h3>
+          <p
+            id="name-warning-message"
+            class="text-xs text-on-surface-variant leading-relaxed"
+          >
+            لطفاً، أكتب اسمك حتى نتمكن من ربط الطلب باسمك وإرساله للمطبخ.
+          </p>
+        </div>
+
+        <div class="space-y-3 pt-1">
+          <input
+            id="modal-quick-name-input"
+            type="text"
+            onkeydown="if (event.key === 'Enter') submitNameFromModal();"
+            placeholder="أدخل الاسم هنا..."
+            class="w-full bg-surface-container-low border border-primary/50 rounded-xl px-4 py-3 text-on-surface text-center font-bold text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder-on-surface-variant/40"
+          />
+          <button
+            onclick="submitNameFromModal()"
+            class="w-full bg-primary text-on-primary font-bold py-3 rounded-xl uppercase tracking-widest hover:bg-primary-container transition-all gold-glow text-sm flex items-center justify-center gap-2"
+          >
+            <svg
+              class="lucide-icon text-lg"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#circle-check"></use>
+            </svg>
+            <span>حفظ وتأكيد الطلب</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="success-modal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
+    >
+      <div
+        class="w-full max-w-md glass-panel rounded-3xl p-8 text-center space-y-6 relative animate-fade-in"
+      >
+        <div
+          class="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center mx-auto text-primary gold-glow"
+        >
+          <svg
+            class="lucide-icon text-4xl"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#circle-check"></use>
+          </svg>
+        </div>
+
+        <div>
+          <h3 class="font-tajawal text-3xl text-primary font-bold mb-2">
+            تم تأكيد طلبكم بنجاح!
+          </h3>
+          <p class="text-sm text-on-surface-variant">
+            شكراً لك
+            <span id="success-guest-name" class="text-primary font-bold"></span
+            >. نقوم الآن بتحضير طلبكم بعناية فائقة.
+          </p>
+          <p
+            id="success-payment-note"
+            class="text-sm text-primary font-bold mt-2"
+          ></p>
+        </div>
+
+        <div
+          class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-2 text-sm text-right"
+        >
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">المبلغ المطلوب:</span>
+            <strong
+              id="success-amount"
+              class="text-primary font-price text-lg font-bold"
+            ></strong>
+          </div>
+        </div>
+
+        <button
+          onclick="closeSuccessModal()"
+          class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl uppercase tracking-widest hover:bg-primary-container transition-all gold-glow"
+        >
+          العودة للتصفح
+        </button>
+      </div>
+    </div>
+
+    <footer
+      class="w-full py-6 px-4 flex justify-center items-center border-t border-outline-variant/10 mt-auto"
+    >
+      <div
+        class="dev-credit flex items-center gap-2 opacity-40 hover:opacity-80 transition-opacity duration-500 cursor-default select-none"
+        dir="ltr"
+      >
+        <svg
+          class="lucide-icon text-sm text-primary"
+          style="font-size: 14px"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <use href="#code"></use>
+        </svg>
+        <span
+          class="text-[11px] tracking-widest text-on-surface-variant uppercase font-cairo"
+        >
+          Built by
+          <button
+            type="button"
+            onclick="window.location.href = 'https://sicode.dev'"
+            onclick="
+              openSiCodeCard();
+              notifySiCodeClick();
+            "
+            class="text-primary font-semibold"
+            aria-haspopup="dialog"
+            aria-controls="sicode-card"
+          >
+            SiCode
+          </button>
+        </span>
+        <svg
+          class="lucide-icon text-sm text-primary"
+          style="font-size: 14px"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <use href="#terminal"></use>
+        </svg>
+      </div>
+    </footer>
+
+    <!-- <div
+      id="sicode-card"
+      class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/65 p-4 opacity-0 pointer-events-none backdrop-blur-sm transition-opacity duration-300"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sicode-card-title"
+      onclick="if (event.target === this) closeSiCodeCard();"
+    >
+      <div
+        id="sicode-card-panel"
+        class="w-full max-w-md translate-y-4 scale-95 opacity-0 transition-all duration-300 ease-out"
+        onclick="event.stopPropagation()"
+      >
+        <div
+          id="sicode-card-content"
+          class="relative w-full overflow-hidden rounded-3xl border border-primary/30 bg-surface-container-lowest px-5 py-5 text-right shadow-2xl"
+          dir="rtl"
+        >
+          <button
+            type="button"
+            onclick="closeSiCodeCard()"
+            class="absolute left-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-surface-container text-on-surface-variant transition hover:text-primary"
+            aria-label="إغلاق"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#x"></use>
+            </svg>
+          </button>
+
+          <div
+            class="mb-4 flex flex-col items-center justify-center gap-1.5 text-center"
+            dir="ltr"
+          >
+            <div class="flex items-center justify-center gap-0">
+              <img
+                src="assets/images/si.svg"
+                alt="Si"
+                class="h-11 w-11 object-contain"
+              />
+
+              <img
+                src="assets/images/code.svg"
+                alt="Code"
+                class="h-auto w-[138px] object-contain"
+              />
+            </div>
+
+            <p class="text-[11px] text-on-surface-variant">
+              Technology That Moves Business Forward
+            </p>
+          </div>
+
+          <p
+            class="mb-4 font-tajawal text-sm leading-6 text-on-surface-variant"
+          >
+            نصمم ونطوّر مواقع وتطبيقات رقمية تساعد الأعمال على الظهور والنمو.
+          </p>
+
+          <div class="space-y-2.5">
+            <a
+              id="sicode-phone-link"
+              href="#"
+              target="_blank"
+              onclick="notifySiCodeClick('واتساب')"
+              rel="noopener noreferrer"
+              class="flex items-center gap-3 rounded-2xl bg-surface-container px-4 py-3 transition hover:bg-surface-container-high"
+            >
+              <svg
+                class="lucide-icon text-primary"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use href="#message-circle"></use>
+              </svg>
+
+              <span class="min-w-0">
+                <span class="block text-xs text-on-surface-variant">
+                  واتساب
+                </span>
+
+                <strong
+                  id="sicode-phone"
+                  dir="ltr"
+                  class="block text-sm font-medium text-on-surface"
+                >
+                  +970 56 999 6988
+                </strong>
+              </span>
+            </a>
+
+            <a
+              id="sicode-website-link"
+              href="#"
+              target="_blank"
+              onclick="notifySiCodeClick('الموقع الإلكتروني')"
+              rel="noopener noreferrer"
+              class="flex items-center gap-3 rounded-2xl bg-surface-container px-4 py-3 transition hover:bg-surface-container-high"
+            >
+              <svg
+                class="lucide-icon text-primary"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use href="#globe"></use>
+              </svg>
+
+              <span class="min-w-0">
+                <span class="block text-xs text-on-surface-variant">
+                  الموقع الإلكتروني
+                </span>
+
+                <strong
+                  id="sicode-website"
+                  dir="ltr"
+                  class="block text-sm font-medium text-on-surface"
+                >
+                  www.sicode.dev
+                </strong>
+              </span>
+            </a>
+
+            <div
+              class="flex items-center gap-3 rounded-2xl bg-surface-container px-4 py-3"
+            >
+              <svg
+                class="lucide-icon text-primary"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <use href="#map-pin"></use>
+              </svg>
+
+              <span class="min-w-0">
+                <span class="block text-xs text-on-surface-variant">
+                  الموقع
+                </span>
+
+                <strong
+                  id="sicode-location"
+                  class="block text-sm font-medium text-on-surface"
+                >
+                  فلسطين - غزة
+                </strong>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          id="save-sicode-card"
+          type="button"
+          onclick="
+            saveSiCodeContact();
+            notifySiCodeClick('حفظ الكرت');
+          "
+          class="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3.5 font-tajawal font-bold text-on-primary transition hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
+        >
+          <svg class="lucide-icon text-xl" aria-hidden="true" focusable="false">
+            <use href="#user-plus"></use>
+          </svg>
+
+          <span>حفظ الكرت</span>
+        </button>
+      </div>
+    </div> -->
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+
+    <script>
+      /* ============================================================
+         Dynamic Menu Data (Supabase)
+         The visual/menu logic below still uses CATEGORIES and DISHES.
+         Only their source has changed from hard-coded JS to Supabase.
+         Pass the restaurant UUID as ?restaurant_id=... in the menu URL.
+         ============================================================ */
+      let CATEGORIES = [];
+      let DISHES = [];
+      const MENU_URL_PARAMS = new URLSearchParams(window.location.search);
+      const MENU_PATHNAME = decodeURIComponent(
+        window.location.pathname,
+      ).replace(/\/+$/, "");
+      const MENU_SLUG =
+        MENU_URL_PARAMS.get("slug") ||
+        (!MENU_PATHNAME.includes("/Pages/")
+          ? MENU_PATHNAME.split("/").filter(Boolean).slice(-1)[0]
+          : "") ||
+        "";
+      let MENU_RESTAURANT_ID =
+        MENU_URL_PARAMS.get("restaurant_id") || window.MENU_RESTAURANT_ID || "";
+      let MENU_RESTAURANT_NAME = "مطعمنا";
+      let MENU_PAYMENT_SETTINGS = {
+        bank_palestine: {
+          account_name: "",
+          iban: "",
+          account_number: "",
+          instructions: "",
+        },
+        palpay: { account_name: "", phone: "", instructions: "" },
+        jawwal_pay: { account_name: "", phone: "", instructions: "" },
+      };
+      let MENU_TABLE_ID = MENU_URL_PARAMS.get("table_id") || "";
+      let MENU_TABLE_CODE = MENU_URL_PARAMS.get("table_code") || "";
+      let MENU_QR_SEED = MENU_URL_PARAMS.get("qr_seed") || "";
+      const MENU_REQUESTED_MODE = MENU_URL_PARAMS.get("mode") || "";
+      // QR links carry table_id + qr_seed. Restaurant-only links are public.
+      let MENU_IS_TABLE_MODE =
+        MENU_REQUESTED_MODE !== "public" &&
+        Boolean(MENU_TABLE_ID && MENU_QR_SEED);
+      let MENU_QR_INVALID = false;
+
+      async function resolveMenuRestaurantBySlug() {
+        if (MENU_RESTAURANT_ID || !MENU_SLUG || !window.supabase) return;
+
+        const { data, error } = await supabase.rpc(
+          "get_public_restaurant_by_slug",
+          { p_slug: MENU_SLUG },
+        );
+        if (error) throw error;
+
+        MENU_RESTAURANT_ID = data?.id || "";
+        if (!MENU_RESTAURANT_ID) {
+          throw new Error("لم يتم العثور على المنيو المطلوبة.");
+        }
+      }
+
+      document.body.classList.toggle("public-menu-mode", !MENU_IS_TABLE_MODE);
+      document.body.dataset.menuMode = MENU_IS_TABLE_MODE ? "table" : "public";
+
+      function getMenuColorsStorageKey(restaurantId) {
+        const id = String(restaurantId || "").trim();
+        return id ? `EduPulse_MenuColors_${id}` : "EduPulse_MenuColors";
+      }
+      window.getMenuColorsStorageKey = getMenuColorsStorageKey;
+
+      function normalizeMenuBrandFont(value) {
+        const normalized = String(value || "default").toLowerCase();
+        return ["default", "telma", "chillax", "kidzhood", "naveid"].includes(
+          normalized,
+        )
+          ? normalized
+          : "default";
+      }
+
+      function applyMenuBrandFont(value) {
+        document.documentElement.dataset.menuBrandFont =
+          normalizeMenuBrandFont(value);
+      }
+
+      window.applyMenuBrandFont = applyMenuBrandFont;
+
+      function getCachedRestaurantName() {
+        if (MENU_RESTAURANT_ID) {
+          const specific = localStorage.getItem(
+            `EduPulse_RestaurantName_${MENU_RESTAURANT_ID}`,
+          );
+          if (specific) return specific;
+        }
+
+        if (!MENU_RESTAURANT_ID) {
+          return localStorage.getItem("EduPulse_RestaurantName") || "مطعمنا";
+        }
+        return "مطعمنا";
+      }
+
+      function updateRestaurantBrandName(name) {
+        const resolvedName = String(name || "").trim() || "مطعمنا";
+        MENU_RESTAURANT_NAME = resolvedName;
+
+        const brandTitle = document.querySelector("header h1");
+        if (brandTitle) {
+          brandTitle.textContent = resolvedName;
+        }
+
+        document.title = `${resolvedName} - المنيو الرقمي`;
+      }
+
+      async function loadRestaurantBrandFromSupabase() {
+        if (!window.supabase) return;
+
+        const cachedName = getCachedRestaurantName();
+
+        if (!MENU_RESTAURANT_ID) {
+          updateRestaurantBrandName(cachedName);
+          return;
+        }
+
+        try {
+          // Anonymous QR/table visitors are not allowed to read the
+          // "restaurants" row directly (RLS only allows logged-in members),
+          // so branding is exposed through a dedicated public RPC instead.
+          const { data, error } = await supabase.rpc(
+            "get_public_restaurant_brand",
+            { p_restaurant_id: MENU_RESTAURANT_ID },
+          );
+
+          if (error) throw error;
+
+          // Payment instructions are exposed through a dedicated public RPC.
+          // Do not wait for the restaurant row below: anonymous QR visitors
+          // may not be allowed to read that row directly by RLS.
+          const { data: paymentSettingsData, error: paymentSettingsError } =
+            await supabase.rpc("get_public_restaurant_payment_settings", {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+            });
+          if (paymentSettingsError) {
+            console.warn(
+              "Could not load public payment settings:",
+              paymentSettingsError,
+            );
+          } else if (
+            paymentSettingsData &&
+            typeof paymentSettingsData === "object"
+          ) {
+            MENU_PAYMENT_SETTINGS = {
+              ...MENU_PAYMENT_SETTINGS,
+              ...paymentSettingsData,
+            };
+          }
+
+          if (!data) {
+            updateRestaurantBrandName(cachedName);
+            return;
+          }
+
+          // اسم المطعم
+          if (data.name) {
+            localStorage.setItem("EduPulse_RestaurantName", data.name);
+
+            localStorage.setItem(
+              `EduPulse_RestaurantName_${MENU_RESTAURANT_ID}`,
+              data.name,
+            );
+
+            updateRestaurantBrandName(data.name);
+          }
+
+          // ثيم هذا المطعم فقط
+          if (data.menu_theme && typeof data.menu_theme === "object") {
+            const theme = data.menu_theme;
+
+            applyMenuBrandFont(theme.brandFont);
+
+            // نطبّق الثيم القادم مباشرة من Supabase
+            if (typeof window.applyMenuThemeColors === "function") {
+              window.applyMenuThemeColors(theme);
+              const preload = document.getElementById(
+                "menu-custom-colors-preload",
+              );
+              if (preload) preload.remove();
+            }
+
+            // نخزن نسخة مؤقتة خاصة بهذا المطعم فقط
+            localStorage.setItem(
+              getMenuColorsStorageKey(MENU_RESTAURANT_ID),
+              JSON.stringify(theme),
+            );
+
+            console.log(
+              "Menu theme loaded for restaurant:",
+              MENU_RESTAURANT_ID,
+              theme,
+            );
+          }
+
+          updateRestaurantBrandName(data.name || cachedName);
+        } catch (error) {
+          console.warn("Could not load restaurant branding/theme:", error);
+
+          updateRestaurantBrandName(cachedName);
+        }
+      }
+
+      function updateTableContextFromUrl() {
+        const tableBadge = document.getElementById("menu-table-context");
+        if (!tableBadge) return;
+
+        if (!MENU_IS_TABLE_MODE) {
+          tableBadge.classList.add("hidden");
+          return;
+        }
+
+        if (MENU_TABLE_CODE) {
+          tableBadge.textContent = `طاولة ${MENU_TABLE_CODE}`;
+          tableBadge.classList.remove("hidden");
+        } else if (MENU_TABLE_ID) {
+          tableBadge.textContent = `طاولة ${MENU_TABLE_ID}`;
+          tableBadge.classList.remove("hidden");
+        } else {
+          tableBadge.textContent = "طلب عادي";
+          tableBadge.classList.add("hidden");
+        }
+      }
+
+      async function validateTableQrCode() {
+        if (!MENU_TABLE_ID) return true;
+        MENU_QR_INVALID = !MENU_QR_SEED;
+        return !MENU_QR_INVALID;
+      }
+
+      function normalizeMenuCategory(row) {
+        return {
+          id: row.id,
+          name: String(row.name || "").trim(),
+          description: String(row.description || "").trim(),
+          sortOrder: Number(row.sort_order || 0),
+          active: row.active !== false && row.is_active !== false,
+        };
+      }
+
+      function normalizeMenuItem(row, sizes) {
+        const basePrice = row.price ?? row.base_price ?? 0;
+
+        return {
+          id: row.id,
+          title: String(row.name || "").trim(),
+          category: row.category_id,
+          categoryName: row.menu_categories?.name || "",
+          price: Number(basePrice) || 0,
+          image: row.image_url || "",
+          desc: String(row.description || "").trim(),
+          featured: row.featured === true,
+          tags: Array.isArray(row.tags) ? row.tags : [],
+          subCategory: row.sub_category || null,
+          requiresWaiterInquiry: row.requires_waiter_inquiry === true,
+          advanceBookingHours: Number(row.advance_booking_hours || 0) || 0,
+          sizes: (sizes || [])
+            .filter(
+              (size) =>
+                size.menu_item_id === row.id && size.is_active !== false,
+            )
+            .sort(
+              (a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0),
+            )
+            .map((size) => ({
+              id: size.id,
+              name: String(size.name || "").trim(),
+              price: Number(size.price || 0),
+            })),
+        };
+      }
+
+      async function loadMenuFromSupabase() {
+        if (!window.supabase) {
+          throw new Error("خدمة البيانات غير متاحة.");
+        }
+        if (!MENU_RESTAURANT_ID) {
+          throw new Error(
+            "Restaurant ID is missing. Open the menu with ?restaurant_id=YOUR_RESTAURANT_UUID",
+          );
+        }
+
+        const [categoriesRes, itemsRes] = await Promise.all([
+          supabase
+            .from("menu_categories")
+            .select("*")
+            .eq("restaurant_id", MENU_RESTAURANT_ID)
+            .order("sort_order", { ascending: true })
+            .order("name", { ascending: true }),
+
+          supabase
+            .from("menu_items")
+            .select("*")
+            .eq("restaurant_id", MENU_RESTAURANT_ID)
+            .order("sort_order", { ascending: true })
+            .order("created_at", { ascending: true }),
+        ]);
+        if (categoriesRes.error) throw categoriesRes.error;
+        if (itemsRes.error) throw itemsRes.error;
+
+        const categoryRows = categoriesRes.data || [];
+        const itemRows = itemsRes.data || [];
+        let sizeRows = [];
+        const itemIds = itemRows.map((item) => item.id).filter(Boolean);
+        if (itemIds.length) {
+          const { data: sizesData, error: sizesError } = await supabase
+            .from("menu_item_sizes")
+            .select("*")
+            .in("menu_item_id", itemIds)
+            .order("sort_order", { ascending: true });
+          if (sizesError) throw sizesError;
+          sizeRows = (sizesData || []).filter((row) => {
+            const matchesRestaurant =
+              !("restaurant_id" in row) ||
+              row.restaurant_id === MENU_RESTAURANT_ID ||
+              !row.restaurant_id;
+            const matchesActive = !("is_active" in row)
+              ? row.active !== false
+              : row.is_active !== false;
+            return matchesRestaurant && matchesActive;
+          });
+        }
+        const fallbackCategory = { id: "uncategorized", name: "عام" };
+        const categoryMap = new Map(categoryRows.map((row) => [row.id, row]));
+        categoryMap.set(fallbackCategory.id, fallbackCategory);
+
+        CATEGORIES = [
+          { id: "all", name: "الكل" },
+          { ...fallbackCategory, active: true },
+          ...categoryRows.map(normalizeMenuCategory),
+        ];
+
+        DISHES = itemRows
+          .map((row) => {
+            const resolvedCategoryId = row.category_id || fallbackCategory.id;
+            return normalizeMenuItem(
+              {
+                ...row,
+                category_id: resolvedCategoryId,
+                menu_categories: categoryMap.get(resolvedCategoryId),
+              },
+              sizeRows,
+            );
+          })
+          .filter(Boolean);
+
+        return { categories: CATEGORIES, dishes: DISHES };
+      }
+
+      let menuRealtimeChannel = null;
+      function subscribeToMenuChanges() {
+        if (!window.supabase || !MENU_RESTAURANT_ID) return;
+        if (menuRealtimeChannel) supabase.removeChannel(menuRealtimeChannel);
+
+        menuRealtimeChannel = supabase
+          .channel(`public-menu-${MENU_RESTAURANT_ID}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "menu_categories",
+              filter: `restaurant_id=eq.${MENU_RESTAURANT_ID}`,
+            },
+            reloadMenuData,
+          )
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "menu_items",
+              filter: `restaurant_id=eq.${MENU_RESTAURANT_ID}`,
+            },
+            reloadMenuData,
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "menu_item_sizes" },
+            reloadMenuData,
+          )
+          .subscribe();
+      }
+
+      let menuReloadTimer = null;
+      async function reloadMenuData() {
+        clearTimeout(menuReloadTimer);
+        menuReloadTimer = setTimeout(async () => {
+          try {
+            await loadMenuFromSupabase();
+            renderCategoryPills();
+            renderDrinkCategories();
+            filterDishes();
+          } catch (error) {
+            console.error("Menu reload error:", error);
+          }
+        }, 250);
+      }
+
+      /* State variables */
+      let selectedCategory = "all";
+      let pendingCheckoutData = null;
+      let selectedPaymentProvider = null;
+      let paymentProofData = "";
+      let selectedDrinkCategory = "all";
+      let activeDishModal = null;
+      let modalQuantity = 1;
+      let cart = [];
+      let themeSwitchInProgress = false;
+      let selectedSize = null;
+      let pendingReservationItem = null;
+      let activeWaiterInquiryDish = null;
+      let activeServiceRatingOrder = null;
+      let selectedServiceRating = 0;
+      const selectedCardSizes = {};
+
+      function requiresWaiterInquiry(dish) {
+        return dish?.requiresWaiterInquiry === true;
+      }
+
+      function getAdvanceBookingHours(dish) {
+        const hours = Number(dish?.advanceBookingHours || 0);
+        return Number.isFinite(hours) && hours > 0 ? hours : 0;
+      }
+      function bookingDurationText(hours) {
+        if (hours === 1) return "ساعة واحدة";
+        if (hours === 2) return "ساعتين";
+        return `${hours} ساعات`;
+      }
+
+      /* Menu Rendering & Selection */
+      function renderCategoryPills() {
+        const container = document.getElementById("category-pills");
+        if (!container) return;
+        container.innerHTML = CATEGORIES.map(
+          (cat) => `
+            <button onclick="selectCategory('${cat.id}')" 
+                    class="px-6 py-2.5 rounded-full font-tajawal font-bold text-xs sm:text-sm uppercase tracking-widest transition-all duration-300 ${
+                      selectedCategory === cat.id
+                        ? "bg-primary text-on-primary shadow-[0_0_15px_rgba(242,202,80,0.3)] font-bold scale-105"
+                        : "glass-panel-light text-on-surface hover:bg-primary/10 hover:border-primary/50"
+                    }">
+                ${cat.name}
+            </button>
+        `,
+        ).join("");
+      }
+
+      function renderDrinkCategories() {
+        const wrapper = document.getElementById("drink-category-pills-wrapper");
+        const container = document.getElementById("drink-category-pills");
+        if (!wrapper || !container) return;
+        const hasSubcategories = ["cold-drinks", "desserts"].includes(
+          selectedCategory,
+        );
+
+        if (!hasSubcategories) {
+          wrapper.classList.add("hidden");
+          container.innerHTML = "";
+          return;
+        }
+
+        wrapper.classList.remove("hidden");
+        const subcategoryMap = new Map();
+        DISHES.filter(
+          (dish) => dish.category === selectedCategory && dish.subCategory,
+        ).forEach((dish) => {
+          const value = String(dish.subCategory);
+          if (!subcategoryMap.has(value)) subcategoryMap.set(value, value);
+        });
+
+        const subcategories = [
+          { id: "all", name: "الكل" },
+          ...Array.from(subcategoryMap.entries()).map(([id, name]) => ({
+            id,
+            name,
+          })),
+        ];
+        container.innerHTML = subcategories
+          .map(
+            (item) => `
+        <button
+            onclick="selectDrinkCategory('${item.id}')"
+            class="px-5 py-2 rounded-full font-tajawal font-semibold text-xs sm:text-sm transition-all duration-300 ${
+              selectedDrinkCategory === item.id
+                ? "bg-primary text-on-primary shadow-[0_0_10px_rgba(242,202,80,0.25)] scale-105"
+                : "glass-panel-light text-on-surface hover:bg-primary/10 hover:border-primary/40"
+            }">
+            ${item.name}
+        </button>
+    `,
+          )
+          .join("");
+      }
+
+      function selectDrinkCategory(id) {
+        selectedDrinkCategory = id;
+        renderDrinkCategories();
+        filterDishes();
+      }
+
+      function selectCategory(catId) {
+        selectedCategory = catId;
+        selectedDrinkCategory = "all";
+        renderDrinkCategories();
+        renderCategoryPills();
+        filterDishes();
+      }
+
+      function selectCardSize(dishId, sizeId, event) {
+        if (event) event.stopPropagation();
+        selectedCardSizes[dishId] = sizeId;
+
+        const dish = DISHES.find((d) => d.id === dishId);
+        if (!dish || !dish.sizes) return;
+
+        const selectedSizeObj = dish.sizes.find((s) => s.id === sizeId);
+        if (!selectedSizeObj) return;
+
+        const priceTag = document.getElementById(`dish-price-${dishId}`);
+        if (priceTag) {
+          priceTag.textContent = `₪${selectedSizeObj.price}`;
+        }
+
+        const container = document.getElementById(
+          `dish-sizes-container-${dishId}`,
+        );
+        if (container) {
+          container.innerHTML = dish.sizes
+            .map((size) => {
+              const isSelected = size.id === sizeId;
+              return `
+                <button 
+                    onclick="selectCardSize(${dish.id}, '${size.id}', event)" 
+                    class="px-2.5 py-1 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                      isSelected
+                        ? "bg-primary text-on-primary border-primary font-bold shadow-sm scale-105"
+                        : "bg-surface-container/60 text-on-surface-variant border-outline-variant/30 hover:border-primary/50"
+                    }"
+                >
+                    ${size.name} (${size.price}₪)
+                </button>
+            `;
+            })
+            .join("");
+          container.insertAdjacentHTML(
+            "afterbegin",
+            '<span class="text-[11px] text-on-surface-variant font-semibold ml-1">الحجم:</span>',
+          );
+        }
+      }
+
+      function renderDishes(dishesToRender = DISHES) {
+        const grid = document.getElementById("dishes-grid");
+        const emptyState = document.getElementById("empty-search-state");
+        if (!grid) return;
+
+        if (dishesToRender.length === 0) {
+          grid.innerHTML = "";
+          if (emptyState) emptyState.classList.remove("hidden");
+          return;
+        }
+
+        if (emptyState) emptyState.classList.add("hidden");
+
+        grid.innerHTML = dishesToRender
+          .map((dish, idx) => {
+            let currentPrice = dish.price;
+            let sizesHtml = "";
+            const isInquiryOnly = requiresWaiterInquiry(dish);
+
+            if (dish.sizes && dish.sizes.length > 0) {
+              const lowestSize = dish.sizes.reduce(
+                (prev, curr) => (curr.price < prev.price ? curr : prev),
+                dish.sizes[0],
+              );
+              if (!selectedCardSizes[dish.id]) {
+                selectedCardSizes[dish.id] = lowestSize.id;
+              }
+              const activeSize =
+                dish.sizes.find((s) => s.id === selectedCardSizes[dish.id]) ||
+                lowestSize;
+              currentPrice = activeSize.price;
+
+              sizesHtml = `
+                    <div id="dish-sizes-container-${dish.id}" class="flex flex-wrap items-center gap-1.5 mb-4">
+                        <span class="text-[11px] text-on-surface-variant font-semibold ml-1">الحجم:</span>
+                        ${dish.sizes
+                          .map((size) => {
+                            const isSelected = activeSize.id === size.id;
+                            return `
+                                <button 
+                                    onclick="selectCardSize('${dish.id}', '${size.id}', event)"
+                                    class="px-2.5 py-1 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                                      isSelected
+                                        ? "bg-primary text-on-primary border-primary font-bold shadow-sm scale-105"
+                                        : "bg-surface-container/60 text-on-surface-variant border-outline-variant/30 hover:border-primary/50"
+                                    }"
+                                >
+                                    ${size.name} (${size.price}₪)
+                                </button>
+                            `;
+                          })
+                          .join("")}
+                    </div>
+                `;
+            }
+
+            const delay = Math.min(idx * 0.05, 0.4).toFixed(2);
+            const actionHandler = isInquiryOnly
+              ? `openWaiterInquiry('${dish.id}')`
+              : `quickAddToCart('${dish.id}')`;
+            const productTrigger = MENU_IS_TABLE_MODE
+              ? `onclick="openProductModal('${dish.id}')"`
+              : "";
+
+            return `
+                <article style="animation-delay: ${delay}s" class="menu-card glass-panel rounded-3xl overflow-hidden group relative flex flex-col h-full hover:border-primary/40 hover-lift animate-card-enter">
+                    <div class="menu-product-trigger relative h-64 w-full overflow-hidden ${MENU_IS_TABLE_MODE ? "cursor-pointer" : ""}" ${productTrigger}>
+                        <img
+                            src="${dish.image}"
+                            alt="${dish.title}"
+                            loading="${idx < 3 ? "eager" : "lazy"}"
+                            decoding="async"
+                            ${idx < 3 ? 'fetchpriority="high"' : ""}
+                            class="object-cover w-full h-full img-zoom-hover"
+                        />
+                        <div class="absolute top-4 right-4 flex flex-wrap gap-1.5">
+                            ${(dish.tags || []).map((t) => `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-background/70 backdrop-blur-md text-primary border border-primary/30 uppercase tracking-widest shadow-sm">${t}</span>`).join("")}
+                        </div>
+                    </div>
+
+                    <div class="p-6 flex flex-col flex-grow relative -mt-10">
+                        <div class="menu-product-trigger flex justify-between items-start mb-2 gap-2" ${productTrigger}>
+                            <h3 class="font-Tajawal text-xm text-primary font-bold bg-surface-container/80 backdrop-blur-md px-3 py-1 rounded-full border border-primary/20 shrink-0 shadow-inner">
+                                ${dish.title}
+                            </h3>
+                            <span id="dish-price-${dish.id}" class="font-Tajawal text-xm text-primary font-bold bg-surface-container/80 backdrop-blur-md px-3 py-1 rounded-full border border-primary/20 shrink-0 shadow-inner">${isInquiryOnly ? "السعر حسب السوق" : `₪${currentPrice ?? 0}`}</span>
+                        </div>
+
+                        <p class="text-xs text-on-surface-variant/80 mb-4 flex-grow leading-relaxed line-clamp-3">${dish.desc || ""}</p>
+
+                        ${sizesHtml}
+
+                        ${
+                          MENU_IS_TABLE_MODE
+                            ? `
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/20">
+                            <button onclick="openProductModal('${dish.id}')" class="text-xs text-on-surface-variant hover:text-primary flex items-center gap-1 font-semibold transition-colors">
+                                <svg class="lucide-icon text-base" aria-hidden="true" focusable="false"><use href="#info"></use></svg>
+                                <span>التفاصيل</span>
+                            </button>
+                            <button onclick="${actionHandler}" class="menu-order-action flex items-center gap-2 bg-primary/10 border border-primary text-primary px-4 py-2 rounded-full font-bold text-xs hover:bg-primary hover:text-on-primary transition-all duration-300 shadow-md hover:shadow-primary/20">
+                                    ${createLucideIcon(isInquiryOnly ? "support_agent" : "add_shopping_cart", "text-base")}
+                                <span>${isInquiryOnly ? "استفسر من القرصون" : "إضافة"}</span>
+                            </button>
+                        </div>`
+                            : ""
+                        }
+                    </div>
+                </article>
+            `;
+          })
+          .join("");
+      }
+
+      function filterDishes() {
+        const searchInput = document.getElementById("search-input");
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+        const clearBtn = document.getElementById("clear-search");
+
+        if (clearBtn) {
+          if (query.length > 0) {
+            clearBtn.classList.remove("hidden");
+          } else {
+            clearBtn.classList.add("hidden");
+          }
+        }
+
+        const filtered = DISHES.filter((d) => {
+          const matchesCategory =
+            selectedCategory === "all" || d.category === selectedCategory;
+          const matchesSearch =
+            d.title.toLowerCase().includes(query) ||
+            (d.desc && d.desc.toLowerCase().includes(query));
+          let matchesDrink = true;
+
+          if (["cold-drinks", "desserts"].includes(selectedCategory)) {
+            if (selectedDrinkCategory !== "all") {
+              matchesDrink = d.subCategory === selectedDrinkCategory;
+            }
+          }
+          return matchesCategory && matchesDrink && matchesSearch;
+        });
+
+        renderDishes(filtered);
+      }
+
+      function clearSearch() {
+        const searchInput = document.getElementById("search-input");
+        if (searchInput) searchInput.value = "";
+        filterDishes();
+      }
+
+      /* Cart Management */
+      function triggerBadgePop() {
+        const fabBadge = document.getElementById("fab-badge-count");
+        const headerBadge = document.getElementById("cart-badge-count");
+        [fabBadge, headerBadge].forEach((badge) => {
+          if (badge) {
+            badge.classList.remove("badge-pop");
+            void badge.offsetWidth;
+            badge.classList.add("badge-pop");
+          }
+        });
+      }
+
+      function escapeCartHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function showToast(message) {
+        let toast = document.getElementById("menu-toast");
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.id = "menu-toast";
+          toast.setAttribute("role", "status");
+          toast.setAttribute("aria-live", "polite");
+          Object.assign(toast.style, {
+            position: "fixed",
+            left: "50%",
+            bottom: "24px",
+            transform: "translateX(-50%) translateY(12px)",
+            opacity: "0",
+            pointerEvents: "none",
+            zIndex: "9999",
+            maxWidth: "min(90vw, 360px)",
+            padding: "12px 18px",
+            borderRadius: "9999px",
+            background: "rgba(21, 24, 30, 0.94)",
+            color: "#f8fafc",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.28)",
+            fontSize: "13px",
+            fontWeight: "700",
+            lineHeight: "1.5",
+            transition: "opacity 0.25s ease, transform 0.25s ease",
+            textAlign: "center",
+            border: "1px solid rgba(255,255,255,0.08)",
+          });
+          document.body.appendChild(toast);
+        }
+
+        toast.textContent = message;
+        toast.style.opacity = "1";
+        toast.style.transform = "translateX(-50%) translateY(0)";
+
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => {
+          toast.style.opacity = "0";
+          toast.style.transform = "translateX(-50%) translateY(12px)";
+        }, 2200);
+      }
+
+      function addToCart(dish, qty, notes) {
+        if (!MENU_IS_TABLE_MODE) return;
+        const existingIndex = cart.findIndex(
+          (item) =>
+            item.dish.id === dish.id &&
+            item.dish.title === dish.title &&
+            (item.dish.size || null) === (dish.size || null) &&
+            item.notes === notes,
+        );
+        if (existingIndex > -1) {
+          cart[existingIndex].quantity += qty;
+        } else {
+          cart.push({ dish, quantity: qty, notes });
+        }
+        updateCartUI();
+        triggerBadgePop();
+        showToast(`تمت إضافة "${dish.title}" إلى سلتك`);
+      }
+
+      function updateCartQty(index, delta) {
+        if (!cart[index]) return;
+        cart[index].quantity += delta;
+        if (cart[index].quantity <= 0) {
+          cart.splice(index, 1);
+        }
+        updateCartUI();
+      }
+
+      function removeFromCart(index) {
+        if (!cart[index]) return;
+        cart.splice(index, 1);
+        updateCartUI();
+      }
+
+      function updateCartUI() {
+        const totalItemsCount = cart.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        );
+        const headerBadge = document.getElementById("cart-badge-count");
+        const fabBadge = document.getElementById("fab-badge-count");
+
+        if (totalItemsCount > 0) {
+          if (headerBadge) {
+            headerBadge.textContent = totalItemsCount;
+            headerBadge.classList.remove("hidden");
+          }
+          if (fabBadge) {
+            fabBadge.textContent = totalItemsCount;
+            fabBadge.classList.remove("hidden");
+          }
+        } else {
+          if (headerBadge) headerBadge.classList.add("hidden");
+          if (fabBadge) fabBadge.classList.add("hidden");
+        }
+
+        const itemsContainer = document.getElementById("cart-items-list");
+        const emptyState = document.getElementById("empty-cart-state");
+        const summarySection = document.getElementById("cart-summary-section");
+        const formSection = document.getElementById("cart-form-section");
+        const checkoutFooter = document.getElementById("cart-checkout-footer");
+
+        if (cart.length === 0) {
+          if (itemsContainer) itemsContainer.innerHTML = "";
+          if (emptyState) emptyState.classList.remove("hidden");
+          if (summarySection) summarySection.classList.add("hidden");
+          if (formSection) formSection.classList.add("hidden");
+          if (checkoutFooter) checkoutFooter.classList.add("hidden");
+        } else {
+          if (emptyState) emptyState.classList.add("hidden");
+          if (summarySection) summarySection.classList.remove("hidden");
+          if (formSection) formSection.classList.remove("hidden");
+          if (checkoutFooter) checkoutFooter.classList.remove("hidden");
+
+          let subtotal = 0;
+          if (itemsContainer) {
+            itemsContainer.innerHTML = cart
+              .map((item, idx) => {
+                const itemTotal = item.dish.price * item.quantity;
+                const dishTitle = escapeCartHtml(item.dish.title);
+                const dishImage = escapeCartHtml(item.dish.image);
+                const itemNotes = escapeCartHtml(item.notes);
+                subtotal += itemTotal;
+
+                return `
+                        <div class="flex items-center justify-between glass-panel-light p-3.5 rounded-2xl gap-3">
+                            <img src="${dishImage}" alt="${dishTitle}" class="w-16 h-16 rounded-xl object-cover shrink-0"/>
+                            
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-tajawal font-bold text-sm text-on-surface truncate">${dishTitle}</h4>
+                                <p class="text-xs text-primary font-bold mb-1 font-price">₪${item.dish.price} × ${item.quantity} = ₪${itemTotal}</p>
+                                ${item.notes ? `<p class="text-[11px] text-on-surface-variant italic truncate">"${itemNotes}"</p>` : ""}
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="updateCartQty(${idx}, -1)" class="w-7 h-7 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:text-primary">
+                                    <svg class="lucide-icon text-sm" aria-hidden="true" focusable="false"><use href="#minus"></use></svg>
+                                </button>
+                                <span class="font-bold text-sm w-4 text-center">${item.quantity}</span>
+                                <button onclick="updateCartQty(${idx}, 1)" class="w-7 h-7 flex items-center justify-center rounded-full bg-surface-container text-on-surface-variant hover:text-primary">
+                                    <svg class="lucide-icon text-sm" aria-hidden="true" focusable="false"><use href="#plus"></use></svg>
+                                </button>
+                                <button onclick="removeFromCart(${idx})" class="p-1 text-on-surface-variant hover:text-error mr-1">
+                                    <svg class="lucide-icon text-base" aria-hidden="true" focusable="false"><use href="#trash-2"></use></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+              })
+              .join("");
+          }
+
+          const subtotalEl = document.getElementById("summary-subtotal");
+          const totalEl = document.getElementById("summary-total");
+          if (subtotalEl) subtotalEl.textContent = `₪${subtotal.toFixed(2)}`;
+          if (totalEl) totalEl.textContent = `₪${subtotal.toFixed(2)}`;
+        }
+      }
+
+      function openCartModal() {
+        if (!MENU_IS_TABLE_MODE) return;
+        const drawer = document.getElementById("cart-drawer");
+        const content = document.getElementById("cart-drawer-content");
+        if (drawer) drawer.classList.remove("opacity-0", "pointer-events-none");
+        if (content)
+          content.classList.remove("translate-x-full", "rtl:-translate-x-full");
+      }
+
+      function closeCartModal() {
+        const drawer = document.getElementById("cart-drawer");
+        const content = document.getElementById("cart-drawer-content");
+        if (content)
+          content.classList.add("translate-x-full", "rtl:-translate-x-full");
+        if (drawer) drawer.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      /* Modal Management */
+      function openProductModal(dishId) {
+        if (!MENU_IS_TABLE_MODE) return;
+        const dish = DISHES.find((d) => d.id === dishId);
+        if (!dish) return;
+
+        activeDishModal = dish;
+        modalQuantity = 1;
+
+        const imgEl = document.getElementById("modal-dish-img");
+        const titleEl = document.getElementById("modal-dish-title");
+        const descEl = document.getElementById("modal-dish-desc");
+        const qtyEl = document.getElementById("modal-dish-qty");
+        const notesEl = document.getElementById("modal-notes");
+        const priceEl = document.getElementById("modal-dish-price");
+        const sizesContainer = document.getElementById("modal-dish-sizes");
+        const tagsContainer = document.getElementById("modal-dish-tags");
+
+        if (imgEl) imgEl.src = dish.image;
+        if (titleEl) titleEl.textContent = dish.title;
+        if (descEl) descEl.textContent = dish.desc || "";
+        if (qtyEl) qtyEl.textContent = modalQuantity;
+        if (notesEl) notesEl.value = "";
+
+        if (dish.sizes && dish.sizes.length > 0) {
+          const lowestSize = dish.sizes.reduce(
+            (prev, curr) => (curr.price < prev.price ? curr : prev),
+            dish.sizes[0],
+          );
+          const cardSelectedId = selectedCardSizes[dish.id] || null;
+          selectedSize =
+            dish.sizes.find((s) => s.id === cardSelectedId) || lowestSize;
+
+          if (priceEl) priceEl.textContent = `₪${selectedSize.price}`;
+
+          if (sizesContainer) {
+            sizesContainer.innerHTML = dish.sizes
+              .map((size) => {
+                const isSelected = selectedSize.id === size.id;
+                return `
+                    <button
+                        onclick="selectDishSize('${size.id}')"
+                        class="size-btn px-4 py-2 rounded-full border text-xs sm:text-sm font-bold transition-all duration-300 ${
+                          isSelected
+                            ? "bg-primary text-on-primary border-primary shadow-md scale-105"
+                            : "bg-surface-container/60 text-on-surface border-outline-variant/40 hover:bg-primary/20 hover:border-primary"
+                        }">
+                        ${size.name} (${size.price}₪)
+                    </button>
+                `;
+              })
+              .join("");
+          }
+        } else {
+          selectedSize = null;
+          if (priceEl) priceEl.textContent = `₪${dish.price ?? 0}`;
+          if (sizesContainer) sizesContainer.innerHTML = "";
+        }
+
+        if (tagsContainer) {
+          tagsContainer.innerHTML = (dish.tags || [])
+            .map(
+              (t) =>
+                `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-background/70 text-primary border border-primary/30 uppercase tracking-widest">${t}</span>`,
+            )
+            .join("");
+        }
+
+        updateModalButtonText();
+
+        const addButton =
+          document.getElementById("modal-add-btn-text")?.parentElement;
+        const addButtonText = document.getElementById("modal-add-btn-text");
+        if (requiresWaiterInquiry(dish)) {
+          if (priceEl) priceEl.textContent = "السعر حسب السوق";
+          if (addButtonText) addButtonText.textContent = "استفسر من القرصون";
+          if (addButton) addButton.onclick = () => openWaiterInquiry(dish.id);
+        } else if (addButton) {
+          addButton.onclick = () => addModalItemToCart();
+        }
+
+        const modal = document.getElementById("product-modal");
+        const modalContent = document.getElementById("product-modal-content");
+        if (modal) modal.classList.remove("opacity-0", "pointer-events-none");
+        if (modalContent) modalContent.classList.remove("translate-y-full");
+      }
+
+      function selectDishSize(id) {
+        if (!activeDishModal || !activeDishModal.sizes) return;
+        selectedSize = activeDishModal.sizes.find((s) => s.id === id);
+        if (!selectedSize) return;
+
+        selectedCardSizes[activeDishModal.id] = id;
+
+        const priceEl = document.getElementById("modal-dish-price");
+        if (priceEl) priceEl.textContent = `₪${selectedSize.price}`;
+
+        const sizesContainer = document.getElementById("modal-dish-sizes");
+        if (sizesContainer) {
+          sizesContainer.innerHTML = activeDishModal.sizes
+            .map((size) => {
+              const isSelected = selectedSize.id === size.id;
+              return `
+                <button
+                    onclick="selectDishSize('${size.id}')"
+                    class="size-btn px-4 py-2 rounded-full border text-xs sm:text-sm font-bold transition-all duration-300 ${
+                      isSelected
+                        ? "bg-primary text-on-primary border-primary shadow-md scale-105"
+                        : "bg-surface-container/60 text-on-surface border-outline-variant/40 hover:bg-primary/20 hover:border-primary"
+                    }">
+                    ${size.name} (${size.price}₪)
+                </button>
+            `;
+            })
+            .join("");
+        }
+
+        selectCardSize(activeDishModal.id, id);
+        updateModalButtonText();
+      }
+
+      function closeProductModal() {
+        const modal = document.getElementById("product-modal");
+        const modalContent = document.getElementById("product-modal-content");
+        if (modalContent) modalContent.classList.add("translate-y-full");
+        if (modal) modal.classList.add("opacity-0", "pointer-events-none");
+        activeDishModal = null;
+      }
+
+      function adjustModalQty(delta) {
+        modalQuantity = Math.max(1, modalQuantity + delta);
+        const qtyEl = document.getElementById("modal-dish-qty");
+        if (qtyEl) qtyEl.textContent = modalQuantity;
+        updateModalButtonText();
+      }
+
+      function updateModalButtonText() {
+        if (!activeDishModal) return;
+
+        if (requiresWaiterInquiry(activeDishModal)) {
+          const btnTextEl = document.getElementById("modal-add-btn-text");
+          if (btnTextEl) btnTextEl.textContent = "استفسر من القرصون";
+          return;
+        }
+
+        const price = selectedSize
+          ? selectedSize.price
+          : (activeDishModal.price ?? 0);
+        const total = price * modalQuantity;
+        const btnTextEl = document.getElementById("modal-add-btn-text");
+
+        if (btnTextEl) {
+          btnTextEl.textContent = `إضافة إلى السلة • ₪${total}`;
+        }
+      }
+
+      function addModalItemToCart() {
+        if (!activeDishModal) return;
+
+        const notesEl = document.getElementById("modal-notes");
+        const notes = notesEl ? notesEl.value.trim() : "";
+        const dishToCart = {
+          ...activeDishModal,
+          price: selectedSize
+            ? selectedSize.price
+            : (activeDishModal.price ?? 0),
+          size: selectedSize ? selectedSize.name : null,
+          sizeId: selectedSize ? selectedSize.id : null,
+          title: selectedSize
+            ? `${activeDishModal.title} (${selectedSize.name})`
+            : activeDishModal.title,
+        };
+
+        requestAddToCart(dishToCart, modalQuantity, notes, true);
+      }
+
+      function quickAddToCart(dishId) {
+        const dish = DISHES.find((d) => d.id === dishId);
+        if (!dish) return;
+
+        if (dish.sizes && dish.sizes.length > 0) {
+          const lowestSize = dish.sizes.reduce(
+            (prev, curr) => (curr.price < prev.price ? curr : prev),
+            dish.sizes[0],
+          );
+          const cardSelectedId = selectedCardSizes[dish.id] || null;
+          const selectedCardSize =
+            dish.sizes.find((s) => s.id === cardSelectedId) || lowestSize;
+
+          requestAddToCart(
+            {
+              ...dish,
+              price: selectedCardSize.price,
+              size: selectedCardSize.name,
+              sizeId: selectedCardSize.id,
+              title: `${dish.title} (${selectedCardSize.name})`,
+            },
+            1,
+            "",
+          );
+        } else {
+          requestAddToCart(dish, 1, "");
+        }
+      }
+
+      function requestAddToCart(
+        dish,
+        quantity,
+        notes,
+        fromProductModal = false,
+      ) {
+        if (!MENU_IS_TABLE_MODE) return;
+        const bookingHours = getAdvanceBookingHours(dish);
+
+        if (bookingHours) {
+          pendingReservationItem = {
+            dish: { ...dish, advanceBookingHours: bookingHours },
+            quantity,
+            notes,
+            fromProductModal,
+          };
+          openAdvanceBookingModal(dish, bookingHours);
+          return;
+        }
+
+        addToCart(dish, quantity, notes);
+        if (fromProductModal) closeProductModal();
+      }
+
+      function openAdvanceBookingModal(dish, hours) {
+        const modal = document.getElementById("advance-booking-modal");
+        const dishName = document.getElementById("advance-booking-dish-name");
+        const hoursEl = document.getElementById("advance-booking-hours");
+
+        if (dishName) dishName.textContent = dish.title;
+        if (hoursEl) hoursEl.textContent = bookingDurationText(hours);
+        if (modal) modal.classList.remove("opacity-0", "pointer-events-none");
+      }
+
+      function closeAdvanceBookingModal() {
+        const modal = document.getElementById("advance-booking-modal");
+        if (modal) modal.classList.add("opacity-0", "pointer-events-none");
+        pendingReservationItem = null;
+      }
+
+      function confirmAdvanceBooking() {
+        if (!pendingReservationItem) return;
+
+        const { dish, quantity, notes, fromProductModal } =
+          pendingReservationItem;
+        const modal = document.getElementById("advance-booking-modal");
+        if (modal) modal.classList.add("opacity-0", "pointer-events-none");
+        pendingReservationItem = null;
+
+        addToCart(dish, quantity, notes);
+        if (fromProductModal) closeProductModal();
+        openCartModal();
+      }
+
+      function openWaiterInquiry(dishId) {
+        if (!MENU_IS_TABLE_MODE) return;
+        const dish = DISHES.find((item) => item.id === dishId);
+        const modal = document.getElementById("waiter-inquiry-modal");
+        if (!dish || !modal) return;
+
+        activeWaiterInquiryDish = dish;
+        const dishName = document.getElementById("waiter-inquiry-dish-name");
+        const nameInput = document.getElementById("waiter-inquiry-name");
+        const locationSelect = document.getElementById(
+          "waiter-inquiry-location",
+        );
+        const form = document.getElementById("waiter-inquiry-form");
+        const success = document.getElementById("waiter-inquiry-success");
+        const cartName = document.getElementById("customer-name");
+        const cartLocation = document.getElementById("customer-location");
+
+        if (dishName) dishName.textContent = dish.title;
+        if (nameInput) nameInput.value = cartName?.value || "";
+        if (locationSelect && cartLocation) {
+          locationSelect.innerHTML = cartLocation.innerHTML;
+          locationSelect.value = cartLocation.value || "";
+        }
+        if (form)
+          form.classList.remove(
+            "hidden",
+            "opacity-0",
+            "scale-95",
+            "pointer-events-none",
+          );
+        if (success)
+          success.classList.add("hidden", "opacity-0", "translate-y-3");
+
+        closeProductModal();
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        setTimeout(() => nameInput?.focus(), 150);
+      }
+
+      function closeWaiterInquiryModal() {
+        const modal = document.getElementById("waiter-inquiry-modal");
+        if (modal) modal.classList.add("opacity-0", "pointer-events-none");
+        activeWaiterInquiryDish = null;
+      }
+
+      function submitWaiterInquiry() {
+        if (!activeWaiterInquiryDish) return;
+
+        const nameInput = document.getElementById("waiter-inquiry-name");
+        const locationSelect = document.getElementById(
+          "waiter-inquiry-location",
+        );
+        const guestName = normalizeGuestName(nameInput?.value);
+        const locationKey = locationSelect?.value || "";
+
+        if (!isValidGuestName(guestName)) {
+          nameInput?.focus();
+          nameInput?.classList.add("border-error");
+          setTimeout(() => nameInput?.classList.remove("border-error"), 2000);
+          return;
+        }
+        if (!locationKey) {
+          locationSelect?.focus();
+          locationSelect?.classList.add("border-error");
+          setTimeout(
+            () => locationSelect?.classList.remove("border-error"),
+            2000,
+          );
+          return;
+        }
+
+        const inquiryForm = document.getElementById("waiter-inquiry-form");
+        const inquirySuccess = document.getElementById(
+          "waiter-inquiry-success",
+        );
+        if (inquiryForm)
+          inquiryForm.classList.add(
+            "opacity-0",
+            "scale-95",
+            "pointer-events-none",
+          );
+
+        window.setTimeout(() => {
+          if (inquiryForm) inquiryForm.classList.add("hidden");
+          if (inquirySuccess) inquirySuccess.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            if (inquirySuccess)
+              inquirySuccess.classList.remove("opacity-0", "translate-y-3");
+          });
+        }, 240);
+      }
+
+      function openWaiterCallModal() {
+        if (!MENU_IS_TABLE_MODE) return;
+        const modal = document.getElementById("waiter-call-modal");
+        const nameInput = document.getElementById("waiter-call-name");
+        const locationSelect = document.getElementById("waiter-call-location");
+        const form = document.getElementById("waiter-call-form");
+        const success = document.getElementById("waiter-call-success");
+        const cartName = document.getElementById("customer-name");
+        const cartLocation = document.getElementById("customer-location");
+        if (!modal) return;
+
+        if (nameInput) nameInput.value = cartName?.value || "";
+        if (locationSelect && cartLocation) {
+          locationSelect.innerHTML = cartLocation.innerHTML;
+          locationSelect.value = cartLocation.value || "";
+        }
+        if (form)
+          form.classList.remove(
+            "hidden",
+            "opacity-0",
+            "scale-95",
+            "pointer-events-none",
+          );
+        if (success)
+          success.classList.add("hidden", "opacity-0", "translate-y-3");
+        modal.classList.remove("opacity-0", "pointer-events-none");
+        setTimeout(() => nameInput?.focus(), 150);
+      }
+
+      function closeWaiterCallModal() {
+        document
+          .getElementById("waiter-call-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      async function submitWaiterCall() {
+        if (!MENU_IS_TABLE_MODE) return;
+        const nameInput = document.getElementById("waiter-call-name");
+        const guestName = normalizeGuestName(nameInput?.value);
+
+        if (!isValidGuestName(guestName)) {
+          nameInput?.focus();
+          nameInput?.classList.add("border-error");
+          setTimeout(() => nameInput?.classList.remove("border-error"), 2000);
+          return;
+        }
+        if (!window.supabase || !MENU_RESTAURANT_ID) {
+          showToast("تعذر إرسال النداء: رابط المنيو لا يحتوي على مطعم صالح.");
+          return;
+        }
+        if (MENU_QR_INVALID) {
+          showToast("رمز QR منتهي. يرجى مسح الرمز الجديد من الطاولة.");
+          return;
+        }
+
+        const form = document.getElementById("waiter-call-form");
+        const success = document.getElementById("waiter-call-success");
+        const submitButton = form?.querySelector(
+          "button[onclick='submitWaiterCall()']",
+        );
+        const originalButtonHtml = submitButton?.innerHTML;
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.innerHTML =
+            '<svg class="lucide-icon text-lg" aria-hidden="true"><use href="#hourglass"></use></svg><span>جاري إرسال النداء...</span>';
+        }
+        try {
+          console.log("📞 Creating waiter call:", {
+            restaurantId: MENU_RESTAURANT_ID,
+            tableId: MENU_TABLE_ID,
+            tableCode: MENU_TABLE_CODE,
+            guestName: guestName,
+          });
+
+          const { data, error } = await supabase.rpc(
+            "create_guest_waiter_call",
+            {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+              p_table_id: MENU_TABLE_ID || null,
+              p_table_code: MENU_TABLE_CODE || null,
+              p_qr_seed: MENU_QR_SEED ? Number(MENU_QR_SEED) : null,
+              p_guest_name: guestName,
+            },
+          );
+
+          console.log("📞 Waiter call RPC response:", { data, error });
+
+          if (error) throw error;
+        } catch (error) {
+          console.error("Failed to send waiter call:", error);
+
+          showToast("تعذر إرسال النداء. حاول مرة أخرى.");
+
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonHtml;
+          }
+
+          return;
+        }
+        if (form)
+          form.classList.add("opacity-0", "scale-95", "pointer-events-none");
+        window.setTimeout(() => {
+          if (form) form.classList.add("hidden");
+          if (success) success.classList.remove("hidden");
+          requestAnimationFrame(() =>
+            success?.classList.remove("opacity-0", "translate-y-3"),
+          );
+        }, 240);
+      }
+
+      function prepareServiceRating(order) {
+        activeServiceRatingOrder = order;
+        selectedServiceRating = 0;
+        const section = document.getElementById("service-rating-section");
+        const feedback = document.getElementById("service-rating-feedback");
+        const note = document.getElementById("service-rating-note");
+        if (section) section.classList.remove("hidden");
+        if (feedback) feedback.classList.add("hidden");
+        if (note) note.value = "";
+        document.querySelectorAll("[data-service-rating]").forEach((button) => {
+          button.classList.remove("text-primary", "scale-110");
+          button.classList.add("text-outline-variant");
+        });
+      }
+
+      function selectServiceRating(rating) {
+        selectedServiceRating = rating;
+        document.querySelectorAll("[data-service-rating]").forEach((button) => {
+          const isSelected = Number(button.dataset.serviceRating) <= rating;
+          button.classList.toggle("text-primary", isSelected);
+          button.classList.toggle("text-outline-variant", !isSelected);
+          button.classList.toggle("scale-110", isSelected);
+        });
+      }
+
+      function submitServiceRating() {
+        if (!activeServiceRatingOrder || !selectedServiceRating) {
+          document
+            .getElementById("service-rating-stars")
+            ?.classList.add("ring-1", "ring-error", "rounded-xl");
+          setTimeout(
+            () =>
+              document
+                .getElementById("service-rating-stars")
+                ?.classList.remove("ring-1", "ring-error", "rounded-xl"),
+            1600,
+          );
+          return;
+        }
+
+        document.getElementById("service-rating-form")?.classList.add("hidden");
+        document
+          .getElementById("service-rating-feedback")
+          ?.classList.remove("hidden");
+      }
+
+      /* Guest Name & Checkout Helper Functions */
+      const GUEST_NAME_PATTERN =
+        /^(?:[A-Za-z\u0621-\u063A\u0641-\u064A\u0671\u067E\u0686\u0698\u06A9\u06AF\u06BE\u06CC][\u064B-\u065F\u0670]*)(?:(?:[A-Za-z\u0621-\u063A\u0641-\u064A\u0671\u067E\u0686\u0698\u06A9\u06AF\u06BE\u06CC][\u064B-\u065F\u0670]*)|[ '\u2019-](?=[A-Za-z\u0621-\u063A\u0641-\u064A\u0671\u067E\u0686\u0698\u06A9\u06AF\u06BE\u06CC]))*$/u;
+
+      function normalizeGuestName(value) {
+        return String(value || "")
+          .normalize("NFC")
+          .trim()
+          .replace(/\s+/g, " ");
+      }
+
+      function isValidGuestName(name) {
+        const length = Array.from(name).length;
+        return length >= 2 && length <= 40 && GUEST_NAME_PATTERN.test(name);
+      }
+
+      function escapeHtml(text) {
+        if (!text) return "";
+        return String(text)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      /* Lucide Icons map */
+      const LUCIDE_ICONS = Object.freeze({
+        account_circle: "circle-user-round",
+        add: "plus",
+        add_shopping_cart: "shopping-cart",
+        badge: "badge",
+        calendar_clock: "calendar-clock",
+        chair: "armchair",
+        chat: "message-circle",
+        check: "check",
+        check_circle: "circle-check",
+        close: "x",
+        code: "code",
+        dark_mode: "moon",
+        delete: "trash-2",
+        edit_note: "notebook-pen",
+        event_available: "calendar-check",
+        expand_more: "chevron-down",
+        hourglass_top: "hourglass",
+        info: "info",
+        language: "globe",
+        light_mode: "sun",
+        location_on: "map-pin",
+        notifications_active: "bell-ring",
+        person: "user",
+        person_add: "user-plus",
+        remove: "minus",
+        restaurant_menu: "utensils",
+        search: "search",
+        search_off: "search-x",
+        send: "send",
+        shopping_bag: "shopping-bag",
+        shopping_cart: "shopping-cart",
+        star: "star",
+        support_agent: "headset",
+        task_alt: "circle-check-big",
+        terminal: "terminal",
+      });
+
+      function getLucideIconName(name) {
+        return LUCIDE_ICONS[name] || name;
+      }
+
+      function createLucideIcon(name, className = "") {
+        const iconName = getLucideIconName(name);
+        return `<svg class="lucide-icon ${className}" aria-hidden="true" focusable="false"><use href="#${iconName}"></use></svg>`;
+      }
+
+      function setLucideIcon(element, name) {
+        const use = element?.querySelector("use");
+        if (use) use.setAttribute("href", `#${getLucideIconName(name)}`);
+      }
+
+      function openNameWarningModal(isInvalidName = false) {
+        const modal = document.getElementById("name-warning-modal");
+        const input = document.getElementById("modal-quick-name-input");
+        const title = document.getElementById("name-warning-title");
+        const message = document.getElementById("name-warning-message");
+
+        if (title) {
+          title.textContent = isInvalidName
+            ? "يرجى كتابة اسمك بشكل صحيح"
+            : "يرجى إدخال اسمك الكريم";
+        }
+        if (message) {
+          message.textContent = isInvalidName
+            ? "استخدم اسمًا واضحًا من أحرف عربية أو إنجليزية، من دون زخرفة أو رموز."
+            : "لطفاً، أكتب اسمك حتى نتمكن من ربط الطلب باسمك وإرساله للمطبخ.";
+        }
+        if (modal) {
+          modal.classList.remove("opacity-0", "pointer-events-none");
+        }
+        if (input) {
+          input.value = "";
+          setTimeout(() => input.focus(), 150);
+        }
+      }
+
+      function closeNameWarningModal() {
+        const modal = document.getElementById("name-warning-modal");
+        if (modal) {
+          modal.classList.add("opacity-0", "pointer-events-none");
+        }
+      }
+
+      function submitNameFromModal() {
+        const quickInput = document.getElementById("modal-quick-name-input");
+        const nameInput = document.getElementById("customer-name");
+        const val = normalizeGuestName(quickInput ? quickInput.value : "");
+
+        if (!val) {
+          if (quickInput) quickInput.focus();
+          return;
+        }
+
+        if (!isValidGuestName(val)) {
+          openNameWarningModal(true);
+          if (quickInput) quickInput.focus();
+          return;
+        }
+
+        if (nameInput) nameInput.value = val;
+        closeNameWarningModal();
+        openCheckoutConfirmModal();
+      }
+
+      function openCheckoutConfirmModal() {
+        if (!MENU_IS_TABLE_MODE || cart.length === 0) return;
+        const checkoutData = collectCheckoutData();
+        if (!checkoutData) return;
+
+        pendingCheckoutData = checkoutData;
+        // The payment step replaces the cart drawer, so its backdrop cannot
+        // remain above the payment modal while the transition is running.
+        closeCartModal();
+        const totalEl = document.getElementById("checkout-confirm-total");
+        if (totalEl) totalEl.textContent = ` إجمالي ₪${checkoutData.total}`;
+
+        const modal = document.getElementById("checkout-confirm-modal");
+        if (modal) {
+          modal.style.zIndex = "90";
+          modal.classList.remove("opacity-0", "pointer-events-none");
+        }
+      }
+
+      function closeCheckoutConfirmModal() {
+        const modal = document.getElementById("checkout-confirm-modal");
+        if (modal) {
+          modal.classList.add("opacity-0", "pointer-events-none");
+        }
+      }
+
+      function confirmCheckoutOrder() {
+        chooseCashPayment();
+      }
+
+      function collectCheckoutData() {
+        if (!MENU_IS_TABLE_MODE || cart.length === 0) return null;
+
+        const nameInput = document.getElementById("customer-name");
+        const locSelect = document.getElementById("customer-location");
+        const notesInput = document.getElementById("order-notes");
+        const guestName = normalizeGuestName(nameInput ? nameInput.value : "");
+
+        if (nameInput && !guestName) {
+          openNameWarningModal();
+          return null;
+        }
+        if (!isValidGuestName(guestName)) {
+          if (nameInput) {
+            nameInput.focus();
+            nameInput.classList.add("border-error");
+            setTimeout(() => nameInput.classList.remove("border-error"), 2000);
+          }
+          openNameWarningModal(true);
+          return null;
+        }
+        if (nameInput) nameInput.value = guestName;
+
+        if (locSelect && !locSelect.value) {
+          locSelect.focus();
+          locSelect.classList.add("border-error");
+          setTimeout(() => locSelect.classList.remove("border-error"), 2000);
+          return null;
+        }
+
+        const total = cart
+          .reduce((sum, item) => sum + item.dish.price * item.quantity, 0)
+          .toFixed(2);
+
+        return {
+          customer_name: guestName,
+          customer_phone: "",
+          notes: notesInput ? notesInput.value.trim() : "",
+          total,
+        };
+      }
+
+      function chooseCashPayment() {
+        const checkoutData = pendingCheckoutData || collectCheckoutData();
+        if (!checkoutData) return;
+
+        closeCheckoutConfirmModal();
+        processCheckout({
+          ...checkoutData,
+          payment_method: "cash",
+          payment_provider: null,
+          payment_proof_data: null,
+        });
+      }
+
+      function getPaymentProviderConfig(providerId) {
+        return MENU_PAYMENT_SETTINGS?.[providerId] || {};
+      }
+
+      function hasProviderInformation(providerId) {
+        const provider = getPaymentProviderConfig(providerId);
+        return providerId === "bank_palestine"
+          ? Boolean(
+              provider.iban || provider.account_number || provider.account_name,
+            )
+          : Boolean(provider.phone || provider.account_name);
+      }
+
+      function chooseElectronicPayment() {
+        const checkoutData = pendingCheckoutData || collectCheckoutData();
+        if (!checkoutData) return;
+
+        pendingCheckoutData = checkoutData;
+        closeCheckoutConfirmModal();
+        selectedPaymentProvider = null;
+        paymentProofData = "";
+        const electronicTotal = document.getElementById(
+          "electronic-payment-total",
+        );
+        if (electronicTotal) {
+          electronicTotal.textContent = `₪${checkoutData.total}`;
+        }
+        renderPaymentProviders();
+
+        const modal = document.getElementById("electronic-payment-modal");
+        const details = document.getElementById("payment-provider-details");
+        if (details) details.classList.add("hidden");
+        if (modal) {
+          modal.style.zIndex = "95";
+          modal.classList.remove("opacity-0", "pointer-events-none");
+        }
+      }
+
+      function renderPaymentProviders() {
+        const list = document.getElementById("payment-provider-list");
+        if (!list) return;
+
+        const providers = [
+          {
+            id: "bank_palestine",
+            label: "بنك فلسطين",
+            image: "/payment-icons/bop.webp",
+          },
+          {
+            id: "palpay",
+            label: "PalPay",
+            image: "/payment-icons/palpay.webp",
+          },
+          {
+            id: "jawwal_pay",
+            label: "Jawwal Pay",
+            image: "/payment-icons/jawalpay.webp",
+          },
+        ];
+
+        list.innerHTML = providers
+          .map((provider) => {
+            const available = hasProviderInformation(provider.id);
+            return `
+            <button type="button" ${available ? `onclick="selectPaymentProvider('${provider.id}')"` : "disabled"}
+              class="payment-provider-option w-full text-right rounded-2xl border ${available ? "border-primary/30 hover:border-primary hover:bg-primary/10" : "border-outline-variant/30 opacity-50 cursor-not-allowed"} bg-surface-container-low p-4 transition-all">
+              <span class="flex items-center gap-3">
+                <img src="${provider.image}" alt="" class="payment-provider-image" />
+                <span><strong class="block">${provider.label}</strong><small class="text-on-surface-variant">${available ? "عرض معلومات التحويل" : "غير متاح حاليًا"}</small></span>
+              </span>
+            </button>`;
+          })
+          .join("");
+      }
+
+      function selectPaymentProvider(providerId) {
+        selectedPaymentProvider = providerId;
+        const provider = getPaymentProviderConfig(providerId);
+        const labels = {
+          bank_palestine: "بنك فلسطين",
+          palpay: "PalPay",
+          jawwal_pay: "Jawwal Pay",
+        };
+        const title = document.getElementById(
+          "selected-payment-provider-title",
+        );
+        const info = document.getElementById("selected-payment-provider-info");
+        const list = document.getElementById("payment-provider-list");
+        const details = document.getElementById("payment-provider-details");
+        if (title) title.textContent = labels[providerId] || "مزود الدفع";
+        if (info) {
+          const fields =
+            providerId === "bank_palestine"
+              ? [
+                  ["اسم صاحب الحساب", provider.account_name],
+                  ["رقم الحساب", provider.account_number],
+                  ["IBAN", provider.iban],
+                ]
+              : [
+                  ["اسم الحساب", provider.account_name],
+                  ["رقم المحفظة", provider.phone],
+                ];
+          info.innerHTML =
+            fields
+              .filter(([, value]) => value)
+              .map(
+                ([label, value]) =>
+                  `<div class="flex justify-between gap-4 border-b border-primary/10 pb-2"><span class="text-on-surface-variant">${escapeHtml(label)}</span><strong dir="ltr" class="text-left select-all">${escapeHtml(value)}</strong></div>`,
+              )
+              .join("") +
+            (provider.instructions
+              ? `<p class="text-xs text-on-surface-variant pt-1">${escapeHtml(provider.instructions)}</p>`
+              : "");
+        }
+        if (list) list.classList.add("hidden");
+        if (details) details.classList.remove("hidden");
+      }
+
+      function backToPaymentProviders() {
+        selectedPaymentProvider = null;
+        paymentProofData = "";
+        document
+          .getElementById("payment-provider-details")
+          ?.classList.add("hidden");
+        document
+          .getElementById("payment-provider-list")
+          ?.classList.remove("hidden");
+      }
+
+      function closeElectronicPaymentModal() {
+        document
+          .getElementById("electronic-payment-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+        selectedPaymentProvider = null;
+        paymentProofData = "";
+      }
+
+      function handlePaymentProofChange(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/") || file.size > 3 * 1024 * 1024) {
+          showToast("اختر صورة لا يتجاوز حجمها 3MB.");
+          event.target.value = "";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = new Image();
+          image.onload = () => {
+            const maxSize = 1400;
+            const scale = Math.min(
+              1,
+              maxSize / Math.max(image.width, image.height),
+            );
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.round(image.width * scale));
+            canvas.height = Math.max(1, Math.round(image.height * scale));
+            canvas
+              .getContext("2d")
+              .drawImage(image, 0, 0, canvas.width, canvas.height);
+            paymentProofData = canvas.toDataURL("image/jpeg", 0.82);
+            const preview = document.getElementById("payment-proof-preview");
+            const previewImage = document.getElementById(
+              "payment-proof-preview-image",
+            );
+            if (previewImage) previewImage.src = paymentProofData;
+            if (preview) preview.classList.remove("hidden");
+          };
+          image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function submitElectronicPayment() {
+        if (!selectedPaymentProvider) {
+          showToast("اختر مزود الدفع أولًا.");
+          return;
+        }
+        if (!paymentProofData) {
+          showToast("أرفق صورة إشعار الدفع الإلكتروني.");
+          return;
+        }
+
+        const checkoutData = pendingCheckoutData || collectCheckoutData();
+        if (!checkoutData) return;
+        const providerId = selectedPaymentProvider;
+        const proofData = paymentProofData;
+        closeElectronicPaymentModal();
+        processCheckout({
+          ...checkoutData,
+          payment_method: "electronic",
+          payment_provider: providerId,
+          payment_proof_data: proofData,
+        });
+      }
+
+      async function saveOrderToSupabase(orderPayload, items) {
+        if (!window.supabase || !MENU_RESTAURANT_ID) return null;
+        if (MENU_QR_INVALID) {
+          throw new Error("رمز QR منتهي. يرجى مسح الرمز الجديد من الطاولة.");
+        }
+
+        const itemRows = items.map((item) => ({
+          menu_item_id: item.dish?.id || null,
+          item_name: item.dish?.title || item.dish?.name || "صنف",
+          quantity: Number(item.quantity) || 1,
+          unit_price: Number(item.dish?.price) || 0,
+          menu_item_size_id: item.dish?.sizeId || null,
+        }));
+
+        const { data: orderId, error: orderError } = await supabase.rpc(
+          "create_guest_order",
+          {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_table_id: MENU_TABLE_ID || null,
+            p_qr_seed: MENU_QR_SEED ? Number(MENU_QR_SEED) : null,
+            p_customer_name: orderPayload.customer_name,
+            p_customer_phone: orderPayload.customer_phone || null,
+            p_notes: orderPayload.notes || null,
+            p_total: Number(orderPayload.total) || 0,
+            p_items: itemRows,
+            p_payment_method: orderPayload.payment_method || "cash",
+            p_payment_provider: orderPayload.payment_provider || null,
+            p_payment_proof_data: orderPayload.payment_proof_data || null,
+          },
+        );
+
+        if (orderError) throw orderError;
+        return { id: orderId };
+      }
+
+      async function processCheckout(paymentData = {}) {
+        if (!MENU_IS_TABLE_MODE) return;
+        if (cart.length === 0) return;
+        if (MENU_QR_INVALID) {
+          showToast("رمز QR منتهي. يرجى مسح الرمز الجديد من الطاولة.");
+          return;
+        }
+
+        const checkoutData = paymentData.customer_name
+          ? paymentData
+          : pendingCheckoutData || collectCheckoutData();
+        if (!checkoutData) return;
+        const total = checkoutData.total;
+        const nameInput = document.getElementById("customer-name");
+        const locSelect = document.getElementById("customer-location");
+        const notesInput = document.getElementById("order-notes");
+
+        try {
+          if (window.supabase && MENU_RESTAURANT_ID) {
+            await saveOrderToSupabase(
+              {
+                customer_name: checkoutData.customer_name,
+                customer_phone: checkoutData.customer_phone || "",
+                notes: checkoutData.notes || null,
+                total,
+                payment_method: checkoutData.payment_method || "cash",
+                payment_provider: checkoutData.payment_provider || null,
+                payment_proof_data: checkoutData.payment_proof_data || null,
+              },
+              cart,
+            );
+          }
+        } catch (error) {
+          console.error("Failed to save order to Supabase:", error);
+          showToast("تعذر إرسال الطلب. حاول مرة أخرى.");
+          return;
+        }
+
+        const guestNameEl = document.getElementById("success-guest-name");
+        const amountEl = document.getElementById("success-amount");
+
+        if (guestNameEl) guestNameEl.textContent = checkoutData.customer_name;
+        if (amountEl) amountEl.textContent = "₪" + total;
+        const paymentNote = document.getElementById("success-payment-note");
+        if (paymentNote) {
+          paymentNote.textContent =
+            checkoutData.payment_method === "electronic"
+              ? "تم إرسال الطلب وإشعار الدفع للمطعم للمراجعة."
+              : "يرجى التوجه إلى الكاشير لإتمام الدفع.";
+        }
+
+        closeCartModal();
+
+        cart = [];
+        pendingCheckoutData = null;
+        paymentProofData = "";
+        if (nameInput) nameInput.value = "";
+        if (locSelect) locSelect.selectedIndex = 0;
+        if (notesInput) notesInput.value = "";
+        updateCartUI();
+
+        const successModal = document.getElementById("success-modal");
+        if (successModal) {
+          successModal.classList.remove("opacity-0", "pointer-events-none");
+        }
+      }
+
+      function closeSuccessModal() {
+        const successModal = document.getElementById("success-modal");
+        if (successModal)
+          successModal.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      /* Theme Toggle */
+      function getMenuGuestThemeConfig() {
+        try {
+          const saved =
+            localStorage.getItem(getMenuColorsStorageKey(MENU_RESTAURANT_ID)) ||
+            localStorage.getItem("EduPulse_MenuColors");
+          if (!saved)
+            return { defaultMode: "light", allowGuestThemeToggle: true };
+          const parsed = JSON.parse(saved);
+          return {
+            defaultMode: parsed.defaultMode || parsed.mode || "light",
+            allowGuestThemeToggle:
+              typeof parsed.allowGuestThemeToggle === "boolean"
+                ? parsed.allowGuestThemeToggle
+                : true,
+          };
+        } catch (_) {
+          return { defaultMode: "light", allowGuestThemeToggle: true };
+        }
+      }
+
+      function updateThemeToggle() {
+        const config = getMenuGuestThemeConfig();
+        const toggle = document.getElementById("theme-toggle");
+        const icon = document.getElementById("theme-toggle-icon");
+        if (!toggle || !icon) return;
+
+        const isGuestAllowed = config.allowGuestThemeToggle !== false;
+        toggle.style.display = isGuestAllowed ? "flex" : "none";
+        if (!isGuestAllowed) return;
+
+        const isDark = document.documentElement.classList.contains("dark");
+        setLucideIcon(icon, isDark ? "light_mode" : "dark_mode");
+        toggle.setAttribute(
+          "aria-label",
+          isDark ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن",
+        );
+        toggle.setAttribute(
+          "title",
+          isDark ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن",
+        );
+      }
+
+      window.toggleTheme = function toggleTheme() {
+        const config = getMenuGuestThemeConfig();
+        if (config.allowGuestThemeToggle === false) return;
+        if (themeSwitchInProgress) return;
+        const root = document.documentElement;
+        const currentTheme = root.classList.contains("dark") ? "dark" : "light";
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        const toggle = document.getElementById("theme-toggle");
+        const applyTheme = () => {
+          root.classList.toggle("dark", nextTheme === "dark");
+          try {
+            localStorage.setItem("king-beach-user-theme", nextTheme);
+          } catch (_) {}
+          updateThemeToggle();
+        };
+        const finishSwitch = () => {
+          themeSwitchInProgress = false;
+          if (toggle) {
+            toggle.disabled = false;
+            toggle.removeAttribute("aria-busy");
+          }
+        };
+
+        themeSwitchInProgress = true;
+        if (toggle) {
+          toggle.disabled = true;
+          toggle.setAttribute("aria-busy", "true");
+        }
+
+        const prefersReducedMotion =
+          window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+          false;
+        if (document.startViewTransition && !prefersReducedMotion) {
+          document
+            .startViewTransition(applyTheme)
+            .finished.finally(finishSwitch);
+        } else {
+          applyTheme();
+          window.requestAnimationFrame(finishSwitch);
+        }
+      };
+
+      /* SiCode Card */
+      const siCodeInfo = {
+        name: "SiCode",
+        phone: "+970 56 999 6988",
+        phoneLink: "970569996988",
+        website: "https://sicode.dev",
+        websiteDisplay: "www.sicode.dev",
+        location: "فلسطين - غزة",
+        description:
+          "Digital solutions studio - نصمم ونطوّر مواقع وتطبيقات رقمية تساعد الأعمال على الظهور والنمو.",
+      };
+
+      function openSiCodeCard() {
+        const card = document.getElementById("sicode-card");
+        const panel = document.getElementById("sicode-card-panel");
+        if (!card || !panel) return;
+
+        card.classList.replace("hidden", "flex");
+        document.body.classList.add("overflow-hidden");
+
+        void card.offsetWidth;
+        requestAnimationFrame(() => {
+          card.classList.remove("opacity-0", "pointer-events-none");
+          panel.classList.remove("translate-y-4", "scale-95", "opacity-0");
+        });
+      }
+
+      function closeSiCodeCard() {
+        const card = document.getElementById("sicode-card");
+        const panel = document.getElementById("sicode-card-panel");
+        if (!card || !panel) return;
+
+        card.classList.add("opacity-0", "pointer-events-none");
+        panel.classList.add("translate-y-4", "scale-95", "opacity-0");
+        document.body.classList.remove("overflow-hidden");
+
+        setTimeout(() => {
+          if (card.classList.contains("opacity-0")) {
+            card.classList.replace("flex", "hidden");
+          }
+        }, 300);
+      }
+
+      function notifySiCodeClick() {}
+
+      function saveSiCodeContact() {
+        const button = document.getElementById("save-sicode-card");
+        if (!button) return;
+        const label = button.querySelector("span:last-child");
+        const icon = button.querySelector(".lucide-icon");
+        const oldLabel = label ? label.textContent : "";
+
+        button.disabled = true;
+        if (label) label.textContent = "جارٍ حفظ الكرت...";
+        if (icon) setLucideIcon(icon, "hourglass_top");
+
+        try {
+          const vCard = [
+            "BEGIN:VCARD",
+            "VERSION:3.0",
+            `FN:${escapeVCard(siCodeInfo.name)}`,
+            `ORG:${escapeVCard(siCodeInfo.name)}`,
+            `TEL;TYPE=CELL,VOICE:${siCodeInfo.phone}`,
+            `URL:${siCodeInfo.website}`,
+            `ADR;TYPE=WORK:;;${escapeVCard(siCodeInfo.location)};;;;`,
+            `NOTE:${escapeVCard(siCodeInfo.description)}`,
+            "END:VCARD",
+          ].join("\r\n");
+
+          const blob = new Blob([vCard], { type: "text/vcard;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "SiCode.vcf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          if (icon) setLucideIcon(icon, "check");
+          if (label) label.textContent = "تم حفظ الكرت";
+
+          setTimeout(() => {
+            button.disabled = false;
+            if (icon) setLucideIcon(icon, "person_add");
+            if (label) label.textContent = oldLabel;
+          }, 1800);
+        } catch (error) {
+          console.error("Could not save SiCode contact.", error);
+          button.disabled = false;
+          if (icon) setLucideIcon(icon, "person_add");
+          if (label) label.textContent = oldLabel;
+        }
+      }
+
+      function escapeVCard(value) {
+        return String(value)
+          .replace(/\\/g, "\\\\")
+          .replace(/\n/g, "\\n")
+          .replace(/;/g, "\\;")
+          .replace(/,/g, "\\,");
+      }
+
+      /* App Initialization */
+      document.addEventListener("DOMContentLoaded", async () => {
+        updateTableContextFromUrl();
+
+        try {
+          await resolveMenuRestaurantBySlug();
+
+          // استخدم الكاش فورًا، ثم اجلب branding + menu بالتوازي.
+          updateRestaurantBrandName(getCachedRestaurantName());
+          updateThemeToggle();
+
+          const validQr = await validateTableQrCode();
+          if (!validQr) {
+            showToast("رمز QR منتهي. يرجى مسح الرمز الجديد من الطاولة.");
+          }
+
+          await Promise.all([
+            loadRestaurantBrandFromSupabase(),
+            loadMenuFromSupabase(),
+          ]);
+
+          // لا نرسم المنيو إلا بعد اكتمال بيانات المطعم والمنيو.
+          updateThemeToggle();
+          renderCategoryPills();
+          renderDrinkCategories();
+          renderDishes();
+
+          subscribeToMenuChanges();
+          document.body.classList.remove("menu-data-loading");
+        } catch (error) {
+          console.error("Failed to load menu from Supabase:", error);
+          const grid = document.getElementById("dishes-grid");
+          if (grid) {
+            grid.innerHTML = `<div class="col-span-full text-center py-20 text-on-surface-variant">تعذر تحميل قائمة الطعام. تأكد من رقم المطعم وصحة الاتصال.</div>`;
+          }
+          document.body.classList.remove("menu-data-loading");
+        }
+
+        const phoneEl = document.getElementById("sicode-phone");
+        const phoneLinkEl = document.getElementById("sicode-phone-link");
+        const websiteEl = document.getElementById("sicode-website");
+        const websiteLinkEl = document.getElementById("sicode-website-link");
+        const locationEl = document.getElementById("sicode-location");
+
+        if (phoneEl) phoneEl.textContent = siCodeInfo.phone;
+        if (phoneLinkEl)
+          phoneLinkEl.href = `https://wa.me/${siCodeInfo.phoneLink}`;
+        if (websiteEl) websiteEl.textContent = siCodeInfo.websiteDisplay;
+        if (websiteLinkEl) websiteLinkEl.href = siCodeInfo.website;
+        if (locationEl) locationEl.textContent = siCodeInfo.location;
+
+        if (!document.getElementById("advance-booking-modal")) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div id="advance-booking-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4" role="dialog" aria-modal="true">
+                <div class="w-full max-w-md glass-panel rounded-3xl p-6 md:p-8 text-center space-y-5 border border-primary/30 shadow-2xl animate-fade-in">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center mx-auto text-primary gold-glow">
+                        <svg class="lucide-icon text-3xl" aria-hidden="true" focusable="false"><use href="#calendar-clock"></use></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-tajawal text-xl md:text-2xl text-primary font-bold mb-3">هذا الصنف يحتاج حجزًا مسبقًا</h3>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">
+                            صنف <span id="advance-booking-dish-name" class="font-bold text-on-surface"></span>
+                            يحتاج إلى حجز مسبق قبل <span id="advance-booking-hours" class="font-bold text-primary"></span> على الأقل.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <button onclick="confirmAdvanceBooking()" class="bg-primary text-on-primary font-bold py-3.5 rounded-xl hover:bg-primary-container transition-all gold-glow flex items-center justify-center gap-2">
+                            <svg class="lucide-icon text-lg" aria-hidden="true" focusable="false"><use href="#calendar-check"></use></svg>
+                            <span>حجز وطلب</span>
+                        </button>
+                        <button onclick="closeAdvanceBookingModal()" class="bg-surface-container border border-outline-variant/50 text-on-surface font-bold py-3.5 rounded-xl hover:border-primary/60 hover:text-primary transition-all">إلغاء</button>
+                    </div>
+                </div>
+            </div>`,
+          );
+        }
+
+        if (!document.getElementById("waiter-inquiry-modal")) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div id="waiter-inquiry-modal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4" role="dialog" aria-modal="true">
+                <div class="w-full max-w-md glass-panel rounded-3xl p-6 md:p-8 relative border border-primary/30 shadow-2xl">
+                    <button onclick="closeWaiterInquiryModal()" class="absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors" aria-label="إغلاق">
+                        <svg class="lucide-icon " aria-hidden="true" focusable="false"><use href="#x"></use></svg>
+                    </button>
+                    <div id="waiter-inquiry-form" class="space-y-5 transition-all duration-300 ease-out">
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center mx-auto text-primary gold-glow mb-4">
+                                <svg class="lucide-icon text-3xl" aria-hidden="true" focusable="false"><use href="#headset"></use></svg>
+                            </div>
+                            <h3 class="font-tajawal text-xl md:text-2xl text-primary font-bold mb-2">استفسار من القرصون</h3>
+                            <p class="text-sm text-on-surface-variant leading-relaxed">سيصل القرصون إليك لإعطائك السعر والتفاصيل الخاصة بصنف <span id="waiter-inquiry-dish-name" class="font-bold text-on-surface"></span>.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="waiter-inquiry-name" class="block text-xs font-bold text-primary">الاسم الكريم <span class="text-error">*</span></label>
+                            <input id="waiter-inquiry-name" type="text" placeholder="أدخل اسمك..." class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                        </div>
+                        <div class="space-y-2">
+                            <label for="waiter-inquiry-location" class="block text-xs font-bold text-primary">مكان الجلوس <span class="text-error">*</span></label>
+                            <select id="waiter-inquiry-location" class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:ring-1 focus:ring-primary"></select>
+                        </div>
+                        <button onclick="submitWaiterInquiry()" class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl hover:bg-primary-container transition-all gold-glow flex items-center justify-center gap-2">
+                            <svg class="lucide-icon text-lg" aria-hidden="true" focusable="false"><use href="#bell-ring"></use></svg>
+                            <span>إرسال طلب الاستفسار</span>
+                        </button>
+                    </div>
+                    <div id="waiter-inquiry-success" class="hidden opacity-0 translate-y-3 text-center space-y-5 py-4 transition-all duration-300 ease-out">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center mx-auto text-primary gold-glow"><svg class="lucide-icon text-3xl" aria-hidden="true" focusable="false"><use href="#circle-check"></use></svg></div>
+                        <div><h3 class="font-tajawal text-xl text-primary font-bold mb-2">تم إرسال طلبك</h3><p class="text-sm text-on-surface-variant leading-relaxed">سيصل القرصون إليك قريبًا لإعطائك السعر والتفاصيل.</p></div>
+                        <button onclick="closeWaiterInquiryModal()" class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl hover:bg-primary-container transition-all">حسنًا</button>
+                    </div>
+                </div>
+            </div>`,
+          );
+        }
+
+        if (!document.getElementById("waiter-call-modal")) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div id="waiter-call-modal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4" role="dialog" aria-modal="true">
+                <div class="w-full max-w-md glass-panel rounded-3xl p-6 md:p-8 relative border border-primary/30 shadow-2xl">
+                    <button onclick="closeWaiterCallModal()" class="absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors" aria-label="إغلاق"><svg class="lucide-icon " aria-hidden="true" focusable="false"><use href="#x"></use></svg></button>
+                    <div id="waiter-call-form" class="space-y-5 transition-all duration-300 ease-out">
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center mx-auto text-primary gold-glow mb-4"><svg class="lucide-icon text-3xl" aria-hidden="true" focusable="false"><use href="#bell-ring"></use></svg></div>
+                            <h3 class="font-tajawal text-xl md:text-2xl text-primary font-bold mb-2">مناداة القرصون</h3>
+                            <p class="text-sm text-on-surface-variant leading-relaxed">أدخل بياناتك وسنرسل القرصون إليك بأقرب وقت.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="waiter-call-name" class="block text-xs font-bold text-primary">الاسم الكريم <span class="text-error">*</span></label>
+                            <input id="waiter-call-name" type="text" placeholder="أدخل اسمك..." class="w-full bg-surface-container-low border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                        </div>
+                        
+                        <button onclick="submitWaiterCall()" class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl hover:bg-primary-container transition-all gold-glow flex items-center justify-center gap-2"><svg class="lucide-icon text-lg" aria-hidden="true" focusable="false"><use href="#send"></use></svg><span>إرسال النداء</span></button>
+                    </div>
+                    <div id="waiter-call-success" class="hidden opacity-0 translate-y-3 text-center space-y-5 py-4 transition-all duration-300 ease-out">
+                        <div class="w-16 h-16 rounded-full bg-primary/10 border border-primary/40 flex items-center justify-center mx-auto text-primary gold-glow"><svg class="lucide-icon text-3xl" aria-hidden="true" focusable="false"><use href="#circle-check"></use></svg></div>
+                        <div><h3 class="font-tajawal text-xl text-primary font-bold mb-2">تم إرسال النداء</h3><p class="text-sm text-on-surface-variant leading-relaxed">سيصل القرصون إليك قريبًا.</p></div>
+                        <button onclick="closeWaiterCallModal()" class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl hover:bg-primary-container transition-all">حسنًا</button>
+                    </div>
+                </div>
+            </div>`,
+          );
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeSiCodeCard();
+          closeProductModal();
+          closeCartModal();
+        }
+      });
+    </script>
+  </body>
+</html>

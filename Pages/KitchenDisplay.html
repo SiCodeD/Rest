@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>| شاشة المطبخ (KDS)</title>
+
+    <!-- Local Fonts & Icons -->
+    <link rel="stylesheet" href="../css/local-fonts.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+
+    <!-- Core System Stylesheets -->
+    <script src="../js/theme-init.js"></script>
+    <link rel="stylesheet" href="../css/tailwind.css" />
+    <link rel="stylesheet" href="../css/edupulse.css" />
+    <link rel="stylesheet" href="../css/pages/admin.css" />
+    <link rel="stylesheet" href="../css/pages/kitchen.css" />
+
+    <script>
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#32CD32",
+              "primary-deep": "#28a428",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body>
+    <!-- Full Width KDS App Shell (No Sidebar) -->
+    <div class="app-shell kds-app-shell">
+      <main class="main-shell">
+        <!-- Top System Header -->
+        <header class="header">
+          <div class="kds-header-brand">
+            <div class="kds-header-icon">
+              <span class="material-symbols-outlined" style="font-size: 26px"
+                >soup_kitchen</span
+              >
+            </div>
+            <div>
+              <h2
+                id="pageTitle"
+                style="font-size: 1.3rem; font-weight: 800; line-height: 1.2"
+              >
+                | شاشة المطبخ (KDS)
+              </h2>
+              <p
+                id="pageSubtitle"
+                style="font-size: 0.85rem; color: var(--muted); margin: 0"
+              >
+                متابعة وإدارة تحضير الطلبات مباشرة في المطبخ لحظة بلحظة.
+              </p>
+            </div>
+          </div>
+
+          <div class="header-tools">
+            <!-- Live Clock -->
+            <div
+              id="kdsClock"
+              style="
+                font-weight: 800;
+                font-size: 0.95rem;
+                color: var(--muted);
+                padding: 0.45rem 0.85rem;
+                background: var(--panel);
+                border: 1px solid var(--stroke);
+                border-radius: 12px;
+              "
+            >
+              00:00:00
+            </div>
+
+            <!-- Sound Toggle Button -->
+            <button
+              id="btnToggleSound"
+              class="btn-secondary"
+              type="button"
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.5rem 0.85rem;
+                border-radius: 12px;
+              "
+              title="تفعيل/كتم صوت الطلبات الجديدة"
+            >
+              <span class="material-symbols-outlined">volume_up</span>
+              <span id="soundLabel">الصوت مفعّل</span>
+            </button>
+
+            <!-- Dark Mode Toggle -->
+            <button
+              class="icon-btn"
+              type="button"
+              onclick="DarkMode.toggle()"
+              title="الوضع الليلي"
+            >
+              <span class="material-symbols-outlined dark-mode-icon"
+                >dark_mode</span
+              >
+            </button>
+
+            <!-- Profile Dropdown -->
+            <!-- <div class="user-dropdown-wrapper" id="userDropdownWrapper">
+              <div class="user-pill" onclick="toggleUserDropdown(event)">
+                <div class="avatar user-initials" id="headerAvatar">مط</div>
+                <div>
+                  <p><strong id="headerUserName">شاشة المطبخ</strong></p>
+                  <p class="muted">طاقم الطبخ</p>
+                </div>
+              </div>
+              <div class="user-dropdown">
+                <div class="dropdown-arrow"></div>
+                <div
+                  class="dropdown-item"
+                  onclick="window.location.href = 'AdminDashboard.html'"
+                >
+                  <span class="material-symbols-outlined">space_dashboard</span>
+                  لوحة الإدارة
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item logout" onclick="Auth.logout()">
+                  <span class="material-symbols-outlined">logout</span>
+                  تسجيل الخروج
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </header>
+
+        <!-- Main Dashboard View Container -->
+        <div class="content-shell" style="padding: 1.5rem">
+          <!-- Summary Metrics Cards Grid matching system card-stat style -->
+          <div class="summary-grid" style="margin-bottom: 1.5rem">
+            <div class="card-stat">
+              <span class="material-symbols-outlined bg-icon">schedule</span>
+              <div class="top">
+                <div
+                  class="soft-icon"
+                  style="background: rgba(245, 158, 11, 0.12); color: #f59e0b"
+                >
+                  <span class="material-symbols-outlined">schedule</span>
+                </div>
+                <span class="pill light">جديدة</span>
+              </div>
+              <div class="card-info">
+                <strong class="card-value" id="countNew" style="color: #f59e0b"
+                  >0</strong
+                >
+                <span class="card-label">طلبات جديدة</span>
+                <p class="card-desc">طلبات تنتظر بدء التحضير في المطبخ.</p>
+              </div>
+            </div>
+
+            <div class="card-stat">
+              <span class="material-symbols-outlined bg-icon">skillet</span>
+              <div class="top">
+                <div
+                  class="soft-icon"
+                  style="background: rgba(59, 130, 246, 0.12); color: #3b82f6"
+                >
+                  <span class="material-symbols-outlined">skillet</span>
+                </div>
+                <span class="pill light">نشطة</span>
+              </div>
+              <div class="card-info">
+                <strong class="card-value" id="countPrep" style="color: #3b82f6"
+                  >0</strong
+                >
+                <span class="card-label">قيد التحضير</span>
+                <p class="card-desc">طلبات جاري طبخها وتجهيزها حالياً.</p>
+              </div>
+            </div>
+
+            <div class="card-stat">
+              <span class="material-symbols-outlined bg-icon"
+                >check_circle</span
+              >
+              <div class="top">
+                <div
+                  class="soft-icon"
+                  style="background: rgba(16, 185, 129, 0.12); color: #10b981"
+                >
+                  <span class="material-symbols-outlined">check_circle</span>
+                </div>
+                <span class="pill light">جاهزة</span>
+              </div>
+              <div class="card-info">
+                <strong
+                  class="card-value"
+                  id="countReady"
+                  style="color: #10b981"
+                  >0</strong
+                >
+                <span class="card-label">طلبات جاهزة</span>
+                <p class="card-desc">طلبات تكتمل وجاهزة للتسليم للزبون.</p>
+              </div>
+            </div>
+
+            <div class="card-stat">
+              <span class="material-symbols-outlined bg-icon">sensors</span>
+              <div class="top">
+                <div
+                  class="soft-icon"
+                  style="
+                    background: rgba(159, 29, 32, 0.12);
+                    color: var(--primary);
+                  "
+                >
+                  <span class="material-symbols-outlined">sensors</span>
+                </div>
+                <span class="pill light">مباشر</span>
+              </div>
+              <div class="card-info">
+                <strong
+                  class="card-value"
+                  id="kdsLiveStatus"
+                  style="color: var(--primary); font-size: 1.5rem"
+                  >متصل مباشر</strong
+                >
+                <span class="card-label">حالة النظام</span>
+                <p class="card-desc">مزامنة حية ولحظية مع الخادم.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KDS Controls Toolbar matching Admin Orders Toolbar -->
+          <div class="card orders-toolbar-card" style="margin-bottom: 1.5rem">
+            <div class="orders-toolbar">
+              <div class="orders-search">
+                <span class="material-symbols-outlined muted">search</span>
+                <input
+                  id="kdsSearchInput"
+                  type="text"
+                  placeholder="ابحث برقم الطلب أو اسم الطاولة..."
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="orders-status-filter">
+                <span class="material-symbols-outlined muted">filter_list</span>
+
+                <select id="kdsFilterStatus" class="select-modern">
+                  <option value="all">كل الحالات</option>
+                  <option value="new">جديد</option>
+                  <option value="preparing">قيد التحضير</option>
+                  <option value="ready">جاهز</option>
+                </select>
+              </div>
+
+              <div class="kds-view-switcher" style="margin-inline-start: auto">
+                <button
+                  id="btnViewTickets"
+                  class="kds-view-btn active"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-sm"
+                    >grid_view</span
+                  >
+                  عرض الكروت
+                </button>
+                <button
+                  id="btnViewAggregator"
+                  class="kds-view-btn"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-sm">dataset</span>
+                  تجميع الأصناف
+                </button>
+              </div>
+
+              <button
+                id="btnRefreshKds"
+                class="btn-secondary"
+                type="button"
+                style="min-height: 52px; padding: 0 16px; border-radius: 16px"
+                title="إعادة تحميل الطلبات"
+              >
+                <span class="material-symbols-outlined">refresh</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Content Grid Container -->
+          <div id="kdsContentArea">
+            <div
+              class="card"
+              style="padding: 3.5rem; text-align: center; color: var(--muted)"
+            >
+              <span
+                class="material-symbols-outlined"
+                style="font-size: 3rem; animation: spin 2s linear infinite"
+                >sync</span
+              >
+              <h3
+                style="margin-top: 1rem; color: var(--text); font-weight: 800"
+              >
+                جاري تحميل شاشة المطبخ...
+              </h3>
+              <p>جاري جلب الطلبات النشطة وتجهيز العرض العصري.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts & Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/kitchen.js"></script>
+    <script src="../js/custom-select.js"></script>
+  </body>
+</html>

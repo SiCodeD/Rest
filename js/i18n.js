@@ -195,7 +195,8 @@ const I18N = {
             switch_to_arabic: 'العربية',
             switch_to_english: 'English',
             light_mode: 'Light Mode',
-            dark_mode: 'Dark Mode'
+            dark_mode: 'Dark Mode',
+            revenue: 'School Performance'
         },
         ar: {
             // General
@@ -385,7 +386,8 @@ const I18N = {
 
             // Language switcher
             switch_to_arabic: 'العربية',
-            switch_to_english: 'English'
+            switch_to_english: 'English',
+            revenue: 'أداء المدرسة'
         }
     },
 
@@ -423,7 +425,11 @@ const I18N = {
         const isRTL = this.currentLang === 'ar';
         const main = document.querySelector('main');
         const header = document.querySelector('header.fixed');
-        const sidebar = document.querySelector('aside');
+        const sidebar = document.querySelector('.sidebar');
+
+        // صفحات المصادقة لا تحتوي على سايدبار. لا تطبق عليها هوامش
+        // التخطيط العام حتى لا يتمدد نموذج الدخول خارج عرض الجوال.
+        if (!sidebar) return;
         
         if (main) {
             if (isRTL) {

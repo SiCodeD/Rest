@@ -1,15 +1,48 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+function publicMenuSlugPlugin() {
+  const rewrite = function (req, _res, next) {
+    if (!['GET', 'HEAD'].includes(req.method)) return next();
+
+    const pathname = decodeURIComponent((req.url || '').split('?')[0]);
+    const match = pathname.match(/^\/([^/?.]+)\/?$/);
+    if (!match) return next();
+
+    const slug = match[1];
+    req.url = `/Pages/Menu.html?slug=${encodeURIComponent(slug)}`;
+    next();
+  };
+
+  return {
+    name: "public-menu-slug",
+    configureServer(server) {
+      server.middlewares.use(rewrite);
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(rewrite);
+    },
+  };
+}
+
 export default defineConfig({
+  plugins: [publicMenuSlugPlugin()],
+  server: {
+    allowedHosts: [
+      "gentleman-writer-patches-director.trycloudflare.com"
+    ],
+  },
   build: {
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        login: resolve(__dirname, 'login.html'),
-        parent_dashboard: resolve(__dirname, 'parent/dashboard.html'),
-        teacher_dashboard: resolve(__dirname, 'teacher/dashboard.html'),
-        admin_dashboard: resolve(__dirname, 'admin/dashboard.html'),
+        login: resolve(__dirname, 'Pages/Login.html'),
+        waiter_login: resolve(__dirname, 'Pages/WaiterLogin.html'),
+        waiter_dashboard: resolve(__dirname, 'Pages/WaiterDashboard.html'),
+        admin_dashboard: resolve(__dirname, 'Pages/AdminDashboard.html'),
+        super_admin_dashboard: resolve(__dirname, 'Pages/SuperAdminDashboard.html'),
+        landing: resolve(__dirname, 'Pages/Landing.html'),
+        setup_password: resolve(__dirname, 'Pages/SetupPassword.html'),
       },
     },
     minify: 'terser',

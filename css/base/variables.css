@@ -1,0 +1,235 @@
+:root {
+
+    /* =========================
+     Base
+     ========================= */
+
+    --bg: #F0EDE5;
+    --panel: rgba(255, 255, 255, 0.88);
+    --panel-strong: #FFFFFF;
+    --card: #FFFFFF;
+
+    /* =========================
+     Borders
+     ========================= */
+
+    --stroke: #DED9D0;
+    --header-border: rgba(113, 0, 20, 0.10);
+
+    /* =========================
+     Typography
+     ========================= */
+
+    --text: #183330;
+    --muted: #687875;
+    --text-sid: #FFFDF8;
+
+    /* =========================
+     Primary — Cyprus
+     ========================= */
+
+    --primary: #710014;
+    --primary-deep: #52000e;
+    --primary-soft: rgba(113, 0, 20, 0.12);
+
+    /* =========================
+     Accent — Luxury Gold
+     ========================= */
+
+    --accent: #D3AD67;
+    --accent-soft: rgba(211, 173, 103, 0.12);
+
+    /* =========================
+     Status
+     ========================= */
+
+    --warn: #B7791F;
+    --danger: #A61B1F;
+    --danger-soft: rgba(166, 27, 31, 0.08);
+
+    /* =========================
+     Shadows
+     ========================= */
+
+    --shadow-sm:
+        0 4px 6px -1px rgba(113, 0, 20, 0.04);
+
+    --shadow:
+        0 10px 25px -5px rgba(113, 0, 20, 0.06),
+        0 8px 10px -6px rgba(113, 0, 20, 0.04);
+
+    --shadow-lg:
+        0 20px 50px -12px rgba(113, 0, 20, 0.10);
+
+    /* =========================
+     Radius
+     ========================= */
+
+    --radius-xl: 24px;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+
+    /* =========================
+     Header
+     ========================= */
+
+    --header-bg:
+        linear-gradient(135deg,
+            #FFFFFF 0%,
+            #F0EDE5 100%);
+
+    --header-shadow:
+        0 10px 30px -10px rgba(113, 0, 20, 0.08);
+
+    /* =========================
+     Search
+     ========================= */
+
+    --search-bg: #FFFFFF;
+    --search-border: #DED9D0;
+
+    /* =========================
+     Icon Buttons
+     ========================= */
+
+    --icon-btn-bg: #FFFFFF;
+    --icon-btn-border: #DED9D0;
+
+    /* =========================
+     Sidebar
+     ========================= */
+
+    --sidebar-hover-bg:
+        rgba(113, 0, 20, 0.045);
+
+    --sidebar-active-bg:
+        rgba(113, 0, 20, 0.10);
+
+    --sidebar-active-text: #710014;
+
+    --sidebar-icon-active: #FFFFFF;
+
+    --sidebar-icon-bg:
+        rgba(113, 0, 20, 0.08);
+
+    /* =========================
+     Overlay / Scrollbar
+     ========================= */
+
+    --overlay-bg: rgba(24, 51, 48, 0.42);
+
+    --scrollbar-thumb:
+        rgba(24, 51, 48, 0.14);
+}
+
+.dark {
+
+    /* Neutral charcoal dark theme: surfaces are separated by tone, not glow. */
+    --bg: #0B0C0F;
+
+    --panel: #101114;
+
+    --panel-strong: #15171B;
+
+    --card: #121419;
+
+
+    /* Borders */
+
+    --stroke: #2A2D34;
+
+    --header-border: rgba(255, 255, 255, 0.08);
+
+
+    /* Typography */
+
+    --text: #F1F2F4;
+
+    --muted: #9BA0AA;
+
+    --text-sid: #F1F2F4;
+
+
+    /* Primary */
+
+    --primary: #a61e3a;
+    --primary-deep: #7e1027;
+    --primary-soft: rgba(166, 30, 58, 0.18);
+
+
+    /* Gold */
+
+    --accent: #D3A34F;
+
+    --accent-soft: rgba(211, 163, 79, 0.14);
+
+
+    /* Status */
+
+    --warn: #C58D43;
+
+    --danger: #EF6B70;
+
+    --danger-soft: rgba(239, 107, 112, 0.14);
+
+
+    /* Shadows */
+
+    --shadow-sm:
+        0 4px 8px rgba(0, 0, 0, 0.25);
+
+    --shadow:
+        0 15px 30px -8px rgba(0, 0, 0, 0.35);
+
+    --shadow-lg:
+        0 25px 55px -12px rgba(0, 0, 0, 0.50);
+
+
+    /* Header */
+
+    --header-bg: #101114;
+
+    --header-shadow:
+        0 15px 40px -12px rgba(0, 0, 0, 0.40);
+
+
+    /* Search */
+
+    --search-bg: #15171B;
+
+    --search-border: #2A2D34;
+
+
+    /* Icon Buttons */
+
+    --icon-btn-bg: #15171B;
+
+    --icon-btn-border: #2A2D34;
+
+
+    /* Sidebar */
+
+    --sidebar-hover-bg:
+        rgba(255, 255, 255, 0.035);
+
+    --sidebar-active-bg:
+        rgba(166, 30, 58, 0.16);
+
+    --sidebar-active-text:
+        #D85A72;
+
+    --sidebar-icon-active:
+        #F0EDE5;
+
+    --sidebar-icon-bg:
+        rgba(166, 30, 58, 0.12);
+
+
+    /* Overlay / Scrollbar */
+
+    --overlay-bg:
+        rgba(0, 0, 0, 0.72);
+
+    --scrollbar-thumb:
+        rgba(240, 237, 229, 0.12);
+}

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> | دخول القرصون</title>
+
+    <!-- خط الشعار (Aref Ruqaa). يمكنك استضافته محلياً داخل local-fonts.css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap"
+    />
+
+    <link rel="stylesheet" href="../css/edupulse.css" />
+    <link rel="stylesheet" href="../css/local-fonts.css" />
+    <!-- نفس تصميم صفحة الدخول الرئيسية + إضافات القرصون -->
+    <link rel="stylesheet" href="../css/pages/auth.css" />
+    <link rel="stylesheet" href="../css/pages/waiter-login.css" />
+
+    <script src="../js/theme-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/employee-auth.js"></script>
+  </head>
+
+  <body class="login-page waiter-login">
+    <div class="auth-shell">
+      <!-- ═════════ جهة النموذج ═════════ -->
+      <main class="auth-form-side">
+        <div class="auth-form-inner">
+          <div class="brand">
+            <div class="brand-mark">
+              <span class="material-symbols-outlined">local_dining</span>
+            </div>
+            <!-- <p class="brand-name"></p> -->
+          </div>
+
+          <h1 class="login-title" id="waiterLoginTitle">تسجيل دخول القرصون</h1>
+          <p class="login-sub">
+            أدخل بيانات الدخول التي زودتك بها إدارة المطعم.
+          </p>
+
+          <form id="waiterLoginForm" aria-labelledby="waiterLoginTitle">
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label" for="waiterUsername"
+                  >اسم المستخدم</label
+                >
+              </div>
+              <div class="input-wrapper">
+                <span class="material-symbols-outlined field-icon">person</span>
+                <input
+                  id="waiterUsername"
+                  type="text"
+                  dir="ltr"
+                  autocomplete="username"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  maxlength="40"
+                  placeholder="username"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-row">
+                <label class="form-label" for="waiterPin">رمز PIN</label>
+              </div>
+              <div class="input-wrapper has-toggle">
+                <span class="material-symbols-outlined field-icon">lock</span>
+                <input
+                  class="waiter-pin-input"
+                  id="waiterPin"
+                  type="password"
+                  dir="ltr"
+                  inputmode="numeric"
+                  autocomplete="current-password"
+                  maxlength="8"
+                  placeholder="••••"
+                  required
+                />
+                <button
+                  type="button"
+                  class="pw-toggle"
+                  id="pinToggle"
+                  aria-pressed="false"
+                  aria-label="إظهار الرمز"
+                >
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="waiter-message error"
+              id="waiterLoginMessage"
+              role="alert"
+              aria-live="polite"
+            >
+              <span class="material-symbols-outlined">error</span>
+              <span></span>
+            </div>
+
+            <button class="login-btn" id="waiterLoginButton" type="submit">
+              <span class="material-symbols-outlined">login</span>
+              <span>تسجيل الدخول</span>
+            </button>
+          </form>
+
+          <div class="waiter-security-note">
+            <span class="material-symbols-outlined">verified_user</span>
+            <span>بيانات الدخول مخصصة لك ولا تشاركها مع الآخرين</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- ═════════ جهة التذاكر (زخرفية) ═════════ -->
+      <aside class="auth-hero-side" aria-label="هوية النظام">
+        <div class="stage" aria-hidden="true">
+          <div class="rail"></div>
+
+          <!-- تذكرة نداء طاولة -->
+          <div class="ticket-hang ticket-side">
+            <div class="ticket">
+              <div class="ticket-head">
+                <div class="ticket-table">
+                  <small>طاولة</small>
+                  <strong>3</strong>
+                </div>
+                <div class="ticket-meta">
+                  <span>نداء</span>
+                  <span>9:14 م</span>
+                </div>
+              </div>
+              <ul class="ticket-items">
+                <li>
+                  <b
+                    ><span class="material-symbols-outlined"
+                      >notifications_active</span
+                    ></b
+                  >
+                  <span>تطلب حضور النادل</span>
+                </li>
+              </ul>
+              <div class="ticket-foot">
+                <div class="status">
+                  <span class="status-call">بانتظار الاستلام</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- تذكرة طلب جاهز -->
+          <div class="ticket-hang ticket-main">
+            <div class="ticket">
+              <div class="ticket-head">
+                <div class="ticket-table">
+                  <small>طاولة</small>
+                  <strong>8</strong>
+                </div>
+                <div class="ticket-meta">
+                  <span>طلب #251</span>
+                  <span>9:15 م</span>
+                </div>
+              </div>
+              <ul class="ticket-items">
+                <li><b>1</b><span>مشاوي مشكلة</span></li>
+                <li><b>2</b><span>سلطة فتوش</span></li>
+                <li><b>2</b><span>عصير ليمون</span></li>
+              </ul>
+              <p class="ticket-note">بدون ثوم</p>
+              <div class="ticket-foot">
+                <div class="status">
+                  <span class="status-prep">قيد التحضير</span>
+                  <span class="status-ready">جاهز للتقديم</span>
+                </div>
+                <span class="ticket-time">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span>8 د</span>
+                </span>
+              </div>
+              <div class="stamp">جاهز</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-copy">
+          <h2 class="hero-title">
+            الطلبات الجاهزة ونداءات الطاولات تصلك لحظة حدوثها
+          </h2>
+          <p class="hero-sub">دخول مخصص لفريق الصالة.</p>
+        </div>
+      </aside>
+    </div>
+
+    <script>
+      (function () {
+        const form = document.getElementById("waiterLoginForm");
+        const button = document.getElementById("waiterLoginButton");
+        const message = document.getElementById("waiterLoginMessage");
+        const messageText = message.querySelector("span:last-child");
+        const usernameInput = document.getElementById("waiterUsername");
+        const pinInput = document.getElementById("waiterPin");
+        const pinToggle = document.getElementById("pinToggle");
+
+        if (EmployeeAuth.getSession()) {
+          window.location.replace(EmployeeAuth.getDashboardPath());
+          return;
+        }
+
+        function setMessage(text) {
+          messageText.textContent = text || "";
+          message.classList.toggle("show", Boolean(text));
+        }
+
+        function setLoading(loading) {
+          button.disabled = loading;
+          button.querySelector(".material-symbols-outlined").textContent =
+            loading ? "progress_activity" : "login";
+          button.querySelector("span:last-child").textContent = loading
+            ? "جاري التحقق..."
+            : "تسجيل الدخول";
+          button.classList.toggle("is-loading", loading);
+          button.setAttribute("aria-busy", String(loading));
+        }
+
+        function clearInvalid() {
+          usernameInput.classList.remove("is-invalid");
+          pinInput.classList.remove("is-invalid");
+        }
+
+        usernameInput.addEventListener("input", clearInvalid);
+        pinInput.addEventListener("input", clearInvalid);
+
+        // إظهار / إخفاء رمز PIN
+        pinToggle.addEventListener("click", function () {
+          const show = pinInput.type === "password";
+          pinInput.type = show ? "text" : "password";
+          pinToggle.setAttribute("aria-pressed", String(show));
+          pinToggle.setAttribute(
+            "aria-label",
+            show ? "إخفاء الرمز" : "إظهار الرمز",
+          );
+          pinToggle.querySelector(".material-symbols-outlined").textContent =
+            show ? "visibility_off" : "visibility";
+        });
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+          setMessage("");
+          clearInvalid();
+          setLoading(true);
+          const result = await EmployeeAuth.login(
+            usernameInput.value,
+            pinInput.value,
+          );
+          if (result.success) {
+            window.location.replace(EmployeeAuth.getDashboardPath());
+            return;
+          }
+          setLoading(false);
+          setMessage(result.message);
+          pinInput.classList.add("is-invalid");
+          pinInput.select();
+        });
+      })();
+    </script>
+  </body>
+</html>

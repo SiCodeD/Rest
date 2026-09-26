@@ -7,18 +7,20 @@
     <script src="js/supabase-config.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Check for invite tokens in the URL hash
-        if (window.location.hash.includes('type=invite') || window.location.hash.includes('access_token=')) {
-            // Do nothing, let Auth.init() in auth.js handle the redirect to setup-password.html
-            console.log("Invite detected, waiting for redirect...");
-        } else {
-            const currentUser = Auth.getCurrentUser();
-            if (currentUser) {
-                Auth.redirectByRole(currentUser);
+        (async function() {
+            // Check for invite tokens in the URL hash
+            if (window.location.hash.includes('type=invite') || window.location.hash.includes('access_token=')) {
+                // Do nothing, let Auth.init() in auth.js handle the redirect to setup-password.html
+                console.log("Invite detected, waiting for redirect...");
             } else {
-                window.location.href = 'login.html';
+                const currentUser = await Auth.getCurrentUser();
+                if (currentUser) {
+                    Auth.redirectByRole(currentUser);
+                } else {
+                    window.location.href = 'Pages/Login.html';
+                }
             }
-        }
+        })();
     </script>
 </head>
 <body></body>

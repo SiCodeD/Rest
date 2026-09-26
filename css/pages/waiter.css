@@ -1,0 +1,1222 @@
+:root {
+    --waiter-bg: #faf8f5;
+    --waiter-panel: rgba(255, 255, 255, 0.94);
+    --waiter-text: #2c2522;
+    --waiter-muted: #7b706b;
+    --waiter-stroke: #e8e1db;
+    --waiter-primary: #9f1d20;
+    --waiter-primary-deep: #7f171a;
+    --waiter-primary-soft: rgba(159, 29, 32, 0.09);
+    --waiter-shadow: 0 24px 70px rgba(78, 35, 30, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.waiter-page {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--waiter-text);
+    background:
+        radial-gradient(circle at 12% 10%, rgba(176, 141, 87, 0.13), transparent 28%),
+        radial-gradient(circle at 90% 92%, rgba(159, 29, 32, 0.10), transparent 32%),
+        var(--waiter-bg);
+    font-family: var(--font-cairo);
+}
+
+.waiter-page-shell {
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: minmax(0, 0.88fr) minmax(360px, 1.12fr);
+}
+
+.waiter-brand-panel {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    min-height: 100vh;
+    padding: clamp(32px, 6vw, 88px);
+    overflow: hidden;
+    color: #fffaf5;
+    background: linear-gradient(145deg, #74191b 0%, #9f1d20 54%, #ba4a3d 100%);
+}
+
+.waiter-brand-copy {
+    position: absolute;
+    right: 40px;
+    bottom: 70px;
+    left: auto;
+
+    width: auto;
+    max-width: 500px;
+
+    margin: 0;
+    transform: none;
+
+    text-align: right;
+    direction: rtl;
+    z-index: 10;
+}
+
+.waiter-brand-panel::before,
+.waiter-brand-panel::after {
+    content: "";
+    border: 1px solid rgba(255, 250, 245, 0.18);
+    border-radius: 50%;
+}
+
+.waiter-call-claim-wrap {
+    flex-basis: 100%;
+    margin-top: 4px;
+}
+
+.waiter-call-claim-button,
+.waiter-call-claim-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 38px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 900;
+}
+
+.waiter-call-claim-button {
+    border: 0;
+    background: var(--waiter-primary);
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.waiter-call-claim-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.waiter-call-claim-status {
+    background: rgba(16, 185, 129, 0.1);
+    color: #16845f;
+}
+
+.waiter-call-claim-button .material-symbols-outlined,
+.waiter-call-claim-status .material-symbols-outlined {
+    font-size: 17px;
+}
+
+.waiter-brand-panel::before {
+    width: 480px;
+    height: 480px;
+    top: -190px;
+    left: -150px;
+}
+
+.waiter-brand-panel::after {
+    width: 300px;
+    height: 300px;
+    right: -110px;
+    bottom: -90px;
+}
+
+.waiter-brand-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 430px;
+}
+
+.waiter-brand-mark {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 28px;
+    place-items: center;
+    border: 1px solid rgba(255, 250, 245, 0.3);
+    border-radius: 20px;
+    background: rgba(255, 250, 245, 0.13);
+    box-shadow: 0 18px 40px rgba(55, 12, 13, 0.2);
+}
+
+.waiter-brand-mark .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.waiter-brand-copy h1 {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 4vw, 3.7rem);
+    line-height: 1.15;
+    font-weight: 900;
+}
+
+.waiter-brand-copy p {
+    margin: 0;
+    color: rgba(255, 250, 245, 0.78);
+    font-size: 1rem;
+    line-height: 1.9;
+}
+
+.waiter-brand-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 34px;
+    color: #f4d9c5;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.waiter-brand-note .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.waiter-form-side {
+    display: grid;
+    place-items: center;
+    padding: 32px;
+}
+
+.waiter-login-card {
+    width: min(100%, 470px);
+    padding: clamp(26px, 5vw, 52px);
+    border: 1px solid var(--waiter-stroke);
+    border-radius: 28px;
+    background: var(--waiter-panel);
+    box-shadow: var(--waiter-shadow);
+    animation: waiterEnter 0.55s ease both;
+}
+
+.waiter-card-heading {
+    margin-bottom: 30px;
+}
+
+.waiter-card-heading .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--waiter-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.waiter-card-heading .eyebrow .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.waiter-card-heading h2 {
+    margin: 12px 0 7px;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    font-weight: 900;
+}
+
+.waiter-card-heading p {
+    margin: 0;
+    color: var(--waiter-muted);
+    font-size: 0.88rem;
+    line-height: 1.8;
+}
+
+.waiter-form {
+    display: grid;
+    gap: 18px;
+}
+
+.waiter-field {
+    display: grid;
+    gap: 8px;
+}
+
+.waiter-field label {
+    color: var(--waiter-text);
+    font-size: 0.83rem;
+    font-weight: 800;
+}
+
+.waiter-input-wrap {
+    position: relative;
+}
+
+.waiter-input-wrap>.material-symbols-outlined {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    color: var(--waiter-muted);
+    font-size: 20px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.waiter-input {
+    width: 100%;
+    min-height: 54px;
+    padding: 12px 48px 12px 16px;
+    border: 1px solid var(--waiter-stroke);
+    border-radius: 15px;
+    outline: none;
+    background: #fff;
+    color: var(--waiter-text);
+    font: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.waiter-input[dir="ltr"] {
+    text-align: left;
+}
+
+.waiter-input:focus {
+    border-color: var(--waiter-primary);
+    box-shadow: 0 0 0 4px var(--waiter-primary-soft);
+}
+
+.waiter-pin-input {
+    letter-spacing: 0.3em;
+    font-family: var(--font-jetbrains);
+}
+
+.waiter-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 54px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 15px;
+    background: var(--waiter-primary);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 900;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.waiter-submit:hover {
+    background: var(--waiter-primary-deep);
+    transform: translateY(-2px);
+}
+
+.waiter-submit:disabled {
+    cursor: wait;
+    opacity: 0.72;
+    transform: none;
+}
+
+.waiter-message {
+    display: none;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 12px 14px;
+    border-radius: 13px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.waiter-message.show {
+    display: flex;
+}
+
+.waiter-message.error {
+    background: rgba(166, 27, 31, 0.08);
+    color: var(--waiter-primary-deep);
+}
+
+.waiter-message .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 19px;
+}
+
+.waiter-security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 25px;
+    color: var(--waiter-muted);
+    font-size: 0.72rem;
+}
+
+.waiter-security-note .material-symbols-outlined {
+    color: #10a577;
+    font-size: 17px;
+}
+
+.waiter-loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    background: var(--waiter-bg);
+    color: var(--waiter-text);
+}
+
+.waiter-loading-screen[hidden] {
+    display: none;
+}
+
+.waiter-spinner {
+    width: 34px;
+    height: 34px;
+    border: 3px solid var(--waiter-primary-soft);
+    border-top-color: var(--waiter-primary);
+    border-radius: 50%;
+    animation: waiterSpin 0.8s linear infinite;
+}
+
+.waiter-loading-copy {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    color: var(--waiter-muted);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.waiter-dashboard {
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.waiter-dashboard-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 16px 20px;
+    border: 1px solid var(--waiter-stroke);
+    border-radius: 18px;
+    background: var(--waiter-panel);
+    box-shadow: 0 8px 28px rgba(78, 35, 30, 0.06);
+}
+
+.waiter-dashboard-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-weight: 900;
+}
+
+.waiter-dashboard-brand .material-symbols-outlined {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary);
+}
+
+.waiter-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 13px;
+    border: 1px solid var(--waiter-stroke);
+    border-radius: 11px;
+    background: white;
+    color: var(--waiter-primary);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.waiter-install {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 13px;
+    border: 1px solid rgba(159, 29, 32, 0.2);
+    border-radius: 11px;
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.waiter-install[hidden] {
+    display: none;
+}
+
+.waiter-install:hover {
+    background: var(--waiter-primary);
+    color: #fff;
+}
+
+.waiter-notification-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 13px;
+    border: 1px solid rgba(22, 132, 95, 0.24);
+    border-radius: 11px;
+    background: rgba(22, 132, 95, 0.08);
+    color: #146b50;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.waiter-notification-toggle.is-enabled {
+    background: #16845f;
+    color: #fff;
+}
+
+/* @media (hover: hover) and (pointer: fine) {
+    .waiter-notification-toggle:hover:not(:disabled) {
+        background: #16845f;
+        color: #fff;
+    }
+} */
+
+.waiter-notification-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.62;
+}
+
+.waiter-notification-toggle[hidden] {
+    display: none;
+}
+
+.waiter-notification-toggle .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.waiter-notification-toasts {
+    position: fixed;
+    z-index: 20;
+    top: 86px;
+    inset-inline-end: 22px;
+    display: grid;
+    gap: 9px;
+    width: min(360px, calc(100vw - 32px));
+    pointer-events: none;
+}
+
+.waiter-notification-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 13px 14px;
+    border: 1px solid rgba(22, 132, 95, 0.18);
+    border-radius: 14px;
+    background: #fffdfb;
+    box-shadow: 0 15px 34px rgba(78, 35, 30, 0.16);
+    color: var(--waiter-text);
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.55;
+    animation: waiterToastEnter 0.25s ease both;
+}
+
+.waiter-notification-toast>.material-symbols-outlined {
+    color: #16845f;
+    font-size: 20px;
+}
+
+.waiter-notification-toast.is-call>.material-symbols-outlined {
+    color: var(--waiter-primary);
+}
+
+.waiter-notification-toast.is-error {
+    border-color: rgba(159, 29, 32, 0.2);
+}
+
+.waiter-notification-toast.is-error>.material-symbols-outlined {
+    color: var(--waiter-primary);
+}
+
+@keyframes waiterToastEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.waiter-dashboard-content {
+    max-width: 1120px;
+    margin: 24px auto 0;
+    padding: clamp(28px, 6vw, 70px);
+    border: 1px solid var(--waiter-stroke);
+    border-radius: 24px;
+    background: var(--waiter-panel);
+    text-align: center;
+    box-shadow: var(--waiter-shadow);
+}
+
+.waiter-dashboard-content .material-symbols-outlined {
+    color: var(--waiter-primary);
+    font-size: 48px;
+}
+
+.waiter-dashboard-content h1 {
+    margin: 14px 0 8px;
+    font-size: clamp(1.45rem, 3vw, 2.2rem);
+}
+
+.waiter-dashboard-content p {
+    margin: 0;
+    color: var(--waiter-muted);
+    line-height: 1.9;
+}
+
+@keyframes waiterEnter {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes waiterSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 780px) {
+    .waiter-page-shell {
+        display: block;
+    }
+
+    .waiter-brand-panel {
+        min-height: auto;
+        padding: 30px 24px 28px;
+    }
+
+    .waiter-brand-copy h1 {
+        font-size: 2rem;
+    }
+
+    .waiter-brand-copy p {
+        font-size: 0.84rem;
+    }
+
+    .waiter-brand-note {
+        margin-top: 18px;
+    }
+
+    .waiter-form-side {
+        min-height: calc(100vh - 225px);
+        padding: 22px 16px 32px;
+    }
+
+    .waiter-login-card {
+        padding: 26px 20px;
+        border-radius: 22px;
+    }
+
+    .waiter-ready-heading {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .waiter-ready-counter {
+        width: 100%;
+    }
+
+    .waiter-dashboard-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 420px) {
+    .waiter-ready-section {
+        margin-top: 12px;
+        padding: 16px 12px;
+        border-radius: 18px;
+    }
+
+    .waiter-dashboard-actions>* {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .waiter-dashboard-bar {
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .waiter-dashboard-actions {
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .waiter-dashboard-actions>* {
+        flex: 0 0 auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .waiter-login-card,
+    .waiter-spinner {
+        animation: none;
+    }
+}
+
+/* Ready orders feed */
+.waiter-dashboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.waiter-dashboard-bar,
+.waiter-calls-heading,
+.waiter-ready-heading {
+    min-width: 0;
+}
+
+.waiter-live-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #16845f;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.waiter-live-status>span:first-child {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+
+.waiter-ready-section {
+    max-width: 1120px;
+    margin: 24px auto 0;
+    padding: clamp(22px, 4vw, 38px);
+    border: 1px solid var(--waiter-stroke);
+    border-radius: 24px;
+    background: var(--waiter-panel);
+    box-shadow: var(--waiter-shadow);
+}
+
+.waiter-ready-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--waiter-stroke);
+}
+
+.waiter-card-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--waiter-primary);
+    font-size: 0.76rem;
+    font-weight: 900;
+}
+
+.waiter-card-eyebrow .material-symbols-outlined {
+    font-size: 17px;
+}
+
+.waiter-ready-heading h1 {
+    margin: 10px 0 6px;
+    font-size: clamp(1.4rem, 3vw, 2.15rem);
+}
+
+.waiter-ready-heading p {
+    margin: 0;
+    color: var(--waiter-muted);
+    font-size: 0.84rem;
+}
+
+.waiter-ready-counter {
+    display: grid;
+    min-width: 130px;
+    padding: 13px 16px;
+    border-radius: 15px;
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary);
+    text-align: center;
+}
+
+.waiter-ready-counter strong {
+    font-size: 1.55rem;
+    line-height: 1.1;
+}
+
+.waiter-ready-counter span {
+    margin-top: 5px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.waiter-ready-state {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 65px 20px;
+    color: var(--waiter-muted);
+    text-align: center;
+}
+
+.waiter-ready-state[hidden],
+.waiter-ready-orders[hidden] {
+    display: none;
+}
+
+.waiter-ready-state strong {
+    color: var(--waiter-text);
+    font-size: 1rem;
+}
+
+.waiter-ready-state>.material-symbols-outlined {
+    color: #10a577;
+    font-size: 48px;
+}
+
+.waiter-ready-error>.material-symbols-outlined {
+    color: var(--waiter-primary);
+}
+
+.waiter-ready-state p {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.waiter-refresh {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 13px;
+    border: 0;
+    border-radius: 11px;
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.waiter-ready-orders {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    padding-top: 24px;
+}
+
+.waiter-ready-order {
+    padding: 20px;
+    border: 1px solid rgba(159, 29, 32, 0.16);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #fff, #fff9f7);
+    box-shadow: 0 12px 28px rgba(78, 35, 30, 0.07);
+    animation: waiterOrderEnter 0.4s ease both;
+}
+
+.waiter-ready-order-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.waiter-ready-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #16845f;
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+.waiter-ready-kicker .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.waiter-ready-order h3 {
+    margin: 7px 0 0;
+    font-size: 1.2rem;
+}
+
+.waiter-ready-order time {
+    color: var(--waiter-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.waiter-ready-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+    color: var(--waiter-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.waiter-ready-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.waiter-ready-meta .material-symbols-outlined {
+    color: var(--waiter-primary);
+    font-size: 17px;
+}
+
+.waiter-ready-items {
+    display: grid;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--waiter-stroke);
+}
+
+.waiter-ready-items div {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.84rem;
+}
+
+.waiter-ready-items strong {
+    min-width: 28px;
+    color: var(--waiter-primary);
+}
+
+.waiter-ready-notes {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    margin: 15px 0 0;
+    padding: 9px 10px;
+    border-radius: 10px;
+    background: rgba(176, 141, 87, 0.1);
+    color: #755929;
+    font-size: 0.74rem;
+    line-height: 1.7;
+}
+
+.waiter-ready-notes .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+@keyframes waiterOrderEnter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 780px) {
+    .waiter-dashboard {
+        padding: 14px;
+    }
+
+    .waiter-dashboard-actions {
+        gap: 8px;
+    }
+
+    .waiter-install {
+        padding: 0 10px;
+        font-size: 0.72rem;
+    }
+
+    .waiter-notification-toggle,
+    .waiter-logout,
+    .waiter-install {
+        width: 40px;
+        min-width: 40px;
+        padding: 0;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .waiter-btn-label {
+        display: none;
+    }
+
+    .waiter-live-status {
+        font-size: 0;
+    }
+
+    .waiter-ready-heading {
+        flex-direction: column;
+    }
+
+    .waiter-ready-counter {
+        width: 100%;
+    }
+}
+
+.waiter-action-message {
+    margin: 18px 0 0;
+    padding: 11px 14px;
+    border-radius: 12px;
+    background: rgba(16, 185, 129, 0.1);
+    color: #16845f;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.waiter-action-message.is-error {
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary-deep);
+}
+
+.waiter-claim-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    min-height: 45px;
+    margin-top: 18px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--waiter-primary);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 900;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.waiter-claim-button:hover {
+    background: var(--waiter-primary-deep);
+    transform: translateY(-1px);
+}
+
+.waiter-claim-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+    transform: none;
+}
+
+.waiter-claim-button .material-symbols-outlined,
+.waiter-claim-status .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.waiter-claim-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 10px;
+    border-radius: 11px;
+    background: rgba(16, 185, 129, 0.1);
+    color: #16845f;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-align: center;
+}
+
+.waiter-spin-icon {
+    animation: waiterSpin 0.8s linear infinite;
+}
+
+.waiter-calls-section {
+    max-width: 1120px;
+    margin: 24px auto 0;
+    padding: 22px clamp(18px, 3vw, 30px);
+    border: 1px solid rgba(159, 29, 32, 0.18);
+    border-radius: 22px;
+    background: linear-gradient(145deg, #fff, #fff8f5);
+    box-shadow: 0 14px 34px rgba(78, 35, 30, 0.08);
+}
+
+.waiter-calls-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.waiter-calls-heading h2 {
+    margin: 8px 0 5px;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+}
+
+.waiter-calls-heading p {
+    margin: 0;
+    color: var(--waiter-muted);
+    font-size: 0.78rem;
+}
+
+.waiter-calls-count {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--waiter-primary);
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.waiter-calls-state {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 28px 16px 10px;
+    color: var(--waiter-muted);
+    text-align: center;
+}
+
+.waiter-calls-state[hidden],
+.waiter-calls-list[hidden] {
+    display: none;
+}
+
+.waiter-calls-state strong {
+    color: var(--waiter-text);
+    font-size: 0.85rem;
+}
+
+.waiter-calls-state p {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.waiter-calls-state>.material-symbols-outlined {
+    color: var(--waiter-muted);
+    font-size: 32px;
+}
+
+.waiter-calls-list {
+    display: grid;
+    gap: 9px;
+    padding-top: 18px;
+}
+
+.waiter-call-card {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid rgba(159, 29, 32, 0.16);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #ffffff 0%, #fffaf7 100%);
+    box-shadow: 0 10px 24px rgba(78, 35, 30, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.waiter-call-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(78, 35, 30, 0.1);
+}
+
+.waiter-call-head {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.waiter-call-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary);
+}
+
+.waiter-call-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.waiter-call-copy strong {
+    font-size: 0.84rem;
+}
+
+.waiter-call-copy span {
+    color: var(--waiter-muted);
+    font-size: 0.72rem;
+}
+
+.waiter-call-card time {
+    margin-inline-start: auto;
+    color: var(--waiter-muted);
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.waiter-call-table-line {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 12px;
+    border-radius: 11px;
+    background: var(--waiter-primary-soft);
+    color: var(--waiter-primary);
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.waiter-call-table-line .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.waiter-call-claim-wrap {
+    width: 100%;
+    margin-top: 0;
+}
+
+.waiter-call-claim-button,
+.waiter-call-claim-status {
+    min-height: 44px;
+    margin-top: 0;
+}
+
+@media (max-width: 480px) {
+    .waiter-call-card {
+        padding: 15px;
+    }
+
+    .waiter-call-head {
+        align-items: flex-start;
+    }
+
+    .waiter-call-card time {
+        font-size: 0.66rem;
+    }
+}

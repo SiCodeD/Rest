@@ -1,0 +1,323 @@
+/* =========================================================
+   Header
+   - Desktop / tablet: title on the right, tools on the left
+   - Mobile (<= 640px): the user pill + dropdown are hidden,
+     because the drawer already has the user card, settings
+     and logout.
+   ========================================================= */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 22px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--stroke);
+    background: var(--panel);
+    backdrop-filter: blur(16px);
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 100;
+}
+
+.header-copy h2 {
+    margin: 0;
+    font-size: 1.55rem;
+    line-height: 1.1;
+}
+
+.header-copy p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+    .header {
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .header-copy {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .header-copy h2 {
+        overflow: hidden;
+        font-size: 1.1rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .header-copy p {
+        overflow: hidden;
+        margin-top: 4px;
+        font-size: 0.72rem;
+        line-height: 1.35;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .header-tools {
+        flex: 0 0 auto;
+        flex-wrap: nowrap;
+        gap: 8px;
+        width: auto;
+    }
+
+    .header-tools .icon-btn {
+        flex: 0 0 40px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .header-tools .user-dropdown-wrapper,
+    .header-tools .user-pill {
+        min-width: 0;
+    }
+
+    .user-dropdown {
+        right: 0;
+        left: auto;
+        max-width: calc(100vw - 32px);
+    }
+}
+
+/* Mobile: the drawer has the user card, settings and logout,
+   so the user pill (and its dropdown) is not needed here. */
+@media (max-width: 640px) {
+    .header-tools .user-dropdown-wrapper {
+        display: none;
+    }
+
+    /* Alternative: keep the avatar but hide only "logout":
+       .user-dropdown .dropdown-item.logout,
+       .user-dropdown .dropdown-divider { display: none; }  */
+}
+
+@media (max-width: 420px) {
+    .header {
+        padding-inline: 10px;
+    }
+
+    .header-copy h2 {
+        font-size: 1rem;
+    }
+
+    .header-copy p {
+        font-size: 0.68rem;
+    }
+}
+
+
+/* =========================
+   User Pill
+========================= */
+
+.user-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px 8px 16px;
+    border-radius: 18px;
+    background: var(--panel-strong);
+    border: 1px solid var(--stroke);
+    cursor: pointer;
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.2s ease;
+}
+
+.user-pill:hover {
+    background: var(--primary-soft);
+    border-color: color-mix(in srgb, var(--primary) 25%, transparent);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    transform: translateY(-1px);
+}
+
+.user-pill:active {
+    transform: scale(0.98);
+}
+
+.user-pill:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.user-pill p {
+    margin: 0;
+    line-height: 1.35;
+}
+
+
+/* =========================
+   Avatar
+========================= */
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 14px;
+    /* same gradient as the sidebar brand mark */
+    background: linear-gradient(135deg, var(--primary), var(--primary-deep, var(--primary)));
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 5px 14px color-mix(in srgb, var(--primary) 28%, transparent);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.user-pill:hover .avatar {
+    transform: scale(1.05) rotate(-3deg);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 38%, transparent);
+}
+
+
+/* =========================
+   Dropdown
+========================= */
+
+.user-dropdown-wrapper {
+    position: relative;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 220px;
+    padding: 8px;
+    background: var(--panel-strong);
+    border: 1px solid var(--stroke);
+    border-radius: 18px;
+    box-shadow:
+        0 20px 60px rgba(15, 23, 42, 0.14),
+        0 4px 16px rgba(15, 23, 42, 0.06);
+    z-index: 9999;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Hidden state */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-10px) scale(0.97);
+    transform-origin: top left;
+    transition:
+        opacity 0.2s ease,
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.28s;
+}
+
+.user-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.user-dropdown button,
+.user-dropdown .dropdown-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 13px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.user-dropdown button:hover,
+.user-dropdown .dropdown-item:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+    transform: translateX(-3px);
+}
+
+.user-dropdown button:active,
+.user-dropdown .dropdown-item:active {
+    transform: scale(0.98);
+}
+
+.user-dropdown button .material-symbols-outlined,
+.user-dropdown .dropdown-item .material-symbols-outlined {
+    font-size: 19px;
+    transition: transform 0.2s ease;
+}
+
+.user-dropdown button:hover .material-symbols-outlined,
+.user-dropdown .dropdown-item:hover .material-symbols-outlined {
+    transform: scale(1.12);
+}
+
+.user-dropdown .dropdown-divider {
+    height: 1px;
+    background: var(--stroke);
+    margin: 7px 4px;
+}
+
+/* Logout (--danger fallback in case the variable is not defined) */
+.user-dropdown .dropdown-item.logout {
+    color: var(--danger, #dc2626);
+}
+
+.user-dropdown .dropdown-item.logout:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--danger, #dc2626);
+}
+
+.user-dropdown .dropdown-arrow {
+    position: absolute;
+    top: -7px;
+    left: 24px;
+    width: 13px;
+    height: 13px;
+    background: var(--panel-strong);
+    border-left: 1px solid var(--stroke);
+    border-top: 1px solid var(--stroke);
+    transform: rotate(45deg);
+    border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .user-pill,
+    .avatar,
+    .user-dropdown,
+    .user-dropdown button,
+    .user-dropdown .dropdown-item {
+        transition: none;
+    }
+}
+
+
+/* =========================================================
+   .main-header — older header component (unchanged)
+   Keep it only if some other page still uses it.
+   ========================================================= */

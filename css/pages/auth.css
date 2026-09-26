@@ -1,0 +1,1010 @@
+/* ═══════════════════════════════════════════════════════════
+   login.css — صفحة تسجيل الدخول (نظام المطاعم)
+   • مخصّص لـ Login.html فقط، وبالتالي لا يمسّ auth.css
+     الذي تعتمد عليه SetupPassword و ActivateParent.
+   • الألوان كلها من variables.css (يدعم .dark تلقائياً).
+   • يعتمد على الخصائص المنطقية (inline-start/end) فلا حاجة
+     لأي قواعد [dir="ltr"] منفصلة.
+   ═══════════════════════════════════════════════════════════ */
+
+.login-page {
+    --font-ar: "Cairo", system-ui, sans-serif;
+    --font-en: "Sora", "Cairo", system-ui, sans-serif;
+    --font-brand-ar: "Aref Ruqaa", "Cairo", serif;
+
+    --hero-bg: var(--primary-deep, #084c43);
+    --paper: #fffaf5;
+    --ink: #2c2522;
+    --ink-soft: #7b706b;
+
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--bg, #faf8f5);
+    color: var(--text, #2c2522);
+    font-family: var(--font-ar);
+    -webkit-font-smoothing: antialiased;
+}
+
+.dark .login-page,
+.login-page.dark {
+    --hero-bg: var(--primary-deep, #7e1027);
+}
+
+[lang="en"] .login-page {
+    font-family: var(--font-en);
+}
+
+.login-page *,
+.login-page *::before,
+.login-page *::after {
+    box-sizing: border-box;
+}
+
+/* ───────────── Layout ───────────── */
+
+.auth-shell {
+    display: grid;
+    grid-template-columns: minmax(360px, 520px) 1fr;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.login-page .auth-form-side {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(72px, 8vh, 96px) clamp(24px, 5vw, 64px) 48px !important;
+    background: var(--bg, #faf8f5);
+}
+
+.auth-form-inner {
+    width: 100%;
+    max-width: 400px;
+    margin-inline: auto;
+}
+
+/* ───────────── Language switch ───────────── */
+
+.lang-switch {
+    position: absolute;
+    top: 24px;
+    inset-inline-end: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--stroke, #e8e1db);
+    border-radius: 999px;
+    background: var(--card, #fff);
+    color: var(--text, #2c2522);
+    font: 600 13px/1 inherit;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.lang-switch .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.lang-switch:hover {
+    border-color: var(--primary, #0f6b5a);
+    color: var(--primary, #0f6b5a);
+}
+
+/* ───────────── Brand ───────────── */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 44px;
+}
+
+/* منع تنسيقات السايدبار العامة من التأثير على شعار صفحة الدخول */
+.login-page .brand {
+    padding: 0;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--primary-deep, #084c43);
+    color: var(--paper);
+}
+
+.brand-mark .material-symbols-outlined {
+    font-size: 24px;
+}
+
+.brand-name {
+    margin: 0;
+    font-family: var(--font-brand-ar);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text, #2c2522);
+}
+
+.login-page .brand-name {
+    font-size: 40px;
+    line-height: 1.1;
+}
+
+[lang="en"] .brand-name {
+    font-family: var(--font-en);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ───────────── Heading ───────────── */
+
+.login-title {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.login-sub {
+    margin: 0 0 32px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted, #7b706b);
+}
+
+/* ───────────── Form ───────────── */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.forgot-password {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary, #0f6b5a);
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+/* ملاحظة: خط Material Symbols يفرض direction:ltr على الأيقونة نفسها،
+   لذلك لا نستخدم inset-inline هنا بل نحدّد الجهة صراحةً حسب اتجاه الصفحة. */
+.input-wrapper .field-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--muted, #7b706b);
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+[dir="rtl"] .input-wrapper .field-icon {
+    left: auto;
+    right: 14px;
+}
+
+.input-wrapper:focus-within .field-icon {
+    color: var(--primary, #0f6b5a);
+}
+
+.input-wrapper input {
+    width: 100%;
+    height: 52px;
+    padding-block: 0;
+    padding-inline: 46px 16px;
+    border: 1.5px solid var(--stroke, #e8e1db);
+    border-radius: 14px;
+    background: var(--card, #fff);
+    color: var(--text, #2c2522);
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-wrapper input::placeholder {
+    color: var(--muted, #7b706b);
+    opacity: 0.6;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--primary, #0f6b5a);
+    box-shadow: 0 0 0 4px var(--primary-soft, rgba(15, 107, 90, 0.09));
+}
+
+.input-wrapper input.is-invalid {
+    border-color: var(--danger, #a61b1f);
+    box-shadow: 0 0 0 4px var(--danger-soft, rgba(166, 27, 31, 0.08));
+}
+
+.input-wrapper.has-toggle input {
+    padding-inline-end: 52px;
+}
+
+.pw-toggle {
+    position: absolute;
+    inset-inline-end: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted, #7b706b);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+}
+
+.pw-toggle .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.pw-toggle:hover {
+    color: var(--primary, #0f6b5a);
+    background: var(--primary-soft, rgba(15, 107, 90, 0.09));
+}
+
+/* ───────────── Primary buttons ───────────── */
+
+.login-btn,
+.modal-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 52px;
+    border: 0;
+    border-radius: 14px;
+    background: var(--primary, #0f6b5a);
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.login-btn {
+    margin-top: 8px;
+}
+
+.login-btn:hover,
+.modal-submit-btn:hover {
+    background: var(--primary-deep, #084c43);
+    box-shadow: var(--shadow, 0 10px 25px -5px rgba(44, 37, 34, 0.06));
+}
+
+.login-btn:active,
+.modal-submit-btn:active {
+    transform: translateY(1px);
+}
+
+.login-btn:disabled,
+.modal-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: progress;
+    box-shadow: none;
+}
+
+.login-btn .material-symbols-outlined,
+.modal-submit-btn .material-symbols-outlined {
+    font-size: 20px;
+}
+
+/* في الوضع الداكن نستخدم الأخضر الأغمق ليبقى النص الأبيض مقروءاً */
+.dark .login-btn,
+.dark .modal-submit-btn {
+    background: var(--primary-deep, #0f6b5a);
+}
+
+.dark .login-btn:hover,
+.dark .modal-submit-btn:hover {
+    background: var(--primary, #1b8f79);
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ───────────── Quick access ───────────── */
+
+.demo-section {
+    margin-top: 36px;
+}
+
+.demo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted, #7b706b);
+}
+
+/* خط منقّط يشبه حافة تذكرة الطلب */
+.demo-title::before,
+.demo-title::after {
+    content: "";
+    flex: 1;
+    border-top: 1.5px dashed var(--stroke, #e8e1db);
+}
+
+.demo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.demo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px 0 12px;
+    border: 1px solid var(--stroke, #e8e1db);
+    border-radius: 999px;
+    background: var(--card, #fff);
+    color: var(--text, #2c2522);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.demo-btn .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--muted, #7b706b);
+    transition: color 0.2s;
+}
+
+.demo-btn:hover {
+    border-color: var(--primary, #0f6b5a);
+    background: var(--primary-soft, rgba(15, 107, 90, 0.09));
+}
+
+.demo-btn:hover .material-symbols-outlined {
+    color: var(--primary, #0f6b5a);
+}
+
+/* ───────────── Focus ───────────── */
+
+.login-page :is(button, a):focus-visible {
+    outline: 2px solid var(--primary, #0f6b5a);
+    outline-offset: 2px;
+}
+
+.login-page .input-wrapper input:focus-visible {
+    outline: none;
+}
+
+/* ═══════════ Hero: تذكرة الطلب ═══════════ */
+
+.auth-hero-side {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    padding: 48px 32px;
+    overflow: hidden;
+    background: var(--hero-bg);
+    color: var(--paper);
+}
+
+/* زخرفة هندسية (نجمة ثمانية) تخفت باتجاه الوسط */
+.auth-hero-side::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d3ad67' stroke-opacity='.13' stroke-width='1'%3E%3Cpath d='M16 16h32v32H16z'/%3E%3Cpath d='M32 0l32 32-32 32L0 32z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, transparent 30%, #000 100%);
+    mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, transparent 30%, #000 100%);
+    pointer-events: none;
+}
+
+.hero-copy {
+    position: relative;
+    max-width: 440px;
+    text-align: center;
+}
+
+.hero-title {
+    margin: 0 0 12px;
+    font-size: clamp(24px, 2.3vw, 32px);
+    font-weight: 800;
+    line-height: 1.55;
+}
+
+.hero-sub {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(255, 250, 245, 0.72);
+}
+
+/* ── المنصّة التي تُعلَّق عليها التذاكر ── */
+
+.stage {
+    position: relative;
+    width: 438px;
+    max-width: 100%;
+    height: 400px;
+}
+
+.rail {
+    position: absolute;
+    top: 0;
+    inset-inline: -28px;
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(#ecd39a, #b8904a);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.ticket-hang {
+    position: absolute;
+    transform-origin: 50% 0;
+    filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.28));
+}
+
+/* مشبك التعليق */
+.ticket-hang::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: -3px;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f3dfae, #b8904a 70%);
+    box-shadow: 0 0 0 2px rgba(8, 76, 67, 0.55);
+}
+
+.ticket-main {
+    z-index: 2;
+    top: 6px;
+    inset-inline-start: 0;
+    width: 240px;
+    transform: rotate(-2deg);
+}
+
+.ticket-side {
+    z-index: 1;
+    top: 30px;
+    inset-inline-end: 0;
+    width: 210px;
+    transform: rotate(3deg);
+}
+
+.ticket {
+    position: relative;
+    padding: 26px 22px 24px;
+    border-radius: 3px 3px 0 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ar);
+    animation: ticket-print 1.3s steps(22, end) both;
+}
+
+[lang="en"] .ticket {
+    font-family: var(--font-en);
+}
+
+.ticket-side .ticket {
+    animation-delay: 0.15s;
+}
+
+.ticket-main .ticket {
+    animation-delay: 0.5s;
+}
+
+/* حافة مسنّنة أسفل التذكرة */
+.ticket::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -8px;
+    height: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8'%3E%3Cpath d='M0 0h14L7 8z' fill='%23fffaf5'/%3E%3C/svg%3E") repeat-x left top / 14px 8px;
+}
+
+@keyframes ticket-print {
+    from {
+        clip-path: inset(0 0 100% 0);
+        transform: translateY(-26px);
+    }
+
+    to {
+        clip-path: inset(-12px -12px -24px -12px);
+        transform: none;
+    }
+}
+
+.ticket-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+    border-bottom: 1.5px dashed #d9cfc5;
+}
+
+.ticket-table {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.ticket-table small {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-soft);
+}
+
+.ticket-table strong {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1;
+    color: #084c43;
+}
+
+.ticket-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    text-align: end;
+}
+
+.ticket-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ticket-items li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.ticket-items b {
+    display: grid;
+    place-items: center;
+    flex: none;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: rgba(8, 76, 67, 0.1);
+    color: #084c43;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.ticket-note {
+    margin: 10px 0 0;
+    padding: 7px 10px;
+    border-radius: 6px;
+    background: rgba(211, 173, 103, 0.2);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ticket-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+.ticket-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ticket-time .material-symbols-outlined {
+    font-size: 16px;
+}
+
+/* حالة الطلب: «قيد التحضير» تتحوّل إلى «جاهز» */
+.status {
+    display: grid;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status>span {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.status>span::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-prep {
+    background: rgba(183, 121, 31, 0.15);
+    color: #8a5a12;
+    animation: status-out 0.2s linear 2.3s both;
+}
+
+.status-ready {
+    background: rgba(15, 107, 90, 0.14);
+    color: #0f6b5a;
+    opacity: 0;
+    animation: status-in 0.2s linear 2.3s both;
+}
+
+.status-idle {
+    background: rgba(44, 37, 34, 0.07);
+    color: var(--ink-soft);
+}
+
+@keyframes status-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes status-in {
+    to {
+        opacity: 1;
+    }
+}
+
+/* الختم: اللحظة الوحيدة المتحركة في الصفحة بعد الطباعة */
+.stamp {
+    position: absolute;
+    inset-inline-end: 12px;
+    bottom: 46px;
+    display: grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    border: 3px solid #0f6b5a;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 6px #0f6b5a;
+    color: #0f6b5a;
+    font-size: 19px;
+    font-weight: 800;
+    mix-blend-mode: multiply;
+    opacity: 0;
+    transform: rotate(-14deg);
+    animation: stamp 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) 2.3s both;
+}
+
+@keyframes stamp {
+    from {
+        opacity: 0;
+        transform: rotate(-14deg) scale(1.9);
+    }
+
+    to {
+        opacity: 0.88;
+        transform: rotate(-14deg) scale(1);
+    }
+}
+
+/* ═══════════ Forgot-password modal ═══════════ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--overlay-bg, rgba(44, 37, 34, 0.42));
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.modal-overlay.open {
+    display: flex;
+    animation: fade-in 0.2s ease-out;
+}
+
+.modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 44px 36px 36px;
+    border: 1px solid var(--stroke, #e8e1db);
+    border-radius: var(--radius-xl, 24px);
+    background: var(--card, #fff);
+    color: var(--text, #2c2522);
+    box-shadow: var(--shadow-lg, 0 20px 50px -12px rgba(44, 37, 34, 0.1));
+}
+
+.modal-overlay.open .modal-box {
+    animation: modal-in 0.25s ease-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 14px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted, #7b706b);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.modal-close:hover {
+    background: var(--primary-soft, rgba(15, 107, 90, 0.09));
+    color: var(--text, #2c2522);
+}
+
+.modal-icon,
+.success-icon {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border-radius: 18px;
+    background: var(--primary-soft, rgba(15, 107, 90, 0.09));
+    color: var(--primary, #0f6b5a);
+}
+
+.success-icon {
+    border-radius: 50%;
+}
+
+.modal-icon .material-symbols-outlined,
+.success-icon .material-symbols-outlined {
+    font-size: 30px;
+}
+
+.modal-box h2,
+.modal-success h3 {
+    margin: 0 0 8px;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.modal-box p {
+    margin: 0 0 24px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted, #7b706b);
+    text-align: center;
+}
+
+.modal-box .input-wrapper {
+    margin-bottom: 16px;
+}
+
+.modal-box p,
+.hero-title,
+.hero-sub {
+    text-wrap: balance;
+}
+
+/* أيقونة الإرسال تتجه نحو اتجاه القراءة */
+[dir="rtl"] .modal-submit-btn .material-symbols-outlined {
+    transform: scaleX(-1);
+}
+
+.modal-success {
+    padding: 8px 0 0;
+}
+
+.modal-success p {
+    margin-bottom: 0;
+}
+
+/* ═══════════ Responsive ═══════════ */
+
+/* ── تابلت وجوال: شريط التذاكر في الأعلى، والنموذج «ورقة» تعلوه ── */
+@media (max-width: 1080px) {
+    .auth-shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+    .auth-hero-side {
+        order: -1;
+        justify-content: flex-start;
+        height: 250px;
+        padding: 0;
+        gap: 0;
+    }
+
+    .hero-copy {
+        display: none;
+    }
+
+    .stage {
+        flex: none;
+        max-width: none;
+        margin-top: 26px;
+        transform-origin: 50% 0;
+    }
+
+    .login-page .auth-form-side {
+        z-index: 2;
+        justify-content: flex-start;
+        margin-top: -32px;
+        padding: 24px clamp(20px, 6vw, 48px) 40px !important;
+        border-radius: 28px 28px 0 0;
+        box-shadow: 0 -12px 32px -8px rgba(0, 0, 0, 0.28);
+    }
+
+    .lang-switch {
+        top: 26px;
+        inset-inline-end: clamp(20px, 6vw, 48px);
+    }
+
+    .brand {
+        margin-bottom: 28px;
+    }
+}
+
+@media (max-width: 520px) {
+    .auth-hero-side {
+        height: 200px;
+    }
+
+    .stage {
+        transform: scale(0.86);
+    }
+
+    .login-page .auth-form-side {
+        margin-top: -24px;
+        padding: 28px 20px 36px !important;
+        border-radius: 24px 24px 0 0;
+    }
+
+    .auth-form-inner {
+        max-width: 400px;
+    }
+
+    .login-page .brand {
+        gap: 10px;
+        margin-bottom: 28px;
+    }
+
+    .login-page .brand-name {
+        font-size: clamp(34px, 10vw, 40px);
+    }
+
+    .brand-mark {
+        width: 46px;
+        height: 46px;
+    }
+
+    .login-title {
+        font-size: 24px;
+    }
+
+    .login-sub {
+        margin-bottom: 24px;
+    }
+
+    .modal-box {
+        padding: 40px 24px 28px;
+    }
+}
+
+@media (max-width: 380px) {
+    .stage {
+        transform: scale(0.72);
+    }
+}
+
+/* ═══════════ Reduced motion ═══════════ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ticket,
+    .stamp,
+    .status-prep,
+    .status-ready,
+    .modal-overlay.open,
+    .modal-overlay.open .modal-box {
+        animation: none;
+    }
+
+    .stamp {
+        opacity: 0.88;
+    }
+
+    .status-prep {
+        opacity: 0;
+    }
+
+    .status-ready {
+        opacity: 1;
+    }
+
+    .animate-spin {
+        animation-duration: 2s;
+    }
+}

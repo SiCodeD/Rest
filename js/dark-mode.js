@@ -1,54 +1,67 @@
-/**
- * Dark Mode Management for EduPulse
- * Handles theme switching, persistence, and system preference detection.
- */
-
 const DarkMode = {
     init() {
         this.applyTheme();
-        
-        // Listen for system preference changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!localStorage.getItem('theme')) {
+
+        window.matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', () => {
+                if (!localStorage.getItem('theme')) {
+                    this.applyTheme();
+                }
+            });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
                 this.applyTheme();
             }
         });
     },
 
+    // الفكرة: الصفحة الحالية تتحول فوراً، الباقي بالترتيب في الخلفية
+    _applyProgressively(isDark) {
+        // الخطوة 1: اخفي الأقسام المخفية من الـ render كلياً
+        const inactiveSections = document.querySelectorAll('.admin-section:not(.active)');
+        inactiveSections.forEach(s => {
+            s.style.contentVisibility = 'hidden';
+        });
+
+        // الخطوة 2: طبّق الثيم — الآن المتصفح يرسم القسم الحالي فقط = فوري
+        document.documentElement.classList.toggle('dark', isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        this.updateToggleIcons();
+
+        // الخطوة 3: أرجع الأقسام بالترتيب — قسم كل فريم
+        requestAnimationFrame(() => {
+            inactiveSections.forEach((section, i) => {
+                setTimeout(() => {
+                    section.style.contentVisibility = '';
+                }, i * 32); // 32ms = ~2 فريم بين كل قسم وآخر
+            });
+        });
+    },
+
     applyTheme() {
         const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+
+        if (savedTheme === 'dark') {
             document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
         } else {
-            document.documentElement.classList.add('light');
             document.documentElement.classList.remove('dark');
         }
+
         this.updateToggleIcons();
     },
 
     enable() {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-        localStorage.setItem('theme', 'dark');
-        this.updateToggleIcons();
+        this._applyProgressively(true);
     },
 
     disable() {
-        document.documentElement.classList.add('light');
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        this.updateToggleIcons();
+        this._applyProgressively(false);
     },
 
     toggle() {
-        if (document.documentElement.classList.contains('dark')) {
-            this.disable();
-        } else {
-            this.enable();
-        }
+        const isDark = !document.documentElement.classList.contains('dark');
+        this._applyProgressively(isDark);
     },
 
     updateToggleIcons() {
@@ -61,17 +74,10 @@ const DarkMode = {
         });
 
         labels.forEach(label => {
-            if (window.I18N) {
-                label.textContent = isDark ? I18N.t('light_mode') : I18N.t('dark_mode');
-            } else {
-                label.textContent = isDark ? 'Light Mode' : 'Dark Mode';
-            }
+            label.textContent = isDark ? 'Light Mode' : 'Dark Mode';
         });
     }
 };
 
-// Initialize on load
 document.addEventListener('DOMContentLoaded', () => DarkMode.init());
-
-// Export for global use
 window.DarkMode = DarkMode;

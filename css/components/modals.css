@@ -1,0 +1,407 @@
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+/* =========================
+   MODAL OVERLAY
+========================= */
+
+.modal-overlay,
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 2000;
+
+    opacity: 0;
+    pointer-events: none;
+
+    background: var(--overlay-bg);
+
+    box-sizing: border-box;
+}
+
+.modal-overlay.open,
+.modal-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+/* =========================
+   STANDARD MODAL
+========================= */
+
+.modal-content {
+    width: min(90vw, 800px);
+    max-width: 100%;
+    min-width: 0;
+
+    max-height: 90vh;
+    max-height: 90dvh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    background: var(--panel-strong);
+
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--stroke);
+
+    box-shadow: var(--shadow-lg);
+
+    padding: 30px;
+
+    transform: scale(0.95) translateY(10px);
+
+    transition:
+        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-overlay.open .modal-content {
+    transform: scale(1) translateY(0);
+}
+
+
+/* =========================
+   MODAL HEADER
+========================= */
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid var(--stroke);
+
+    min-width: 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+
+    min-width: 0;
+
+    font-size: 1.35rem;
+    font-weight: 800;
+
+    color: var(--text);
+
+    line-height: 1.4;
+}
+
+.modal-header>* {
+    min-width: 0;
+}
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.close-modal {
+    flex: 0 0 auto;
+
+    background: none;
+    border: none;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   MODAL BACKDROP / MODAL BOX
+   ========================================================= */
+
+.modal-box {
+    position: relative;
+
+    width: min(90vw, 580px);
+    max-width: 100%;
+    min-width: 0;
+
+    max-height: 90vh;
+    max-height: 90dvh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    background: var(--panel-strong);
+
+    border-radius: 40px;
+    border: 1px solid var(--stroke);
+
+    padding: 48px;
+
+    box-shadow:
+        0 40px 120px -20px rgba(0, 0, 0, 0.35);
+
+    transform: scale(0.9) translateY(40px);
+
+    transition:
+        transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-backdrop.open .modal-box {
+    transform: scale(1) translateY(0);
+}
+
+
+/* =========================
+   MODAL CLOSE
+========================= */
+
+.modal-close {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 16px;
+
+    background: var(--bg);
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    font-size: 24px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   TABLET
+   <= 768px
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .modal-content {
+        width: min(94vw, 720px);
+
+        padding: 24px;
+
+        border-radius: 22px;
+    }
+
+    .modal-box {
+        width: min(94vw, 540px);
+
+        padding: 32px;
+
+        border-radius: 30px;
+    }
+
+    .modal-header {
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 13px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .modal-close {
+        width: 44px;
+        height: 44px;
+        flex-basis: 44px;
+        border-radius: 13px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 640px
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .modal-overlay,
+    .modal-backdrop {
+        align-items: flex-end;
+
+        padding: 10px;
+    }
+
+    .modal-content,
+    .modal-box {
+        width: 100%;
+        max-width: none;
+
+        max-height: calc(100dvh - 20px);
+        max-height: calc(100vh - 20px);
+
+        overflow-y: auto;
+
+        box-sizing: border-box;
+    }
+
+    .modal-content {
+        padding: 20px 16px;
+
+        border-radius: 22px;
+    }
+
+    .modal-box {
+        padding: 28px 18px;
+
+        border-radius: 24px;
+    }
+
+    .modal-header {
+        gap: 10px;
+
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.1rem;
+        line-height: 1.35;
+    }
+
+    .modal-close {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+
+        border-radius: 12px;
+
+        font-size: 21px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .modal-overlay,
+    .modal-backdrop {
+        padding: 8px;
+    }
+
+    .modal-content {
+        width: 100%;
+
+        max-height: calc(100dvh - 16px);
+        max-height: calc(100vh - 16px);
+
+        padding: 18px 14px;
+
+        border-radius: 18px;
+    }
+
+    .modal-box {
+        width: 100%;
+
+        max-height: calc(100dvh - 16px);
+        max-height: calc(100vh - 16px);
+
+        padding: 22px 15px;
+
+        border-radius: 20px;
+    }
+
+    .modal-header {
+        gap: 8px;
+
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+    }
+
+    .modal-header h3 {
+        font-size: 1rem;
+    }
+
+    .modal-close {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+
+        border-radius: 11px;
+
+        font-size: 20px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   <= 380px
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .modal-overlay,
+    .modal-backdrop {
+        padding: 6px;
+    }
+
+    .modal-content {
+        padding: 16px 12px;
+        border-radius: 16px;
+    }
+
+    .modal-box {
+        padding: 20px 13px;
+        border-radius: 18px;
+    }
+
+    .modal-header h3 {
+        font-size: 0.95rem;
+    }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+    .close-modal:hover,
+    .modal-close:hover {
+        color: var(--muted);
+        background: var(--bg);
+    }
+}
