@@ -19,6 +19,13 @@ dist-ssr
 
 # Supabase project files and local state
 supabase/
+!supabase/
+supabase/*
+!supabase/functions/
+supabase/functions/*
+!supabase/functions/invite-admin/
+supabase/functions/invite-admin/*
+!supabase/functions/invite-admin/index.ts
 
 # Local agent/tooling configuration
 .agents/

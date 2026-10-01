@@ -55,6 +55,7 @@ export default defineConfig({
         waiter_dashboard: resolve(__dirname, 'Pages/WaiterDashboard.html'),
         admin_dashboard: resolve(__dirname, 'Pages/AdminDashboard.html'),
         super_admin_dashboard: resolve(__dirname, 'Pages/SuperAdminDashboard.html'),
+        menu: resolve(__dirname, 'Pages/Menu.html'),
         landing: resolve(__dirname, 'Pages/Landing.html'),
         setup_password: resolve(__dirname, 'Pages/SetupPassword.html'),
       },
