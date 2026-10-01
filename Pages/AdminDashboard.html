@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>| لوحة الإدارة</title>
+    <title>مرسالك | لوحة الإدارة</title>
     <link rel="stylesheet" href="../css/local-fonts.css" />
     <link
       rel="stylesheet"
@@ -87,7 +87,7 @@
             <i data-lucide="utensils-crossed" class="lucide-icon"></i>
           </div>
           <div>
-            <h1>مطعمنا</h1>
+            <h1>مِرسالك</h1>
             <p>لوحة إدارة المطعم</p>
           </div>
         </div>
@@ -4973,7 +4973,7 @@
                           font-weight: 800;
                         "
                       >
-                        مطعمنا
+                        مِرسالك
                       </div>
                     </div>
 
@@ -7898,7 +7898,7 @@
         }
 
         const cachedName = localStorage.getItem("EduPulse_RestaurantName");
-        const resolvedName = restaurantName || cachedName || "مطعمنا";
+        const resolvedName = restaurantName || cachedName || "مِرسالك";
         titles.forEach((title) => {
           title.textContent = resolvedName;
         });
