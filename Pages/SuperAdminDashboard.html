@@ -967,6 +967,21 @@
               maxlength="120"
             />
           </div>
+          <div id="restaurantSlugField">
+            <label class="field-label">رابط المنيو (Slug) *</label>
+            <input
+              class="input-modern"
+              name="slug"
+              type="text"
+              dir="ltr"
+              required
+              minlength="3"
+              maxlength="60"
+              pattern="[a-z0-9]+(-[a-z0-9]+)*"
+              title="استخدم الأحرف الإنجليزية الصغيرة والأرقام والشرطة فقط"
+              placeholder="مثال: my-restaurant"
+            />
+          </div>
           <div class="form-row-2">
             <div>
               <label class="field-label">اسم المدير *</label
@@ -1207,6 +1222,8 @@
           if (!restaurant) return;
           form.reset();
           document.getElementById("restaurantId").value = restaurant.id;
+          document.getElementById("restaurantSlugField").hidden = true;
+          document.querySelector('[name="slug"]').required = false;
           document.getElementById("restaurantName").value =
             restaurant.name || "";
           document.querySelector('[name="location"]').value =
@@ -1317,6 +1334,8 @@
           .addEventListener("click", function () {
             form.reset();
             document.getElementById("restaurantId").value = "";
+            document.getElementById("restaurantSlugField").hidden = false;
+            document.querySelector('[name="slug"]').required = true;
             document.getElementById("restaurantPasswordLabel").textContent =
               "كلمة المرور *";
             document.querySelector('[name="admin_password"]').required = true;
