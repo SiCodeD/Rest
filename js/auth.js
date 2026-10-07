@@ -1,13 +1,38 @@
 // Authentication Logic
+// Uses clean URLs: /login, /admin, /super-admin, /setup-password.
+// Legacy /Pages/*.html links still work (Worker 301-redirects them).
 const Auth = {
+    cleanRoutes: {
+        'Pages/Login.html': '/login',
+        'Pages/AdminDashboard.html': '/admin',
+        'Pages/SuperAdminDashboard.html': '/super-admin',
+        'Pages/WaiterDashboard.html': '/waiter',
+        'Pages/WaiterLogin.html': '/waiter-login',
+        'Pages/KitchenDisplay.html': '/kitchen',
+        'Pages/SetupPassword.html': '/setup-password',
+        'Pages/Landing.html': '/landing',
+        'Pages/Menu.html': '/menu',
+    },
+
     getBasePrefix: function () {
+        // Clean URLs all live at the root, so no prefix is needed.
+        // Keep the legacy prefix only for old /Pages/*.html bookmarks.
         const path = window.location.pathname.replace(/\\/g, '/');
-        const nestedSections = ['/Pages/', '/admin/', '/teacher/', '/secretary/', '/parent/', '/shared/', '/super-admin/'];
-        return nestedSections.some(section => path.includes(section)) ? '../' : '';
+        return path.includes('/Pages/') ? '' : '';
     },
 
     resolvePath: function (path) {
-        // If the path already includes 'Pages/' and we are already in 'Pages/', we should avoid doubling it.
+        // Absolute paths pass through untouched.
+        if (path.startsWith('/')) return path;
+        // Map legacy Pages/* targets to their clean canonical URL.
+        if (this.cleanRoutes[path]) return this.cleanRoutes[path];
+        // Bare filenames (Login.html, AdminDashboard.html, ...) -> clean URL.
+        const lower = path.toLowerCase();
+        for (const [legacy, clean] of Object.entries(this.cleanRoutes)) {
+            if (legacy.toLowerCase().endsWith('/' + lower) || legacy.toLowerCase() === lower) {
+                return clean;
+            }
+        }
         const currentPath = window.location.pathname.replace(/\\/g, '/');
         if (currentPath.includes('/Pages/') && path.startsWith('Pages/')) {
             return path.replace('Pages/', '');
@@ -52,7 +77,7 @@ const Auth = {
         localStorage.clear();
         sessionStorage.clear();
         await supabase.auth.signOut();
-        window.location.href = this.resolvePath('Pages/Login.html');
+        window.location.href = this.resolvePath('/login');
     },
 
     signOut: async function () {
@@ -128,7 +153,7 @@ const Auth = {
     checkAuth: async function () {
         const user = await this.getCurrentUser();
         if (!user) {
-            window.location.href = this.resolvePath('Pages/Login.html');
+            window.location.href = this.resolvePath('/login');
             return null;
         }
 
@@ -147,8 +172,8 @@ const Auth = {
 
     redirectByRole: function (user) {
         const routes = {
-            'super-admin': 'Pages/SuperAdminDashboard.html',
-            'admin': 'Pages/AdminDashboard.html'
+            'super-admin': '/super-admin',
+            'admin': '/admin'
         };
         const target = routes[user.role] || routes.admin;
 
@@ -161,7 +186,7 @@ const Auth = {
         // Listen for Auth State Changes (especially for Invites)
         supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && window.location.hash.includes('type=invite'))) {
-                window.location.href = this.resolvePath('Pages/SetupPassword.html');
+                window.location.href = this.resolvePath('/setup-password');
             }
         });
     }

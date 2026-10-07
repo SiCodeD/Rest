@@ -60,13 +60,11 @@
     }
 
     function getLoginPath() {
-        const path = window.location.pathname.replace(/\\/g, "/");
-        return path.includes("/Pages/") ? "WaiterLogin.html" : "Pages/WaiterLogin.html";
+        return "/waiter-login";
     }
 
     function getDashboardPath() {
-        const path = window.location.pathname.replace(/\\/g, "/");
-        return path.includes("/Pages/") ? "WaiterDashboard.html" : "Pages/WaiterDashboard.html";
+        return "/waiter";
     }
 
     function normalizeError(error) {

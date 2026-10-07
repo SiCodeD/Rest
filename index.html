@@ -8,6 +8,12 @@
     <script src="js/auth.js"></script>
     <script>
       (async function () {
+        // Host-based routing fallback (Worker already rewrites, this covers direct /index.html hits):
+        // - app.mersalak.com -> AdminDashboard (or Login)
+        // - mersalak.com -> Landing
+        const host = window.location.hostname.toLowerCase();
+        const isApp = host === 'app.mersalak.com' || host.startsWith('app.');
+
         // Check for invite tokens in the URL hash
         if (
           window.location.hash.includes("type=invite") ||
@@ -15,12 +21,14 @@
         ) {
           // Do nothing, let Auth.init() in auth.js handle the redirect to setup-password.html
           console.log("Invite detected, waiting for redirect...");
+        } else if (!isApp) {
+          window.location.href = "/landing";
         } else {
           const currentUser = await Auth.getCurrentUser();
           if (currentUser) {
             Auth.redirectByRole(currentUser);
           } else {
-            window.location.href = "Pages/Login.html";
+            window.location.href = "/login";
           }
         }
       })();

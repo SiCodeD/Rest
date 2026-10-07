@@ -1,8 +1,12 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta
+      name="description"
+      content="مرسالك: نظام إدارة المطاعم للطلبات والمنيو والمخزون والتقارير."
+    />
     <title>مرسالك | Mersalak</title>
 
     <!-- External Resources -->
@@ -16,8 +20,8 @@
     <script src="../js/auth.js"></script>
   </head>
   <body>
-    <nav>
-      <div class="logo">
+    <nav id="nav">
+      <a href="/" class="logo">
         <div class="logo-icon">
           <span
             class="material-symbols-outlined"
@@ -26,92 +30,215 @@
           >
         </div>
         <div class="logo-text">مرسالك | Mersalak</div>
-      </div>
+      </a>
       <div class="nav-links">
-        <a href="#features">الرؤية</a>
-        <a href="Menu.html">المنيو</a>
-        <a href="Login.html" class="btn-premium btn-outline">تسجيل الدخول</a>
-        <a href="Login.html" class="btn-premium">ابدأ الآن</a>
+        <a href="#features">المميزات</a>
+        <a href="#how">كيف يعمل</a>
+        <a href="/menu">المنيو</a>
+        <a href="/login" class="btn-premium btn-outline">تسجيل الدخول</a>
+        <a href="/login" class="btn-premium">ابدأ الآن</a>
       </div>
     </nav>
 
     <header class="hero">
-      <div class="prestige-badge">
-        <span class="material-symbols-outlined" style="font-size: 14px"
-          >bolt</span
-        >
-        <span>نظام الإدارة المدرسية الحديث - الإصدار 4.0</span>
+      <div class="hero-copy">
+        <h1>كل طلب في مطعمك، من الطاولة إلى المطبخ إلى الفاتورة</h1>
+        <p>
+          مرسالك يجمع الطلبات والمنيو والمخزون والتقارير في مكان واحد، ليعمل
+          فريقك بسرعة وترى أرقام يومك لحظة بلحظة.
+        </p>
+        <div class="hero-actions">
+          <a href="/login" class="btn-premium btn-lg">ابدأ الآن</a>
+          <a href="/menu" class="btn-premium btn-outline btn-lg">شاهد المنيو</a>
+        </div>
       </div>
-      <h1>
-        نظام تشغيل
-        <span style="color: var(--primary-light)">المؤسسات التعليمية</span
-        ><br />للجيل القادم
-      </h1>
-      <p>
-        البيئة المتكاملة لإدارة المدارس بذكاء. بيانات دقيقة، عمليات مؤتمتة،
-        وأمان فائق في منصة واحدة موحدة.
-      </p>
-      <div class="hero-actions">
-        <a
-          href="Login.html"
-          class="btn-premium"
-          style="padding: 18px 48px; font-size: 15px"
-          >دخول النظام</a
-        >
-        <a
-          href="#features"
-          class="btn-premium btn-outline"
-          style="padding: 18px 48px; font-size: 15px"
-          >استكشاف الميزات</a
-        >
+
+      <div class="stage" aria-label="مثال مباشر على وصول الطلبات للمطبخ">
+        <div class="stage-head"><span class="live-dot"></span>الطلبات الآن</div>
+        <div class="tickets" id="tickets" aria-live="off"></div>
       </div>
     </header>
 
     <section id="features" class="section">
       <div class="section-title">
-        <h2>التحكم الكامل والذكي</h2>
+        <h2>كل ما يحتاجه المطعم في يوم عمل كامل</h2>
         <p>
-          مصمم لخدمة القادة التربويين والمعلمين وأولياء الأمور في بيئة رقمية
-          رائدة.
+          من استقبال الطلب حتى إغلاق الصندوق، بدون ورق وبدون تطبيقات متفرقة.
         </p>
       </div>
-      <div class="bento-features">
-        <div class="feature-card">
+      <div class="bento">
+        <div class="feature-card wide filled">
           <div class="icon-box">
-            <span class="material-symbols-outlined">hub</span>
+            <span class="material-symbols-outlined">receipt_long</span>
           </div>
-          <h3>المركز الإداري الموحد</h3>
+          <h3>إدارة الطلبات</h3>
           <p>
-            تحكم في كافة مفاصل المدرسة من خلال لوحة تحكم واحدة متطورة تدعم
-            الأدوار المختلفة للمستخدمين.
+            سجّل طلبات الصالة والسفري والتوصيل، وتابع حالة كل طلب من لحظة
+            الاستلام حتى التسليم.
           </p>
         </div>
         <div class="feature-card">
           <div class="icon-box">
-            <span class="material-symbols-outlined">insights</span>
+            <span class="material-symbols-outlined">qr_code_2</span>
           </div>
-          <h3>التحليلات المتقدمة</h3>
+          <h3>منيو رقمي</h3>
           <p>
-            احصل على رؤى عميقة حول أداء الطلاب، الحضور والغياب، والصحة المالية
-            للمؤسسة بشكل فوري.
+            حدّث الأسعار والأصناف مرة واحدة، وتظهر فورًا للزبائن عبر رمز QR.
           </p>
         </div>
         <div class="feature-card">
           <div class="icon-box">
-            <span class="material-symbols-outlined">security</span>
+            <span class="material-symbols-outlined">skillet</span>
           </div>
-          <h3>الأمان المؤسسي</h3>
-          <p>
-            تشفير عالي المستوى لكافة ملفات الطلاب والبيانات الحساسة مع ضمان
-            استمرارية العمل بنسبة 99.9%.
-          </p>
+          <h3>شاشة المطبخ</h3>
+          <p>يصل الطلب إلى الطهاة مباشرة، مرتبًا حسب الأولوية.</p>
         </div>
+        <div class="feature-card">
+          <div class="icon-box">
+            <span class="material-symbols-outlined">inventory_2</span>
+          </div>
+          <h3>المخزون</h3>
+          <p>يخصم المكونات مع كل طلب وينبهك قبل أن ينفد أي صنف.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">
+            <span class="material-symbols-outlined">monitoring</span>
+          </div>
+          <h3>تقارير المبيعات</h3>
+          <p>اعرف الأصناف الأكثر طلبًا وأوقات الذروة وأداء كل فرع.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <div class="section-title">
+        <h2>ابدأ في ثلاث خطوات</h2>
+      </div>
+      <div class="steps" id="steps">
+        <div class="step">
+          <b>الخطوة 1</b>
+          <h3>جهّز المنيو</h3>
+          <p>أضف الأصناف والأسعار والصور من لوحة التحكم.</p>
+        </div>
+        <div class="step">
+          <b>الخطوة 2</b>
+          <h3>استقبل الطلبات</h3>
+          <p>يصل كل طلب إلى المطبخ والكاشير في نفس اللحظة.</p>
+        </div>
+        <div class="step">
+          <b>الخطوة 3</b>
+          <h3>تابع أرقامك</h3>
+          <p>راجع المبيعات والمخزون في نهاية اليوم بنقرة واحدة.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="cta-box">
+        <h2>جاهز لتنظيم مطعمك؟</h2>
+        <p>سجّل الدخول وابدأ باستقبال أول طلب اليوم.</p>
+        <a href="/login" class="btn-premium btn-lg">ابدأ الآن</a>
       </div>
     </section>
 
     <footer>
       <div class="footer-brand">مرسالك | Mersalak</div>
-      <p class="copyright">© 2026 مرسالك • منصة تشغيل المطاعم</p>
+      <p class="copyright">© 2026 مرسالك • منصة إدارة المطاعم</p>
     </footer>
+
+    <script>
+      (function () {
+        var nav = document.getElementById("nav");
+        function onScroll() {
+          nav.classList.toggle("scrolled", window.scrollY > 10);
+        }
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+
+        var steps = document.getElementById("steps");
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(
+            function (e, o) {
+              if (e[0].isIntersecting) {
+                steps.classList.add("in");
+                o.disconnect();
+              }
+            },
+            { threshold: 0.4 },
+          ).observe(steps);
+        } else {
+          steps.classList.add("in");
+        }
+
+        var box = document.getElementById("tickets");
+        var labels = { new: "جديد", cook: "قيد التحضير", ready: "جاهز" };
+        var data = [
+          ["طاولة 5", ["2 × برجر لحم", "1 × بطاطس"]],
+          ["سفري", ["1 × شاورما دجاج", "2 × عصير ليمون"]],
+          ["طاولة 2", ["1 × سلطة سيزر", "1 × باستا ألفريدو"]],
+          ["توصيل", ["3 × بيتزا مارغريتا"]],
+          ["طاولة 8", ["2 × مشاوي مشكلة", "1 × حمص"]],
+        ];
+        var num = 1039,
+          idx = 0;
+
+        function setS(el, s) {
+          el.className = "ticket in s-" + s;
+          el.querySelector(".pill").textContent = labels[s];
+        }
+        function add(status) {
+          var d = data[idx++ % data.length],
+            el = document.createElement("article");
+          el.innerHTML =
+            '<div class="ticket-head"><b>#' +
+            ++num +
+            "</b><span>" +
+            d[0] +
+            '</span><em class="pill" style="font-style:normal"></em></div><ul>' +
+            d[1]
+              .map(function (i) {
+                return "<li>" + i + "</li>";
+              })
+              .join("") +
+            "</ul>";
+          el.className = "ticket s-" + status;
+          el.querySelector(".pill").textContent = labels[status];
+          box.insertBefore(el, box.firstChild);
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              el.classList.add("in");
+            });
+          });
+          if (box.children.length > 3) {
+            var old = box.lastChild;
+            old.classList.remove("in");
+            setTimeout(function () {
+              old.remove();
+            }, 700);
+          }
+          return el;
+        }
+        function flow() {
+          var el = add("new");
+          setTimeout(function () {
+            setS(el, "cook");
+          }, 2200);
+          setTimeout(function () {
+            setS(el, "ready");
+          }, 5200);
+        }
+
+        add("ready");
+        add("cook");
+        add("new");
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          setTimeout(function () {
+            var cur = box.firstChild;
+            setS(cur, "cook");
+            setInterval(flow, 4200);
+          }, 2200);
+        }
+      })();
+    </script>
   </body>
 </html>

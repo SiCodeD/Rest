@@ -1,6 +1,6 @@
 const CACHE_NAME = "mazaq-waiter-shell-v3";
 const APP_SHELL = [
-    "/Pages/WaiterDashboard.html",
+    "/waiter",
     "/css/local-fonts.css",
     "/css/pages/waiter.css",
     "/js/theme-init.js",
@@ -48,7 +48,7 @@ self.addEventListener("fetch", (event) => {
                     }
                     return response;
                 })
-                .catch(() => cached || caches.match("/Pages/WaiterDashboard.html"));
+                .catch(() => cached || caches.match("/waiter"));
 
             return cached || networkRequest;
         }),
@@ -67,7 +67,7 @@ self.addEventListener("push", (event) => {
         const clientsList = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
         const visibleClient = clientsList.find((client) => {
             const path = new URL(client.url).pathname;
-            return client.visibilityState === "visible" && path.endsWith("/Pages/WaiterDashboard.html");
+            return client.visibilityState === "visible" && (path.endsWith("/waiter") || path.endsWith("/Pages/WaiterDashboard.html"));
         });
         if (visibleClient) {
             visibleClient.postMessage({ type: "WAITER_PUSH_RECEIVED", payload });
@@ -82,14 +82,14 @@ self.addEventListener("push", (event) => {
             badge: "/waiter-icon.svg",
             tag: payload.tag || "waiter-call",
             renotify: true,
-            data: { url: payload.url || "/Pages/WaiterDashboard.html" },
+            data: { url: payload.url || "/waiter" },
         });
     })());
 });
 
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
-    const targetUrl = event.notification.data?.url || "/Pages/WaiterDashboard.html";
+    const targetUrl = event.notification.data?.url || "/waiter";
     event.waitUntil((async function () {
         const clientsList = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
         const existingClient = clientsList.find((client) => new URL(client.url).pathname === targetUrl);
