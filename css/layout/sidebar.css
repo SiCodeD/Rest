@@ -77,7 +77,7 @@
 
 .brand p {
     margin: 2px 0 0;
-    color: var(--muted);
+    color: var(--primary);
     font-size: 0.85rem;
 }
 

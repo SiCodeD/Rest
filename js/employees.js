@@ -147,11 +147,13 @@
             const isActive = employee.is_active !== false;
             const statusClass = isActive ? "active" : "inactive";
             const statusText = isActive ? "نشط" : "غير نشط";
+            const isCashier = employee.role === "cashier";
+            const roleLabel = isCashier ? "كاشير / Cashier" : "قرصون / Waiter";
             return `
                                 <tr>
                                     <td><div class="employee-identity"><span class="employee-avatar">${escapeHtml((employee.name || "م").trim().slice(0, 1))}</span><div><strong>${escapeHtml(employee.name || "بدون اسم")}</strong><small>عضو في فريق المطعم</small></div></div></td>
                                     <td><code class="employee-username" dir="ltr">${escapeHtml(employee.username || "—")}</code></td>
-                                    <td><span class="pill light"><i data-lucide="concierge-bell" class="lucide-icon"></i>قرصون</span></td>
+                                    <td><span class="pill light"><i data-lucide="concierge-bell" class="lucide-icon"></i>${roleLabel}</span></td>
                                     <td><span class="employee-status ${statusClass}"><span></span>${statusText}</span></td>
                                     <td class="employee-date">${formatDate(employee.created_at)}</td>
                                     <td><div class="employee-actions"><button class="icon-btn" type="button" data-edit-employee="${escapeHtml(employee.id)}" data-tooltip="تعديل الموظف" aria-label="تعديل الموظف"><i data-lucide="pencil" class="lucide-icon"></i></button><button class="icon-btn employee-toggle-btn" type="button" data-toggle-employee="${escapeHtml(employee.id)}" data-tooltip="${isActive ? "تعطيل الموظف" : "تفعيل الموظف"}" aria-label="${isActive ? "تعطيل الموظف" : "تفعيل الموظف"}">${window.lucideIcon(isActive ? "person_off" : "person_check")}</button><button class="icon-btn-delete" type="button" data-delete-employee="${escapeHtml(employee.id)}" data-tooltip="حذف الموظف" aria-label="حذف الموظف"><i data-lucide="trash-2" class="lucide-icon"></i></button></div></td>
@@ -162,6 +164,9 @@
 
     function getErrorMessage(error) {
         const raw = String(error?.message || "");
+        if (raw.includes("Employee limit reached for the current plan.")) {
+            return "لقد وصلت إلى الحد الأقصى لعدد الموظفين المسموح به في خطتك الحالية. يمكنك ترقية خطتك لإضافة المزيد من الموظفين.";
+        }
         if (error?.code === "23505" || /duplicate key|already exists|unique/i.test(raw)) {
             return "اسم المستخدم مستخدم مسبقًا في هذا المطعم. اختر اسمًا آخر.";
         }

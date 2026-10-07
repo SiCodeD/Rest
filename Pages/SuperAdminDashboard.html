@@ -567,6 +567,356 @@
         max-width: 620px;
       }
 
+      /* Plans & subscriptions */
+      #section-plans .company-toolbar {
+        margin-bottom: 0;
+      }
+
+      .plans-toolbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .plan-card {
+        position: relative;
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+        border: 1px solid rgba(113, 0, 20, 0.11);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 12px 28px rgba(72, 42, 27, 0.05);
+      }
+
+      .plan-card.is-inactive {
+        opacity: 0.72;
+      }
+
+      .plan-card-head,
+      .plan-card-title,
+      .plan-card-status,
+      .plan-card-actions,
+      .plan-limit-row,
+      .subscription-row-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .plan-card-head,
+      .plan-card-title,
+      .plan-card-status,
+      .plan-card-actions {
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .plan-card-title {
+        align-items: flex-start;
+      }
+
+      .plan-card-title h3,
+      .plan-card-title p {
+        margin: 0;
+      }
+
+      .plan-card-title h3 {
+        color: var(--company-ink);
+        font-size: 1.05rem;
+      }
+
+      .plan-card-title p,
+      .plan-card-code,
+      .plan-card-status,
+      .plan-feature-empty {
+        color: #8b7773;
+        font-size: 0.72rem;
+      }
+
+      .plan-card-code {
+        direction: ltr;
+        margin-top: 4px;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      }
+
+      .plan-price {
+        padding: 13px 14px;
+        border-radius: 14px;
+        background: rgba(113, 0, 20, 0.055);
+        color: var(--company-red);
+      }
+
+      .plan-price strong,
+      .plan-price span {
+        display: block;
+      }
+
+      .plan-price strong {
+        font-size: 1.35rem;
+      }
+
+      .plan-price span {
+        margin-top: 3px;
+        color: #8b7773;
+        font-size: 0.7rem;
+      }
+
+      .plan-card-section {
+        display: grid;
+        gap: 8px;
+      }
+
+      .plan-card-section h4 {
+        margin: 0;
+        color: var(--company-ink);
+        font-size: 0.75rem;
+      }
+
+      .plan-limit-list,
+      .plan-feature-list {
+        display: grid;
+        gap: 7px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .plan-limit-row {
+        justify-content: space-between;
+        gap: 8px;
+        padding: 7px 9px;
+        border-radius: 9px;
+        background: rgba(246, 240, 231, 0.72);
+        color: #5d4b48;
+        font-size: 0.72rem;
+      }
+
+      .plan-limit-row strong {
+        color: var(--company-red);
+      }
+
+      .plan-feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #5d4b48;
+        font-size: 0.72rem;
+      }
+
+      .plan-feature-list .material-symbols-outlined {
+        color: #4f9d73;
+        font-size: 16px;
+      }
+
+      .plan-card-status {
+        justify-content: flex-start;
+      }
+
+      .plan-status-pill,
+      .subscription-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: rgba(79, 157, 115, 0.12);
+        color: #3f7d5b;
+        font-size: 0.68rem;
+        font-weight: 800;
+      }
+
+      .plan-status-pill.is-inactive,
+      .subscription-status-pill.is-muted {
+        background: rgba(139, 119, 115, 0.12);
+        color: #806f6b;
+      }
+
+      .plans-modal-content {
+        width: min(900px, calc(100vw - 32px));
+        max-width: 900px;
+      }
+
+      .plans-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .plans-form-grid > .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .plans-editor-panel {
+        padding: 15px;
+        border: 1px solid rgba(113, 0, 20, 0.1);
+        border-radius: 16px;
+        background: rgba(246, 240, 231, 0.5);
+      }
+
+      .plans-editor-panel h4 {
+        margin: 0 0 12px;
+        color: var(--company-ink);
+        font-size: 0.82rem;
+      }
+
+      .plans-limit-editor {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .plans-limit-field,
+      .plans-feature-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .plans-limit-field {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .plans-limit-field label,
+      .plans-feature-field label {
+        color: #6f5e59;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+
+      .plans-limit-control {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 7px;
+      }
+
+      .plans-limit-control input[type="number"] {
+        min-width: 0;
+      }
+
+      .plans-feature-editor {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 9px 14px;
+      }
+
+      .plans-feature-field {
+        padding: 8px 9px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .plans-feature-field input,
+      .plans-limit-control input[type="checkbox"],
+      .plans-inline-check input {
+        accent-color: var(--company-red);
+      }
+
+      .plans-inline-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 42px;
+        color: #6f5e59;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+
+      .plans-modal-actions {
+        display: flex;
+        justify-content: flex-start;
+        gap: 9px;
+        margin-top: 16px;
+      }
+
+      .subscription-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+
+      .subscription-toolbar h3,
+      .subscription-toolbar p {
+        margin: 0;
+      }
+
+      .subscription-toolbar h3 {
+        color: var(--company-ink);
+        font-size: 1.1rem;
+      }
+
+      .subscription-toolbar p {
+        margin-top: 4px;
+        color: #8b7773;
+        font-size: 0.76rem;
+      }
+
+      .subscription-table-wrap {
+        overflow-x: auto;
+      }
+
+      .subscription-table {
+        min-width: 920px !important;
+      }
+
+      .subscription-status-pill.status-active,
+      .subscription-status-pill.status-trialing {
+        background: rgba(79, 157, 115, 0.12);
+        color: #3f7d5b;
+      }
+
+      .subscription-status-pill.status-past_due {
+        background: rgba(213, 173, 99, 0.2);
+        color: #8a641f;
+      }
+
+      .subscription-status-pill.status-canceled,
+      .subscription-status-pill.status-expired {
+        background: rgba(180, 35, 24, 0.1);
+        color: #a12820;
+      }
+
+      @media (max-width: 1120px) {
+        .plans-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .plans-form-grid,
+        .plans-limit-editor,
+        .plans-feature-editor {
+          grid-template-columns: 1fr;
+        }
+        .plans-form-grid > .full-width {
+          grid-column: auto;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .plans-grid {
+          grid-template-columns: 1fr;
+        }
+        .plans-modal-content {
+          width: calc(100vw - 20px);
+          max-height: calc(100vh - 20px);
+          padding: 20px 16px;
+        }
+      }
+
       @keyframes companyReveal {
         from {
           opacity: 0;
@@ -708,6 +1058,18 @@
                 <div class="sidebar-copy"><strong>المطاعم</strong></div>
               </div>
               <span class="sidebar-badge" id="sidebarRestaurantsBadge">0</span>
+            </button>
+            <button
+              class="sidebar-link"
+              type="button"
+              data-section="plans"
+            >
+              <div class="sidebar-link-main">
+                <div class="sidebar-icon">
+                  <span class="material-symbols-outlined">workspace_premium</span>
+                </div>
+                <div class="sidebar-copy"><strong>الخطط والاشتراكات</strong></div>
+              </div>
             </button>
           </div>
         </nav>
@@ -904,6 +1266,7 @@
                   <option value="all">كل الخطط</option>
                   <option value="starter">البداية</option>
                   <option value="professional">احترافية</option>
+                  <option value="business">أعمال</option>
                   <option value="enterprise">مؤسسات</option>
                 </select>
                 <div class="company-actions">
@@ -941,6 +1304,56 @@
                   </tr>
                 </tbody>
               </table>
+            </section>
+          </div>
+        </section>
+
+        <section id="section-plans" class="admin-section">
+          <div class="section-stack">
+            <section class="company-toolbar">
+              <div>
+                <h2>الخطط والاشتراكات</h2>
+                <p>أدر كتالوج الباقات وحدودها واشتراكات المطاعم من مصدر البيانات المركزي.</p>
+              </div>
+              <div class="plans-toolbar-actions">
+                <button class="company-edit-button" id="refreshPlansBtn" type="button">
+                  <span class="material-symbols-outlined" style="font-size: 16px">refresh</span>تحديث
+                </button>
+              </div>
+            </section>
+
+            <section class="plans-grid" id="plansGrid">
+              <article class="company-panel company-empty">جاري تحميل الخطط...</article>
+            </section>
+
+            <section class="company-table">
+              <div class="subscription-toolbar" style="padding: 0 21px 16px">
+                <div>
+                  <h3>اشتراكات المطاعم</h3>
+                  <p>مصدر البيانات هنا هو اشتراك المطعم المرتبط بجدول الخطط.</p>
+                </div>
+                <button class="button-primary" id="addSubscriptionBtn" type="button">
+                  <span class="material-symbols-outlined">add_link</span>تعيين اشتراك
+                </button>
+              </div>
+              <div class="subscription-table-wrap">
+                <table class="subscription-table">
+                  <thead>
+                    <tr>
+                      <th>المطعم</th>
+                      <th>الكود</th>
+                      <th>الخطة</th>
+                      <th>الحالة</th>
+                      <th>البداية</th>
+                      <th>نهاية الفترة</th>
+                      <th>إجراء</th>
+                    </tr>
+                  </thead>
+                  <tbody id="subscriptionsBody">
+                    <tr><td colspan="7" class="company-empty">جاري تحميل الاشتراكات...</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </section>
           </div>
         </section>
@@ -1034,6 +1447,7 @@
               ><select class="select-modern" name="plan">
                 <option value="starter">البداية</option>
                 <option value="professional">احترافية</option>
+                <option value="business">أعمال</option>
                 <option value="enterprise">مؤسسات</option>
               </select>
             </div>
@@ -1042,6 +1456,106 @@
             <span class="material-symbols-outlined">person_add</span
             ><span id="saveRestaurantLabel">إنشاء الحساب والمطعم</span>
           </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="planModal">
+      <div class="modal-content plans-modal-content">
+        <div class="modal-header">
+          <h3 id="planModalTitle">تعديل الخطة</h3>
+          <button class="close-modal" id="closePlanModal" type="button">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="planForm">
+          <input type="hidden" id="planId" />
+          <div class="plans-form-grid">
+            <div>
+              <label class="field-label" for="planName">اسم الخطة</label>
+              <input class="input-modern" id="planName" required maxlength="80" />
+            </div>
+            <div>
+              <label class="field-label" for="planPrice">السعر الشهري بالدولار</label>
+              <input class="input-modern" id="planPrice" type="number" min="0" step="0.01" />
+            </div>
+            <label class="plans-inline-check">
+              <input id="planCustomPrice" type="checkbox" /> سعر مخصص
+            </label>
+            <label class="plans-inline-check">
+              <input id="planActive" type="checkbox" /> الخطة نشطة
+            </label>
+            <div class="plans-editor-panel full-width">
+              <h4>حدود الموارد</h4>
+              <div class="plans-limit-editor" id="planLimitsEditor"></div>
+            </div>
+            <div class="plans-editor-panel full-width">
+              <h4>الميزات المفعلة</h4>
+              <div class="plans-feature-editor" id="planFeaturesEditor"></div>
+            </div>
+          </div>
+          <div class="plans-modal-actions">
+            <button class="button-primary" type="submit" id="savePlanBtn">
+              <span class="material-symbols-outlined">save</span>حفظ الخطة
+            </button>
+            <button class="company-edit-button" type="button" id="cancelPlanBtn">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="subscriptionModal">
+      <div class="modal-content plans-modal-content">
+        <div class="modal-header">
+          <h3 id="subscriptionModalTitle">تعيين اشتراك لمطعم</h3>
+          <button class="close-modal" id="closeSubscriptionModal" type="button">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="subscriptionForm">
+          <input type="hidden" id="subscriptionId" />
+          <div class="plans-form-grid">
+            <div>
+              <label class="field-label" for="subscriptionRestaurant">المطعم</label>
+              <select class="select-modern" id="subscriptionRestaurant" required></select>
+            </div>
+            <div>
+              <label class="field-label" for="subscriptionPlan">الخطة</label>
+              <select class="select-modern" id="subscriptionPlan" required></select>
+            </div>
+            <div>
+              <label class="field-label" for="subscriptionStatus">الحالة</label>
+              <select class="select-modern" id="subscriptionStatus" required>
+                <option value="trialing">تجريبي</option>
+                <option value="active">نشط</option>
+                <option value="past_due">متأخر السداد</option>
+                <option value="canceled">ملغى</option>
+                <option value="expired">منتهي</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="subscriptionStartsAt">تاريخ البداية</label>
+              <input class="input-modern" id="subscriptionStartsAt" type="datetime-local" required />
+            </div>
+            <div>
+              <label class="field-label" for="subscriptionPeriodStart">بداية الفترة الحالية</label>
+              <input class="input-modern" id="subscriptionPeriodStart" type="datetime-local" />
+            </div>
+            <div>
+              <label class="field-label" for="subscriptionPeriodEnd">نهاية الفترة الحالية</label>
+              <input class="input-modern" id="subscriptionPeriodEnd" type="datetime-local" />
+            </div>
+            <div>
+              <label class="field-label" for="subscriptionTrialEnd">نهاية التجربة</label>
+              <input class="input-modern" id="subscriptionTrialEnd" type="datetime-local" />
+            </div>
+          </div>
+          <div class="plans-modal-actions">
+            <button class="button-primary" type="submit" id="saveSubscriptionBtn">
+              <span class="material-symbols-outlined">save</span>حفظ الاشتراك
+            </button>
+            <button class="company-edit-button" type="button" id="cancelSubscriptionBtn">إلغاء</button>
+          </div>
         </form>
       </div>
     </div>
@@ -1063,6 +1577,10 @@
             title: "دليل المطاعم",
             subtitle: "أنشئ مطعماً جديداً واربط به حساب المدير المسؤول.",
           },
+          plans: {
+            title: "الخطط والاشتراكات",
+            subtitle: "أدر الباقات وحدودها واشتراكات المطاعم من مكان واحد.",
+          },
         };
 
         function switchSection(section) {
@@ -1077,6 +1595,7 @@
           const meta = sectionMeta[section] || sectionMeta.overview;
           document.getElementById("pageTitle").textContent = meta.title;
           document.getElementById("pageSubtitle").textContent = meta.subtitle;
+          if (section === "plans") window.PlansSection?.load();
         }
 
         document
@@ -1109,6 +1628,7 @@
             {
               starter: "البداية",
               professional: "احترافية",
+              business: "أعمال",
               enterprise: "مؤسسات",
             }[plan] ||
             plan ||
@@ -1394,6 +1914,424 @@
           }
         });
         await loadRestaurants();
+      })();
+    </script>
+    <script>
+      (function () {
+        "use strict";
+
+        const featureLabels = {
+          qr_menu: "القائمة عبر QR",
+          orders: "الطلبات",
+          kitchen: "المطبخ",
+          tables: "الطاولات",
+          waiter: "القرصون",
+          restaurant_reports: "تقارير المطعم",
+          order_tracking: "تتبع الطلبات",
+          customer_management: "إدارة العملاء",
+          customer_profile: "ملف العميل",
+          feedback: "الملاحظات والتقييمات",
+          loyalty: "الولاء",
+          rewards: "المكافآت",
+          missions: "المهام",
+          customer_reports: "تقارير العملاء",
+          advanced_analytics: "التحليلات المتقدمة",
+          automation: "الأتمتة",
+          multi_branch: "الفروع المتعددة",
+          custom_integrations: "التكاملات المخصصة",
+        };
+        const featureKeys = Object.keys(featureLabels);
+        const limitLabels = {
+          tables: "الطاولات",
+          menu_items: "الأصناف",
+          employees: "الموظفون",
+        };
+        const limitKeys = Object.keys(limitLabels);
+        const statusLabels = {
+          trialing: "تجريبي",
+          active: "نشط",
+          past_due: "متأخر السداد",
+          canceled: "ملغى",
+          expired: "منتهي",
+        };
+        const planOrder = ["starter", "professional", "business", "enterprise"];
+        const planGrid = document.getElementById("plansGrid");
+        const subscriptionsBody = document.getElementById("subscriptionsBody");
+        const planModal = document.getElementById("planModal");
+        const planForm = document.getElementById("planForm");
+        const subscriptionModal = document.getElementById("subscriptionModal");
+        const subscriptionForm = document.getElementById("subscriptionForm");
+        let plans = [];
+        let planLimits = [];
+        let planFeatures = [];
+        let restaurants = [];
+        let subscriptions = [];
+        let loaded = false;
+        let loadingPromise = null;
+
+        function byId(id) {
+          return document.getElementById(id);
+        }
+
+        function escapeHtml(value) {
+          return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        function relationOne(value) {
+          return Array.isArray(value) ? value[0] || null : value || null;
+        }
+
+        function formatDateTime(value) {
+          if (!value) return "—";
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) return "—";
+          return date.toLocaleString("ar-SA", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          });
+        }
+
+        function toLocalDateTime(value) {
+          if (!value) return "";
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) return "";
+          const pad = (number) => String(number).padStart(2, "0");
+          return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        function toIsoOrNull(value) {
+          if (!value) return null;
+          const date = new Date(value);
+          return Number.isNaN(date.getTime()) ? null : date.toISOString();
+        }
+
+        function planName(plan) {
+          return plan?.name || plan?.code || "—";
+        }
+
+        function planPrice(plan) {
+          if (plan?.is_custom_price) return "مخصص";
+          const cents = Number(plan?.monthly_price_cents);
+          if (!Number.isFinite(cents)) return "—";
+          return `$${(cents / 100).toFixed(2)}`;
+        }
+
+        function planModel(plan) {
+          return {
+            ...plan,
+            limits: planLimits.filter((row) => row.plan_id === plan.id),
+            features: planFeatures.filter((row) => row.plan_id === plan.id),
+          };
+        }
+
+        function renderPlans() {
+          const ordered = [...plans].sort(
+            (a, b) => planOrder.indexOf(a.code) - planOrder.indexOf(b.code),
+          );
+          if (!ordered.length) {
+            planGrid.innerHTML = '<article class="company-panel company-empty">لا توجد خطط.</article>';
+            return;
+          }
+          planGrid.innerHTML = ordered
+            .map((plan) => {
+              const model = planModel(plan);
+              const limits = limitKeys
+                .map((key) => model.limits.find((row) => row.limit_key === key))
+                .filter(Boolean);
+              const enabledFeatures = model.features.filter((row) => row.enabled);
+              const statusClass = plan.is_active ? "" : "is-inactive";
+              const statusText = plan.is_active ? "نشطة" : "غير نشطة";
+              return `
+                <article class="plan-card ${statusClass}">
+                  <div class="plan-card-head">
+                    <div class="plan-card-title">
+                      <div>
+                        <h3>${escapeHtml(planName(plan))}</h3>
+                        <p class="plan-card-code">${escapeHtml(plan.code)}</p>
+                      </div>
+                    </div>
+                    <button class="company-edit-button" type="button" data-edit-plan="${escapeHtml(plan.id)}" title="تعديل الخطة">
+                      <span class="material-symbols-outlined" style="font-size: 16px">edit</span>
+                    </button>
+                  </div>
+                  <div class="plan-price">
+                    <strong>${escapeHtml(planPrice(plan))}</strong>
+                    <span>${plan.is_custom_price ? "تسعير حسب الاتفاق" : `شهريًا · ${escapeHtml(plan.currency || "USD")}`}</span>
+                  </div>
+                  <div class="plan-card-status">
+                    <span class="plan-status-pill ${plan.is_active ? "" : "is-inactive"}"><span>●</span>${statusText}</span>
+                  </div>
+                  <div class="plan-card-section">
+                    <h4>الحدود</h4>
+                    <ul class="plan-limit-list">
+                      ${limits.map((row) => `<li class="plan-limit-row"><span>${limitLabels[row.limit_key]}</span><strong>${row.is_unlimited ? "غير محدود" : escapeHtml(row.limit_value)}</strong></li>`).join("")}
+                    </ul>
+                  </div>
+                  <div class="plan-card-section">
+                    <h4>الميزات المفعلة (${enabledFeatures.length})</h4>
+                    ${enabledFeatures.length ? `<ul class="plan-feature-list">${enabledFeatures.map((row) => `<li><span class="material-symbols-outlined">check_circle</span>${escapeHtml(featureLabels[row.feature_key] || row.feature_key)}</li>`).join("")}</ul>` : '<span class="plan-feature-empty">لا توجد ميزات مفعلة.</span>'}
+                  </div>
+                </article>`;
+            })
+            .join("");
+        }
+
+        function renderSubscriptions() {
+          const subscriptionByRestaurant = new Map(
+            subscriptions.map((row) => [String(row.restaurant_id), row]),
+          );
+          const rows = [...restaurants].sort((a, b) =>
+            String(a.name || "").localeCompare(String(b.name || ""), "ar"),
+          );
+          if (!rows.length) {
+            subscriptionsBody.innerHTML = '<tr><td colspan="7" class="company-empty">لا توجد مطاعم.</td></tr>';
+            return;
+          }
+          subscriptionsBody.innerHTML = rows
+            .map((restaurant) => {
+              const subscription = subscriptionByRestaurant.get(String(restaurant.id));
+              const joinedPlan = relationOne(subscription?.plans);
+              const status = subscription?.status;
+              const statusText = statusLabels[status] || "—";
+              const statusClass = status ? `status-${status}` : "is-muted";
+              return `
+                <tr>
+                  <td><strong>${escapeHtml(restaurant.name || "بدون اسم")}</strong></td>
+                  <td><code dir="ltr" class="restaurant-code">${escapeHtml(restaurant.restaurant_code || "—")}</code></td>
+                  <td>${escapeHtml(joinedPlan?.name || (subscription ? "خطة غير معروفة" : "—"))}</td>
+                  <td><span class="subscription-status-pill ${statusClass}">${subscription ? escapeHtml(statusText) : "لا يوجد اشتراك"}</span></td>
+                  <td>${formatDateTime(subscription?.starts_at)}</td>
+                  <td>${formatDateTime(subscription?.current_period_end)}</td>
+                  <td><div class="subscription-row-actions"><button class="company-edit-button" type="button" data-edit-subscription="${escapeHtml(subscription?.id || "")}" data-subscription-restaurant="${escapeHtml(restaurant.id)}"><span class="material-symbols-outlined" style="font-size: 16px">${subscription ? "edit" : "add_link"}</span>${subscription ? "تعديل" : "تعيين"}</button></div></td>
+                </tr>`;
+            })
+            .join("");
+        }
+
+        function populateLimitEditor(model) {
+          byId("planLimitsEditor").innerHTML = limitKeys
+            .map((key) => {
+              const row = model.limits.find((item) => item.limit_key === key);
+              return `<div class="plans-limit-field"><label for="planLimit-${key}">${limitLabels[key]}</label><div class="plans-limit-control"><input class="input-modern" id="planLimit-${key}" data-limit-key="${key}" type="number" min="0" step="1" value="${row?.is_unlimited ? "" : escapeHtml(row?.limit_value ?? "")}" ${row?.is_unlimited ? "disabled" : ""} /><label class="plans-inline-check"><input type="checkbox" data-unlimited-key="${key}" ${row?.is_unlimited ? "checked" : ""} />غير محدود</label></div></div>`;
+            })
+            .join("");
+          byId("planLimitsEditor").querySelectorAll("[data-unlimited-key]").forEach((checkbox) => {
+            checkbox.addEventListener("change", function () {
+              const input = byId(`planLimit-${checkbox.dataset.unlimitedKey}`);
+              if (input) {
+                input.disabled = checkbox.checked;
+                if (checkbox.checked) input.value = "";
+              }
+            });
+          });
+        }
+
+        function populateFeatureEditor(model) {
+          const enabled = new Set(model.features.filter((row) => row.enabled).map((row) => row.feature_key));
+          byId("planFeaturesEditor").innerHTML = featureKeys
+            .map((key) => `<label class="plans-feature-field"><input type="checkbox" data-feature-key="${key}" ${enabled.has(key) ? "checked" : ""} /><span>${featureLabels[key]}</span></label>`)
+            .join("");
+        }
+
+        function openPlanEditor(plan) {
+          const model = planModel(plan);
+          byId("planId").value = plan.id;
+          byId("planName").value = plan.name || "";
+          byId("planPrice").value = plan.is_custom_price ? "" : ((Number(plan.monthly_price_cents) || 0) / 100).toFixed(2);
+          byId("planCustomPrice").checked = Boolean(plan.is_custom_price);
+          byId("planPrice").disabled = Boolean(plan.is_custom_price);
+          byId("planActive").checked = plan.is_active !== false;
+          populateLimitEditor(model);
+          populateFeatureEditor(model);
+          planModal.classList.add("open");
+        }
+
+        function closePlanEditor() {
+          planModal.classList.remove("open");
+        }
+
+        function populateSubscriptionChoices() {
+          byId("subscriptionRestaurant").innerHTML = [...restaurants]
+            .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ar"))
+            .map((restaurant) => `<option value="${escapeHtml(restaurant.id)}">${escapeHtml(restaurant.name || "بدون اسم")} · ${escapeHtml(restaurant.restaurant_code || "—")}</option>`)
+            .join("");
+          byId("subscriptionPlan").innerHTML = [...plans]
+            .sort((a, b) => planOrder.indexOf(a.code) - planOrder.indexOf(b.code))
+            .map((plan) => `<option value="${escapeHtml(plan.id)}">${escapeHtml(plan.name || plan.code)}</option>`)
+            .join("");
+        }
+
+        function openSubscriptionEditor(subscription, restaurantId) {
+          populateSubscriptionChoices();
+          const restaurant = restaurantId || subscription?.restaurant_id || restaurants[0]?.id || "";
+          byId("subscriptionId").value = subscription?.id || "";
+          byId("subscriptionRestaurant").value = restaurant;
+          byId("subscriptionRestaurant").disabled = Boolean(subscription?.id);
+          byId("subscriptionPlan").value = subscription?.plan_id || plans[0]?.id || "";
+          byId("subscriptionStatus").value = subscription?.status || "active";
+          byId("subscriptionStartsAt").value = toLocalDateTime(subscription?.starts_at) || toLocalDateTime(new Date().toISOString());
+          byId("subscriptionPeriodStart").value = toLocalDateTime(subscription?.current_period_start);
+          byId("subscriptionPeriodEnd").value = toLocalDateTime(subscription?.current_period_end);
+          byId("subscriptionTrialEnd").value = toLocalDateTime(subscription?.trial_ends_at);
+          byId("subscriptionModalTitle").textContent = subscription ? "تعديل اشتراك المطعم" : "تعيين اشتراك لمطعم";
+          subscriptionModal.classList.add("open");
+        }
+
+        function closeSubscriptionEditor() {
+          byId("subscriptionRestaurant").disabled = false;
+          subscriptionModal.classList.remove("open");
+        }
+
+        async function loadPlansSection(force) {
+          if (loadingPromise) return loadingPromise;
+          if (loaded && !force) return;
+          loadingPromise = (async function () {
+            try {
+              const [plansResult, limitsResult, featuresResult, restaurantsResult, subscriptionsResult] = await Promise.all([
+                supabase.from("plans").select("*").order("code"),
+                supabase.from("plan_limits").select("*").order("limit_key"),
+                supabase.from("plan_features").select("*").order("feature_key"),
+                supabase.from("restaurants").select("id, restaurant_code, name").order("name"),
+                supabase.from("restaurant_subscriptions").select("id, restaurant_id, plan_id, status, starts_at, current_period_start, current_period_end, trial_ends_at, cancel_at_period_end, canceled_at, plans(code, name)").order("created_at", { ascending: false }),
+              ]);
+              const failure = [plansResult, limitsResult, featuresResult, restaurantsResult, subscriptionsResult].find((result) => result.error);
+              if (failure) throw failure.error;
+              plans = plansResult.data || [];
+              planLimits = limitsResult.data || [];
+              planFeatures = featuresResult.data || [];
+              restaurants = restaurantsResult.data || [];
+              subscriptions = subscriptionsResult.data || [];
+              renderPlans();
+              renderSubscriptions();
+              loaded = true;
+            } catch (error) {
+              planGrid.innerHTML = '<article class="company-panel company-empty">تعذر تحميل بيانات الخطط.</article>';
+              subscriptionsBody.innerHTML = '<tr><td colspan="7" class="company-empty">تعذر تحميل الاشتراكات.</td></tr>';
+              Notifications.error("تعذر تحميل الخطط", error.message || "حدث خطأ غير متوقع.");
+            } finally {
+              loadingPromise = null;
+            }
+          })();
+          return loadingPromise;
+        }
+
+        byId("refreshPlansBtn")?.addEventListener("click", () => loadPlansSection(true));
+        planGrid.addEventListener("click", function (event) {
+          const button = event.target.closest("[data-edit-plan]");
+          if (!button) return;
+          const plan = plans.find((item) => String(item.id) === String(button.dataset.editPlan));
+          if (plan) openPlanEditor(plan);
+        });
+
+        byId("planCustomPrice")?.addEventListener("change", function () {
+          byId("planPrice").disabled = this.checked;
+          if (this.checked) byId("planPrice").value = "";
+        });
+        byId("closePlanModal")?.addEventListener("click", closePlanEditor);
+        byId("cancelPlanBtn")?.addEventListener("click", closePlanEditor);
+        planModal?.addEventListener("click", (event) => {
+          if (event.target === planModal) closePlanEditor();
+        });
+
+        planForm?.addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const plan = plans.find((item) => String(item.id) === String(byId("planId").value));
+          if (!plan) return;
+          const saveButton = byId("savePlanBtn");
+          const customPrice = byId("planCustomPrice").checked;
+          const price = Number(byId("planPrice").value);
+          if (!customPrice && (!Number.isFinite(price) || price < 0)) {
+            Notifications.error("بيانات غير مكتملة", "أدخل سعرًا شهريًا صالحًا أو فعّل السعر المخصص.");
+            return;
+          }
+          saveButton.disabled = true;
+          try {
+            const { error: planError } = await supabase.from("plans").update({
+              name: byId("planName").value.trim(),
+              monthly_price_cents: customPrice ? null : Math.round(price * 100),
+              is_custom_price: customPrice,
+              is_active: byId("planActive").checked,
+              updated_at: new Date().toISOString(),
+            }).eq("id", plan.id);
+            if (planError) throw planError;
+
+            const limitRows = limitKeys.map((key) => {
+              const unlimited = byId("planLimitsEditor").querySelector(`[data-unlimited-key="${key}"]`)?.checked;
+              const input = byId(`planLimit-${key}`);
+              const value = Number(input?.value);
+              if (!unlimited && (!Number.isInteger(value) || value < 0)) throw new Error(`أدخل حدًا صالحًا لـ ${limitLabels[key]}.`);
+              return { plan_id: plan.id, limit_key: key, limit_value: unlimited ? null : value, is_unlimited: Boolean(unlimited), updated_at: new Date().toISOString() };
+            });
+            const { error: limitsError } = await supabase.from("plan_limits").upsert(limitRows, { onConflict: "plan_id,limit_key" });
+            if (limitsError) throw limitsError;
+
+            const featureRows = featureKeys.map((key) => ({
+              plan_id: plan.id,
+              feature_key: key,
+              enabled: Boolean(byId("planFeaturesEditor").querySelector(`[data-feature-key="${key}"]`)?.checked),
+              updated_at: new Date().toISOString(),
+            }));
+            const { error: featuresError } = await supabase.from("plan_features").upsert(featureRows, { onConflict: "plan_id,feature_key" });
+            if (featuresError) throw featuresError;
+            closePlanEditor();
+            await loadPlansSection(true);
+            Notifications.success("تم حفظ الخطة", "تم تحديث بيانات الخطة والحدود والميزات.");
+          } catch (error) {
+            Notifications.error("تعذر حفظ الخطة", error.message || "حدث خطأ غير متوقع.");
+          } finally {
+            saveButton.disabled = false;
+          }
+        });
+
+        byId("addSubscriptionBtn")?.addEventListener("click", () => openSubscriptionEditor(null));
+        subscriptionsBody.addEventListener("click", function (event) {
+          const button = event.target.closest("[data-edit-subscription]");
+          if (!button) return;
+          const subscription = subscriptions.find((item) => String(item.id) === String(button.dataset.editSubscription));
+          openSubscriptionEditor(subscription || null, button.dataset.subscriptionRestaurant);
+        });
+        byId("closeSubscriptionModal")?.addEventListener("click", closeSubscriptionEditor);
+        byId("cancelSubscriptionBtn")?.addEventListener("click", closeSubscriptionEditor);
+        subscriptionModal?.addEventListener("click", (event) => {
+          if (event.target === subscriptionModal) closeSubscriptionEditor();
+        });
+
+        subscriptionForm?.addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const saveButton = byId("saveSubscriptionBtn");
+          saveButton.disabled = true;
+          const subscriptionId = byId("subscriptionId").value;
+          const payload = {
+            restaurant_id: byId("subscriptionRestaurant").value,
+            plan_id: byId("subscriptionPlan").value,
+            status: byId("subscriptionStatus").value,
+            starts_at: toIsoOrNull(byId("subscriptionStartsAt").value) || new Date().toISOString(),
+            current_period_start: toIsoOrNull(byId("subscriptionPeriodStart").value),
+            current_period_end: toIsoOrNull(byId("subscriptionPeriodEnd").value),
+            trial_ends_at: toIsoOrNull(byId("subscriptionTrialEnd").value),
+            updated_at: new Date().toISOString(),
+          };
+          try {
+            const result = subscriptionId
+              ? await supabase.from("restaurant_subscriptions").update(payload).eq("id", subscriptionId)
+              : await supabase.from("restaurant_subscriptions").insert(payload);
+            if (result.error) throw result.error;
+            closeSubscriptionEditor();
+            await loadPlansSection(true);
+            Notifications.success("تم حفظ الاشتراك", "تم تحديث اشتراك المطعم بنجاح.");
+          } catch (error) {
+            Notifications.error("تعذر حفظ الاشتراك", error.message || "حدث خطأ غير متوقع.");
+          } finally {
+            saveButton.disabled = false;
+          }
+        });
+
+        window.PlansSection = { load: () => loadPlansSection(false) };
       })();
     </script>
   </body>

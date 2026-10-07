@@ -25,9 +25,1541 @@
         cursor: default;
       }
 
+      /* Table badge: sits in the header, under "Lounge & Restaurant". */
+      .header-table-badge {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 4px;
+        padding: 2px 12px;
+        border-radius: 999px;
+        border: 1px solid rgb(var(--primary) / 0.4);
+        background: rgb(var(--primary) / 0.1);
+        color: rgb(var(--primary));
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.6;
+      }
+      .header-table-badge.hidden {
+        display: none;
+      }
+      /* Header is taller while the badge shows: keep the side buttons on the
+         logo row and give the page content matching room. */
+      body.has-table-context #theme-toggle,
+      body.has-table-context #header-waiter-call,
+      body.has-table-context #customer-session-btn {
+        margin-top: -26px;
+      }
+      body.has-table-context #screen-menu {
+        padding-top: 8.5rem;
+      }
+
+      /* Explicit placement for the account button (no dependency on compiled
+         Tailwind offsets): sits to the left of the waiter bell, never on the logo.
+         Kept at low specificity so the public-mode rule below still overrides it. */
+      #customer-session-btn {
+        position: absolute;
+        right: 4rem;
+        z-index: 1;
+        flex-shrink: 0;
+      }
+      @media (min-width: 640px) {
+        #customer-session-btn {
+          right: 5rem;
+        }
+      }
+
+      /* Account button in the header: clean user icon, tinted when signed in */
+      #customer-session-btn {
+        width: auto;
+        min-width: 2.75rem;
+        border: 1px solid transparent;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      #customer-session-btn .header-account-ico {
+        width: 22px;
+        height: 22px;
+        flex: none;
+      }
+      #customer-session-btn:hover {
+        background: rgb(var(--primary) / 0.1);
+      }
+      #customer-session-btn.is-signed-in {
+        background: rgb(var(--primary) / 0.12);
+        border-color: rgb(var(--primary) / 0.35);
+      }
+      #customer-session-btn:focus-visible {
+        outline: 2px solid rgb(var(--primary));
+        outline-offset: 2px;
+      }
+
+      /* The waiter bell is hidden in public mode, so the account button takes its corner. */
+      body.public-menu-mode #customer-session-btn {
+        right: 1rem;
+      }
+      @media (min-width: 640px) {
+        body.public-menu-mode #customer-session-btn {
+          right: 1.5rem;
+        }
+      }
+
+      body.ordering-disabled #customer-session-btn {
+        display: none !important;
+      }
+
       body.menu-data-loading #main-header,
       body.menu-data-loading #screen-menu {
         visibility: hidden;
+      }
+
+      /* ===== Customer profile (loyalty modal) =====
+         Self-contained: only theme CSS variables, no compiled-Tailwind dependency. */
+      .lp-sheet {
+        --lp-text: rgb(var(--on-surface));
+        --lp-muted: rgb(var(--on-surface-variant));
+        --lp-primary: rgb(var(--primary));
+        --lp-line: rgb(var(--on-surface) / 0.09);
+        --lp-fill: rgb(var(--on-surface) / 0.045);
+        position: relative;
+        width: 100%;
+        max-width: 32rem;
+        max-height: 92vh;
+        max-height: 92dvh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 0.875rem;
+        padding: 0.5rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+        border: 1px solid rgb(var(--primary) / 0.28);
+        border-radius: 1.5rem 1.5rem 0 0;
+        box-shadow: 0 -8px 40px rgb(0 0 0 / 0.45);
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--on-surface) / 0.25) transparent;
+        color: var(--lp-text);
+      }
+      .lp-sheet::-webkit-scrollbar {
+        width: 4px;
+      }
+      .lp-sheet::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .lp-sheet::-webkit-scrollbar-thumb {
+        background: rgb(var(--on-surface) / 0.25);
+        border-radius: 4px;
+      }
+      @media (min-width: 640px) {
+        .lp-sheet {
+          border-radius: 1.5rem;
+          padding: 1.25rem 1.5rem 1.5rem;
+          box-shadow: 0 20px 60px rgb(0 0 0 / 0.5);
+        }
+        .lp-handle {
+          display: none;
+        }
+      }
+      .lp-sheet .hidden {
+        display: none !important;
+      }
+      .lp-sheet,
+      .lp-sheet * {
+        box-sizing: border-box;
+      }
+      .lp-sheet :is(h3, h4, p, span, strong, b, li) {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .lp-handle {
+        width: 2.5rem;
+        height: 0.25rem;
+        border-radius: 999px;
+        background: rgb(var(--on-surface) / 0.22);
+        margin: 0 auto 0.125rem;
+        flex: none;
+      }
+      .lp-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+      .lp-hello {
+        font-size: 0.75rem;
+        color: var(--lp-muted);
+        line-height: 1.2;
+      }
+      .lp-name {
+        font-size: 1.5rem;
+        line-height: 1.25;
+        font-weight: 800;
+        color: var(--lp-primary);
+        margin: 0;
+      }
+      .lp-close {
+        flex: none;
+        width: 2.25rem;
+        height: 2.25rem;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 0;
+        background: rgb(var(--on-surface) / 0.08);
+        color: var(--lp-muted);
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .lp-close:hover,
+      .lp-close:active {
+        background: rgb(var(--primary) / 0.18);
+        color: var(--lp-primary);
+      }
+      .lp-state {
+        padding: 2.5rem 0;
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--lp-muted);
+      }
+      .lp-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.875rem;
+      }
+
+      /* level card */
+      .lp-level {
+        padding: 0.875rem;
+        border-radius: 1.125rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        background: linear-gradient(
+          145deg,
+          rgb(var(--primary) / 0.18),
+          rgb(var(--primary) / 0.05)
+        );
+        border: 1px solid rgb(var(--primary) / 0.32);
+      }
+      .lp-level-top {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .lp-badge {
+        flex: none;
+        width: 2.75rem;
+        height: 2.75rem;
+        display: grid;
+        place-items: center;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        background: rgb(var(--primary) / 0.16);
+        border: 1px solid rgb(var(--primary) / 0.35);
+      }
+      .lp-level-name {
+        flex: 1 1 auto;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        color: var(--lp-text);
+      }
+      .lp-xp {
+        flex: none;
+        padding: 0.25rem 0.625rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--lp-primary);
+        background: rgb(var(--primary) / 0.14);
+        border: 1px solid rgb(var(--primary) / 0.3);
+        direction: ltr;
+        white-space: nowrap;
+      }
+      .lp-track {
+        height: 0.625rem;
+        border-radius: 999px;
+        background: rgb(var(--on-surface) / 0.14);
+        overflow: hidden;
+      }
+      .lp-fill {
+        height: 100%;
+        border-radius: 999px;
+        min-width: 0.375rem;
+        background: linear-gradient(
+          90deg,
+          rgb(var(--primary) / 0.75),
+          rgb(var(--primary))
+        );
+        box-shadow: 0 0 10px rgb(var(--primary) / 0.55);
+        transition: width 0.5s ease;
+      }
+      .lp-level-labels {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--lp-muted);
+        margin-top: -0.25rem;
+      }
+      .lp-level-labels .lp-pct {
+        font-weight: 800;
+        color: var(--lp-primary);
+      }
+      .lp-level-foot {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.6875rem;
+        color: var(--lp-muted);
+        margin-top: -0.375rem;
+      }
+
+      /* stats */
+      .lp-stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+      .lp-stat {
+        padding: 0.625rem 0.75rem;
+        border-radius: 0.875rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+      }
+      .lp-stat-label {
+        display: block;
+        font-size: 0.6875rem;
+        color: var(--lp-muted);
+        margin-bottom: 0.125rem;
+      }
+      .lp-stat-value {
+        display: block;
+        font-size: 1.25rem;
+        line-height: 1.3;
+        font-weight: 800;
+        color: var(--lp-text);
+      }
+      .lp-stat.is-hl .lp-stat-value {
+        color: var(--lp-primary);
+      }
+
+      /* quick actions */
+      .lp-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+      .lp-action {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.625rem 0.75rem;
+        text-align: start;
+        border-radius: 0.875rem;
+        cursor: pointer;
+        font: inherit;
+        color: var(--lp-primary);
+        background: rgb(var(--primary) / 0.09);
+        border: 1px solid rgb(var(--primary) / 0.3);
+        transition:
+          background 0.2s,
+          transform 0.1s;
+      }
+      .lp-action:hover {
+        background: rgb(var(--primary) / 0.16);
+      }
+      .lp-action:active {
+        transform: scale(0.98);
+      }
+      .lp-action-ico {
+        flex: none;
+        font-size: 1.5rem;
+        line-height: 1;
+      }
+      .lp-action-txt {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        line-height: 1.35;
+      }
+      .lp-action-txt > span:first-child {
+        font-size: 0.8125rem;
+        font-weight: 700;
+      }
+      .lp-action-txt > b {
+        font-size: 0.6875rem;
+        font-weight: 400;
+        color: var(--lp-muted);
+      }
+
+      /* lists */
+      .lp-section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .lp-section-title {
+        margin: 0;
+        font-size: 0.8125rem;
+        font-weight: 800;
+        color: var(--lp-primary);
+      }
+      .lp-section-hint {
+        font-size: 0.6875rem;
+        color: var(--lp-muted);
+      }
+      .lp-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+      .lp-empty {
+        padding: 0.75rem 0;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--lp-muted);
+      }
+
+      .lp-row {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 0.75rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+      }
+      .lp-row-main {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.5rem;
+        color: var(--lp-text);
+      }
+      .lp-row-total {
+        flex: none;
+        font-size: 0.9375rem;
+        font-weight: 800;
+        color: var(--lp-primary);
+      }
+      .lp-pill {
+        padding: 0.0625rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.625rem;
+        font-weight: 700;
+        background: rgb(var(--on-surface) / 0.1);
+        color: var(--lp-muted);
+      }
+      .lp-pill[data-s="served"] {
+        background: rgb(34 197 94 / 0.16);
+        color: #4ade80;
+      }
+      .lp-pill[data-s="cancelled"] {
+        background: rgb(239 68 68 / 0.16);
+        color: #f87171;
+      }
+      .lp-pill[data-s="new"],
+      .lp-pill[data-s="accepted"] {
+        background: rgb(59 130 246 / 0.16);
+        color: #60a5fa;
+      }
+      .lp-pill[data-s="preparing"],
+      .lp-pill[data-s="ready"] {
+        background: rgb(245 158 11 / 0.16);
+        color: #fbbf24;
+      }
+
+      .lp-act {
+        align-items: flex-start;
+      }
+      .lp-act-ico {
+        flex: none;
+        width: 2rem;
+        height: 2rem;
+        display: grid;
+        place-items: center;
+        font-size: 0.9375rem;
+        border-radius: 50%;
+        background: rgb(var(--primary) / 0.13);
+      }
+      /* Profile icons (SVG, replaces emoji) */
+      .lp-svg {
+        display: block;
+        width: 1.25rem;
+        height: 1.25rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
+      }
+      .lp-badge {
+        color: var(--lp-primary);
+      }
+      .lp-badge .lp-svg {
+        width: 1.375rem;
+        height: 1.375rem;
+      }
+      .lp-action-ico {
+        display: grid;
+        place-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.75rem;
+        color: var(--lp-primary);
+        background: rgb(var(--primary) / 0.14);
+        border: 1px solid rgb(var(--primary) / 0.28);
+      }
+      .lp-act-ico {
+        color: var(--lp-primary);
+      }
+      .lp-act-ico .lp-svg {
+        width: 1rem;
+        height: 1rem;
+      }
+      .lp-name .lp-svg {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-inline-end: 0.5rem;
+        vertical-align: -0.2em;
+      }
+      .lp-act-body {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .lp-act-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      .lp-act-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: var(--lp-text);
+      }
+      .lp-act-date {
+        flex: none;
+        font-size: 0.625rem;
+        color: var(--lp-muted);
+        white-space: nowrap;
+      }
+      .lp-act-desc {
+        display: block;
+        margin-top: 0.125rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        color: var(--lp-muted);
+      }
+
+      /* stacking: plain CSS so it never depends on compiled Tailwind (z-[75] was missing -> modals hid behind profile) */
+      #loyalty-modal {
+        z-index: 70;
+      }
+      #rewards-modal,
+      #missions-modal {
+        z-index: 80;
+      }
+
+      #order-tracking-modal {
+        z-index: 85;
+      }
+
+      #order-feedback-modal {
+        z-index: 90;
+      }
+
+      /* =====================================================
+         Success modal + Quick feedback modal
+         Plain CSS (no Tailwind dependency) so the layout never
+         breaks when a utility class is missing from menu.css
+         ===================================================== */
+      #success-modal,
+      #order-feedback-modal {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.85);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        transition: opacity 0.3s ease;
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+      #success-modal {
+        z-index: 50;
+      }
+      #success-modal.opacity-0,
+      #order-feedback-modal.opacity-0 {
+        opacity: 0;
+      }
+      #success-modal.pointer-events-none,
+      #order-feedback-modal.pointer-events-none {
+        pointer-events: none;
+      }
+      #success-modal .hidden,
+      #order-feedback-modal .hidden {
+        display: none !important;
+      }
+      #success-modal *,
+      #order-feedback-modal * {
+        box-sizing: border-box;
+      }
+
+      .sm-card,
+      .fb-card {
+        position: relative;
+        width: 100%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        border: 1px solid rgb(var(--primary) / 0.3);
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      }
+
+      /* ---------- Success card ---------- */
+      .sm-card {
+        max-width: 25rem;
+        max-height: calc(100dvh - 2rem);
+        padding: 1.75rem 1.25rem 1.25rem;
+        gap: 1.25rem;
+        text-align: center;
+      }
+      .sm-icon {
+        flex: none;
+        width: 4.5rem;
+        height: 4.5rem;
+        margin: 0 auto;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgb(var(--primary));
+        background: rgb(var(--primary) / 0.15);
+        border: 2px solid rgb(var(--primary));
+      }
+      .sm-icon svg {
+        width: 2.25rem;
+        height: 2.25rem;
+      }
+      .sm-head {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .sm-title {
+        margin: 0;
+        font-size: 1.75rem;
+        line-height: 1.3;
+        font-weight: 800;
+        color: rgb(var(--primary));
+      }
+      .sm-sub {
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.7;
+        color: rgb(var(--on-surface-variant));
+      }
+      .sm-sub strong {
+        color: rgb(var(--primary));
+      }
+      .sm-note {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: rgb(var(--primary));
+      }
+      .sm-note:empty {
+        display: none;
+      }
+
+      .sm-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        padding: 0.9rem 1rem;
+        text-align: right;
+        font-size: 0.875rem;
+        border-radius: 1rem;
+        background: rgb(var(--surface-container-low) / 0.8);
+        border: 1px solid rgb(var(--outline-variant) / 0.35);
+      }
+      .sm-info-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+      .sm-info-row span {
+        color: rgb(var(--on-surface-variant));
+      }
+      .sm-info-row strong {
+        color: rgb(var(--primary));
+        word-break: break-all;
+      }
+      .sm-info-row .sm-amount {
+        font-size: 1.125rem;
+        font-weight: 800;
+      }
+
+      .sm-box {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+        text-align: right;
+        border-radius: 1rem;
+        background: rgb(var(--primary) / 0.08);
+        border: 1px solid rgb(var(--primary) / 0.3);
+      }
+      .sm-box h4 {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: rgb(var(--primary));
+      }
+      .sm-box p {
+        margin: 0;
+        font-size: 0.75rem;
+        line-height: 1.7;
+        color: rgb(var(--on-surface-variant));
+      }
+      .sm-row {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .sm-row > .sm-btn {
+        flex: 1;
+      }
+
+      .sm-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        width: 100%;
+        min-height: 2.75rem;
+        padding: 0.65rem 0.9rem;
+        border-radius: 0.85rem;
+        border: 1px solid transparent;
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 800;
+        line-height: 1.2;
+        cursor: pointer;
+        transition: 160ms ease;
+      }
+      .sm-btn--primary {
+        background: rgb(var(--primary));
+        color: rgb(var(--on-primary));
+      }
+      .sm-btn--primary:hover {
+        filter: brightness(1.1);
+      }
+      .sm-btn--ghost {
+        background: rgb(var(--surface-container));
+        color: rgb(var(--on-surface-variant));
+        border-color: rgb(var(--outline-variant) / 0.45);
+      }
+      .sm-btn--ghost:hover {
+        color: rgb(var(--primary));
+      }
+      .sm-btn--outline {
+        background: transparent;
+        color: rgb(var(--primary));
+        border-color: rgb(var(--primary) / 0.5);
+      }
+      .sm-btn--outline:hover {
+        background: rgb(var(--primary) / 0.1);
+      }
+      .sm-btn--lg {
+        min-height: 3rem;
+        font-size: 1rem;
+      }
+
+      /* Success card: payment note lives inside the info card, main actions
+         come first, optional boxes (account / feedback) are quieter. */
+      .sm-info .sm-note {
+        margin-top: 0.1rem;
+        padding-top: 0.7rem;
+        border-top: 1px dashed rgb(var(--outline-variant) / 0.5);
+        text-align: center;
+      }
+      .sm-row > .sm-btn--primary.sm-btn--lg {
+        flex: 1.4;
+      }
+      .sm-box {
+        padding: 0.85rem 1rem;
+        background: rgb(var(--primary) / 0.05);
+        border-color: rgb(var(--primary) / 0.22);
+      }
+      .sm-box .sm-row {
+        align-items: center;
+      }
+      .sm-box .sm-row > .sm-btn--ghost {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 4.5rem;
+        background: transparent;
+        border-color: transparent;
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* ---------- Quick feedback card ---------- */
+      #order-feedback-modal {
+        z-index: 90;
+      }
+      .fb-card {
+        max-width: 30rem;
+        max-height: calc(100dvh - 2rem);
+        padding: 1.25rem;
+        gap: 1.25rem;
+      }
+      .fb-close {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        width: 2.25rem;
+        height: 2.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 9999px;
+        background: transparent;
+        color: rgb(var(--on-surface-variant));
+        cursor: pointer;
+        transition: 160ms ease;
+      }
+      .fb-close:hover {
+        color: rgb(var(--primary));
+        background: rgb(var(--primary) / 0.1);
+      }
+      .fb-close svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+      .fb-head {
+        text-align: right;
+        padding-left: 2.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .fb-kicker {
+        margin: 0;
+        font-size: 0.75rem;
+        color: rgb(var(--on-surface-variant));
+      }
+      .fb-title {
+        margin: 0;
+        font-size: 1.5rem;
+        line-height: 1.3;
+        font-weight: 800;
+        color: rgb(var(--primary));
+      }
+      .fb-hint {
+        margin: 0;
+        font-size: 0.75rem;
+        color: rgb(var(--on-surface-variant));
+      }
+      .fb-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        margin: 0;
+      }
+      .fb-group {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+      .fb-group legend {
+        float: left;
+        width: 100%;
+        padding: 0;
+        margin: 0 0 0.55rem;
+        text-align: right;
+        font-size: 0.875rem;
+        font-weight: 800;
+        color: rgb(var(--on-surface));
+      }
+      .fb-group legend + * {
+        clear: both;
+      }
+      .fb-choices {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.4rem;
+        width: 100%;
+      }
+      .order-feedback-choice {
+        min-height: 2.75rem;
+        padding: 0.5rem 0.25rem;
+        border: 1px solid rgb(var(--primary) / 0.28);
+        border-radius: 0.75rem;
+        color: rgb(var(--on-surface));
+        background: rgb(var(--surface-container-low) / 0.7);
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-align: center;
+        cursor: pointer;
+        transition: 160ms ease;
+      }
+      .order-feedback-choice:hover,
+      .order-feedback-choice.is-selected {
+        border-color: rgb(var(--primary));
+        color: rgb(var(--on-primary));
+        background: rgb(var(--primary));
+      }
+      .fb-label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: right;
+        font-size: 0.875rem;
+        font-weight: 800;
+        color: rgb(var(--on-surface));
+      }
+      .fb-label textarea {
+        width: 100%;
+        resize: none;
+        padding: 0.65rem 0.75rem;
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 400;
+        border-radius: 0.75rem;
+        border: 1px solid rgb(var(--outline-variant) / 0.45);
+        background: rgb(var(--surface-container-low));
+        color: rgb(var(--on-surface));
+      }
+      .fb-label textarea::placeholder {
+        color: rgb(var(--on-surface-variant) / 0.6);
+      }
+      .fb-label textarea:focus {
+        outline: none;
+        border-color: rgb(var(--primary));
+      }
+      .fb-error {
+        margin: 0;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 0.75rem;
+        color: rgb(var(--error, 239 68 68));
+        background: rgb(var(--error, 239 68 68) / 0.1);
+      }
+      .fb-actions {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 0.5rem;
+      }
+      .fb-actions .sm-btn {
+        flex: 1;
+      }
+      .fb-done {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 1.5rem 0 0.25rem;
+        text-align: center;
+      }
+      .fb-done-emoji {
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+      .fb-done h4 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: rgb(var(--primary));
+      }
+      .fb-done p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: rgb(var(--on-surface-variant));
+      }
+      .fb-done .sm-row {
+        width: 100%;
+        margin-top: 0.25rem;
+      }
+
+      /* ---------- Quick feedback: redesign ---------- */
+      .fb-card {
+        gap: 1rem;
+      }
+      .fb-head {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+        padding-left: 2.75rem;
+        text-align: right;
+      }
+      .fb-head-ico {
+        flex: none;
+        width: 2.75rem;
+        height: 2.75rem;
+        display: grid;
+        place-items: center;
+        border-radius: 0.9rem;
+        color: rgb(var(--primary));
+        background: rgb(var(--primary) / 0.14);
+        border: 1px solid rgb(var(--primary) / 0.3);
+      }
+      .fb-head-ico svg {
+        width: 1.35rem;
+        height: 1.35rem;
+      }
+      .fb-head-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        min-width: 0;
+      }
+      .fb-title {
+        font-size: 1.25rem;
+      }
+      .fb-hint {
+        line-height: 1.5;
+      }
+      .fb-form {
+        gap: 0.75rem;
+      }
+      .fb-progress {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+      .fb-progress-bar {
+        flex: 1;
+        height: 0.375rem;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgb(var(--on-surface) / 0.14);
+      }
+      .fb-progress-bar > i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        border-radius: 999px;
+        background: rgb(var(--primary));
+        transition: width 0.25s ease;
+      }
+      .fb-progress > span {
+        flex: none;
+        min-width: 2.25rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        direction: ltr;
+        text-align: left;
+        color: rgb(var(--on-surface-variant));
+        font-variant-numeric: tabular-nums;
+      }
+      .fb-group {
+        padding: 0.8rem 0.85rem 0.85rem;
+        gap: 0;
+        border-radius: 1rem;
+        background: rgb(var(--surface-container-low) / 0.55);
+        border: 1px solid rgb(var(--outline-variant) / 0.3);
+      }
+      .fb-group legend {
+        margin-bottom: 0.65rem;
+        font-size: 0.85rem;
+      }
+      .fb-choices {
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border-radius: 0.9rem;
+        background: rgb(var(--surface-container) / 0.8);
+        border: 1px solid rgb(var(--outline-variant) / 0.3);
+      }
+      .order-feedback-choice {
+        min-height: 2.5rem;
+        padding: 0.4rem 0.2rem;
+        border: 0;
+        border-radius: 0.65rem;
+        background: transparent;
+        color: rgb(var(--on-surface-variant));
+      }
+      .order-feedback-choice:hover {
+        color: rgb(var(--primary));
+        background: rgb(var(--primary) / 0.12);
+        border-color: transparent;
+      }
+      .order-feedback-choice.is-selected,
+      .order-feedback-choice.is-selected:hover {
+        color: rgb(var(--on-primary));
+        background: rgb(var(--primary));
+        box-shadow: 0 2px 8px rgb(var(--primary) / 0.35);
+      }
+      .order-feedback-choice:focus-visible {
+        outline: 2px solid rgb(var(--primary));
+        outline-offset: 1px;
+      }
+      .fb-actions {
+        position: sticky;
+        bottom: -1.25rem;
+        z-index: 1;
+        margin: 0.25rem -1.25rem -1.25rem;
+        padding: 0.75rem 1.25rem 1.25rem;
+        background: rgb(var(--surface-container-low) / 0.96);
+        border-top: 1px solid rgb(var(--outline-variant) / 0.3);
+      }
+      .fb-actions .sm-btn--primary {
+        flex: 1.6;
+      }
+      .fb-actions .sm-btn--ghost {
+        flex: 1;
+      }
+      .fb-done-ico {
+        width: 4rem;
+        height: 4rem;
+        display: grid;
+        place-items: center;
+        border-radius: 9999px;
+        color: rgb(var(--primary));
+        background: rgb(var(--primary) / 0.15);
+        border: 2px solid rgb(var(--primary));
+      }
+      .fb-done-ico svg {
+        width: 1.75rem;
+        height: 1.75rem;
+      }
+      .fb-done {
+        padding-top: 1rem;
+      }
+      .fb-done .sm-row {
+        gap: 0.5rem;
+      }
+      .fb-done .sm-row > .sm-btn--primary {
+        flex: 1.4;
+      }
+
+      @media (max-width: 340px) {
+        .fb-choices {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 639px) {
+        #order-feedback-modal {
+          align-items: flex-end;
+          padding: 0.5rem;
+        }
+        .fb-card {
+          margin: 0 auto;
+          border-radius: 1.5rem 1.5rem 1rem 1rem;
+        }
+      }
+
+      /* ===== order tracking ===== */
+      .lp-balance:empty {
+        display: none;
+      }
+      .lp-status-card {
+        padding: 0.875rem 1rem;
+        border-radius: 1.125rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        background: linear-gradient(
+          145deg,
+          rgb(var(--primary) / 0.18),
+          rgb(var(--primary) / 0.05)
+        );
+        border: 1px solid rgb(var(--primary) / 0.32);
+      }
+      .lp-status-title {
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: var(--lp-primary);
+      }
+      .lp-status-desc {
+        margin: 0;
+        font-size: 0.8125rem;
+        line-height: 1.6;
+        color: var(--lp-muted);
+      }
+
+      .lp-steps {
+        display: flex;
+        flex-direction: column;
+        padding: 0.25rem 0.25rem;
+        border-radius: 1rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+      }
+      .lp-step {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.625rem;
+        font-size: 0.8125rem;
+        color: var(--lp-muted);
+      }
+      .lp-step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        width: 2px;
+        border-radius: 2px;
+        inset-inline-start: calc(0.625rem + 0.875rem - 1px);
+        top: calc(50% + 0.875rem);
+        height: calc(100% - 1.75rem);
+        background: rgb(var(--on-surface) / 0.16);
+      }
+      .lp-step.is-done:not(:last-child)::after {
+        background: var(--lp-primary);
+      }
+      .lp-step-dot {
+        position: relative;
+        z-index: 1;
+        flex: none;
+        width: 1.75rem;
+        height: 1.75rem;
+        display: grid;
+        place-items: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        border-radius: 50%;
+        line-height: 1;
+        border: 2px solid rgb(var(--on-surface) / 0.22);
+        color: var(--lp-muted);
+        background: transparent;
+      }
+      .lp-step.is-done .lp-step-dot {
+        background: var(--lp-primary);
+        border-color: var(--lp-primary);
+        color: rgb(var(--on-primary));
+      }
+      .lp-step.is-done {
+        color: var(--lp-text);
+      }
+      .lp-step.is-current {
+        color: var(--lp-primary);
+        font-weight: 800;
+      }
+      .lp-step.is-current .lp-step-dot {
+        border-color: var(--lp-primary);
+        background: rgb(var(--primary) / 0.18);
+        color: var(--lp-primary);
+        animation: lpPulse 1.8s ease-out infinite;
+      }
+      @keyframes lpPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgb(var(--primary) / 0.5);
+        }
+        70% {
+          box-shadow: 0 0 0 0.5rem rgb(var(--primary) / 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgb(var(--primary) / 0);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .lp-step.is-current .lp-step-dot {
+          animation: none;
+        }
+      }
+
+      .lp-cancel {
+        padding: 1.25rem 1rem;
+        text-align: center;
+        border-radius: 1.125rem;
+        background: rgb(239 68 68 / 0.1);
+        border: 1px solid rgb(239 68 68 / 0.35);
+      }
+      .lp-cancel-ico {
+        display: grid;
+        place-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        margin: 0 auto 0.5rem;
+        font-size: 1.25rem;
+        border-radius: 50%;
+        background: rgb(239 68 68 / 0.18);
+        color: #f87171;
+      }
+      .lp-cancel strong {
+        display: block;
+        font-size: 1.0625rem;
+        color: #f87171;
+      }
+      .lp-cancel p {
+        margin: 0.375rem 0 0;
+        font-size: 0.8125rem;
+        color: var(--lp-muted);
+      }
+
+      .lp-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.875rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+        font-size: 0.875rem;
+      }
+      .lp-total > span {
+        color: var(--lp-muted);
+      }
+      .lp-total > strong {
+        font-size: 1.1875rem;
+        font-weight: 800;
+        color: var(--lp-primary);
+      }
+      .lp-qty {
+        flex: none;
+        padding: 0.0625rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--lp-primary);
+        background: rgb(var(--primary) / 0.14);
+        direction: ltr;
+        white-space: nowrap;
+      }
+
+      /* shared bits for rewards / missions sheets */
+      .lp-balance {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+        padding: 0.1875rem 0.625rem;
+        font-size: 0.75rem;
+        color: var(--lp-muted);
+        border-radius: 999px;
+        background: rgb(var(--primary) / 0.1);
+        border: 1px solid rgb(var(--primary) / 0.28);
+      }
+      .lp-balance strong {
+        color: var(--lp-primary);
+        font-weight: 800;
+      }
+      .lp-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem;
+        padding: 0.25rem;
+        border-radius: 0.875rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+      }
+      .lp-tab {
+        padding: 0.5rem 0.5rem;
+        font: inherit;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 0.625rem;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--lp-muted);
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .lp-tab.bg-primary,
+      .lp-tab.is-active,
+      .lp-tab[aria-selected="true"] {
+        background: var(--lp-primary);
+        color: rgb(var(--on-primary));
+        border-color: transparent;
+      }
+      /* default look for list items rendered by menu-rewards.js / menu-missions.js (zero specificity: their own classes still win) */
+      :where(.lp-cards) {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      :where(.lp-cards) > li {
+        padding: 0.75rem;
+        border-radius: 0.875rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+        font-size: 0.8125rem;
+        line-height: 1.5;
+      }
+      .lp-cards img {
+        max-width: 100%;
+        height: auto;
+      }
+      .lp-cards button {
+        max-width: 100%;
+      }
+
+      .lp-confirm {
+        display: flex;
+        flex-direction: column;
+        gap: 0.875rem;
+      }
+      .lp-confirm-name {
+        margin: 0;
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: var(--lp-primary);
+      }
+      .lp-kv {
+        display: flex;
+        flex-direction: column;
+        border-radius: 0.875rem;
+        background: var(--lp-fill);
+        border: 1px solid var(--lp-line);
+      }
+      .lp-kv > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.8125rem;
+      }
+      .lp-kv > div + div {
+        border-top: 1px solid var(--lp-line);
+      }
+      .lp-kv span {
+        color: var(--lp-muted);
+      }
+      .lp-kv strong {
+        font-weight: 800;
+      }
+      .lp-kv .is-total strong {
+        color: var(--lp-primary);
+        font-size: 1rem;
+      }
+      .lp-err {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #f87171;
+      }
+      .lp-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .lp-btn {
+        flex: 1 1 0;
+        padding: 0.75rem;
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 0.875rem;
+        border: 1px solid transparent;
+        transition:
+          transform 0.1s,
+          opacity 0.2s;
+      }
+      .lp-btn:active {
+        transform: scale(0.98);
+      }
+      .lp-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .lp-btn-primary {
+        background: var(--lp-primary);
+        color: rgb(var(--on-primary));
+      }
+      .lp-btn-ghost {
+        background: transparent;
+        color: var(--lp-muted);
+        border-color: rgb(var(--on-surface) / 0.2);
+      }
+      .lp-result {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.625rem;
+        text-align: center;
+        padding: 0.5rem 0;
+      }
+      .lp-result-emoji {
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+      .lp-result h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 800;
+      }
+      .lp-code {
+        width: 100%;
+        padding: 0.875rem;
+        margin: 0;
+        border-radius: 0.875rem;
+        direction: ltr;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        color: var(--lp-primary);
+        user-select: all;
+        background: rgb(var(--primary) / 0.08);
+        border: 2px dashed rgb(var(--primary) / 0.45);
+      }
+      .lp-result .lp-btn {
+        width: 100%;
+        flex: none;
+      }
+
+      @media (max-width: 340px) {
+        .lp-stats,
+        .lp-actions {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .lp-act-top {
+          flex-direction: column;
+          gap: 0;
+        }
+      }
+
+      #customer-session-btn {
+        right: 1rem;
+      }
+
+      #header-waiter-call {
+        right: 4rem;
+      }
+
+      @media (min-width: 640px) {
+        #customer-session-btn {
+          right: 1.5rem;
+        }
+
+        #header-waiter-call {
+          right: 5rem;
+        }
       }
     </style>
     <script>
@@ -820,6 +2352,167 @@
           <path d="M12 19h8" />
           <path d="m4 17 6-6-6-6" />
         </symbol>
+        <symbol
+          id="award"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"
+          />
+          <circle cx="12" cy="8" r="6" />
+        </symbol>
+        <symbol
+          id="gift"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="8" width="18" height="4" rx="1" />
+          <path d="M12 8v13" />
+          <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" />
+          <path
+            d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
+          />
+        </symbol>
+        <symbol
+          id="target"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="6" />
+          <circle cx="12" cy="12" r="2" />
+        </symbol>
+        <symbol
+          id="sparkles"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+          />
+          <path d="M20 3v4" />
+          <path d="M22 5h-4" />
+          <path d="M4 17v2" />
+          <path d="M5 18H3" />
+        </symbol>
+        <symbol
+          id="receipt-text"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"
+          />
+          <path d="M14 8H8" />
+          <path d="M16 12H8" />
+          <path d="M13 16H8" />
+        </symbol>
+        <symbol
+          id="trophy"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+          <path d="M4 22h16" />
+          <path
+            d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"
+          />
+          <path
+            d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"
+          />
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+        </symbol>
+        <symbol
+          id="crown"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"
+          />
+          <path d="M5 21h14" />
+        </symbol>
+        <symbol
+          id="gem"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M6 3h12l4 6-10 13L2 9Z" />
+          <path d="M11 3 8 9l4 13 4-13-3-6" />
+          <path d="M2 9h20" />
+        </symbol>
+        <symbol
+          id="flame"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+          />
+        </symbol>
+        <symbol
+          id="heart"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+          />
+        </symbol>
+        <symbol
+          id="user-round"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="8" r="5" />
+          <path d="M20 21a8 8 0 0 0-16 0" />
+        </symbol>
       </defs>
     </svg>
 
@@ -848,6 +2541,48 @@
           </svg>
         </button>
         <button
+          id="customer-session-btn"
+          type="button"
+          onclick="openCustomerSessionEntry()"
+          class="absolute right-16 sm:right-20 flex h-11 items-center justify-center gap-1.5 rounded-full px-2 text-primary transition-all"
+          aria-label="تسجيل الدخول"
+          title="تسجيل الدخول"
+        >
+          <svg
+            class="lucide-icon header-account-ico"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#user-round"></use>
+          </svg>
+          <span
+            id="customer-session-label"
+            class="hidden max-w-[90px] truncate text-xs font-bold sm:inline"
+            >تسجيل الدخول</span
+          >
+        </button>
+        <button
+          id="customer-session-btn"
+          type="button"
+          onclick="openCustomerSessionEntry()"
+          class="absolute right-16 sm:right-20 flex h-11 items-center justify-center gap-1.5 rounded-full px-2 text-primary transition-all"
+          aria-label="تسجيل الدخول"
+          title="تسجيل الدخول"
+        >
+          <svg
+            class="lucide-icon header-account-ico"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#user-round"></use>
+          </svg>
+          <span
+            id="customer-session-label"
+            class="hidden max-w-[90px] truncate text-xs font-bold sm:inline"
+            >تسجيل الدخول</span
+          >
+        </button>
+        <button
           id="header-waiter-call"
           type="button"
           onclick="openWaiterCallModal()"
@@ -864,18 +2599,18 @@
           </svg>
           <span class="hidden text-sm font-bold lg:inline"></span>
         </button>
+
         <div class="text-center justify-center">
           <h1
             class="menu-brand-title font-playfair text-2xl md:text-3xl tracking-[0.25em] text-primary font-bold uppercase"
             dir="ltr"
-          >
-            مطعمنا
-          </h1>
+          ></h1>
           <p
             class="py-1 text-[10px] text-on-surface-variant tracking-widest uppercase -mt-1"
           >
             Lounge & Restaurant
           </p>
+          <div id="menu-table-context" class="header-table-badge hidden"></div>
         </div>
       </div>
     </header>
@@ -891,13 +2626,31 @@
         id="screen-menu"
         class="min-h-screen pt-28 pb-32 px-4 sm:px-8 max-w-7xl mx-auto w-full animate-fade-in"
       >
-        <div class="flex justify-center">
-          <div
-            id="menu-table-context"
-            class="hidden mt-2 mb-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary"
+        <div class="flex flex-wrap justify-center items-start gap-2">
+          <button
+            id="loyalty-open-btn"
+            type="button"
+            onclick="openLoyaltyModal()"
+            class="hidden mt-2 mb-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors"
           >
-            طاولة
-          </div>
+            <svg
+              class="lucide-icon text-sm"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#star"></use>
+            </svg>
+            <span>حسابي ونقاطي</span>
+          </button>
+          <button
+            id="order-tracking-open-btn"
+            type="button"
+            onclick="openOrderTracking()"
+            class="hidden mt-2 mb-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors"
+          >
+            <!--    <span aria-hidden="true">📍</span> -->
+            <span>متابعة الطلب</span>
+          </button>
         </div>
         <div class="mb-10">
           <div class="relative w-full max-w-2xl mx-auto mb-8">
@@ -1637,58 +3390,926 @@
       </div>
     </div>
 
-    <div
-      id="success-modal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
-    >
-      <div
-        class="w-full max-w-md glass-panel rounded-3xl p-8 text-center space-y-6 relative animate-fade-in"
-      >
-        <div
-          class="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center mx-auto text-primary gold-glow"
-        >
-          <svg
-            class="lucide-icon text-4xl"
-            aria-hidden="true"
-            focusable="false"
-          >
+    <div id="success-modal" class="opacity-0 pointer-events-none">
+      <div class="sm-card glass-panel animate-fade-in">
+        <div class="sm-icon gold-glow">
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
             <use href="#circle-check"></use>
           </svg>
         </div>
 
-        <div>
-          <h3 class="font-tajawal text-3xl text-primary font-bold mb-2">
-            تم تأكيد طلبكم بنجاح!
-          </h3>
-          <p class="text-sm text-on-surface-variant">
-            شكراً لك
-            <span id="success-guest-name" class="text-primary font-bold"></span
-            >. نقوم الآن بتحضير طلبكم بعناية فائقة.
+        <div class="sm-head">
+          <h3 class="sm-title font-tajawal">تم إرسال طلبك بنجاح</h3>
+          <p class="sm-sub">
+            شكراً لك <strong id="success-guest-name"></strong>. نقوم الآن بتحضير
+            طلبكم بعناية فائقة.
           </p>
-          <p
-            id="success-payment-note"
-            class="text-sm text-primary font-bold mt-2"
-          ></p>
         </div>
 
-        <div
-          class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-2 text-sm text-right"
+        <div class="sm-info">
+          <div class="sm-info-row">
+            <span>مرجع الطلب:</span>
+            <strong id="success-order-reference"></strong>
+          </div>
+          <div class="sm-info-row">
+            <span>المبلغ المطلوب:</span>
+            <strong id="success-amount" class="font-price sm-amount"></strong>
+          </div>
+          <p id="success-payment-note" class="sm-note"></p>
+        </div>
+
+        <div class="sm-row">
+          <button
+            id="success-track-order-btn"
+            type="button"
+            onclick="afterSuccessThen(openOrderTracking)"
+            class="sm-btn sm-btn--primary sm-btn--lg gold-glow"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#map-pin"></use>
+            </svg>
+            متابعة الطلب
+          </button>
+          <button
+            type="button"
+            onclick="afterSuccessThen()"
+            class="sm-btn sm-btn--ghost sm-btn--lg"
+          >
+            العودة للتصفح
+          </button>
+        </div>
+
+        <div id="post-order-account-cta" class="sm-box hidden">
+          <h4>احتفظ بطلباتك واحصل على مزايا الولاء</h4>
+          <p>
+            إنشاء حسابك اختياري. يمكنك دائمًا المتابعة كضيف بدون أي تأثير على
+            الطلب الحالي.
+          </p>
+          <div class="sm-row">
+            <button
+              type="button"
+              onclick="afterSuccessThen(openCustomerAccountModal)"
+              class="sm-btn sm-btn--primary"
+            >
+              إنشاء حساب
+            </button>
+            <button
+              type="button"
+              onclick="
+                dismissPostOrderAccountCta();
+                afterSuccessThen();
+              "
+              class="sm-btn sm-btn--ghost"
+            >
+              لاحقًا
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="order-feedback-modal"
+      class="opacity-0 pointer-events-none"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="order-feedback-title"
+    >
+      <div class="fb-card glass-panel">
+        <button
+          type="button"
+          onclick="closeOrderFeedback()"
+          class="fb-close"
+          aria-label="إغلاق"
         >
-          <div class="flex justify-between">
-            <span class="text-on-surface-variant">المبلغ المطلوب:</span>
-            <strong
-              id="success-amount"
-              class="text-primary font-price text-lg font-bold"
-            ></strong>
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
+        </button>
+
+        <div id="order-feedback-head" class="fb-head">
+          <span class="fb-head-ico" aria-hidden="true">
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#star"></use>
+            </svg>
+          </span>
+          <div class="fb-head-text">
+            <h3 id="order-feedback-title" class="fb-title font-tajawal">
+              كيف كانت تجربة الطلب؟
+            </h3>
+            <p class="fb-hint">
+              تقييم سريع عن سهولة الطلب والمنيو، يستغرق أقل من دقيقة.
+            </p>
           </div>
         </div>
 
-        <button
-          onclick="closeSuccessModal()"
-          class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl uppercase tracking-widest hover:bg-primary-container transition-all gold-glow"
+        <form
+          id="instant-feedback-form"
+          class="fb-form"
+          onsubmit="
+            event.preventDefault();
+            submitOrderFeedback();
+          "
         >
-          العودة للتصفح
+          <div class="fb-progress" aria-hidden="true">
+            <div class="fb-progress-bar">
+              <i id="order-feedback-progress-fill"></i>
+            </div>
+            <span id="order-feedback-progress-text">0 / 4</span>
+          </div>
+          <fieldset class="fb-group">
+            <legend>ما مدى سهولة تقديم الطلب؟</legend>
+            <div class="fb-choices">
+              <button
+                type="button"
+                data-feedback-field="ease_of_order"
+                data-feedback-value="excellent"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                ممتاز
+              </button>
+              <button
+                type="button"
+                data-feedback-field="ease_of_order"
+                data-feedback-value="good"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                جيد
+              </button>
+              <button
+                type="button"
+                data-feedback-field="ease_of_order"
+                data-feedback-value="acceptable"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                مقبول
+              </button>
+              <button
+                type="button"
+                data-feedback-field="ease_of_order"
+                data-feedback-value="poor"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                سيئ
+              </button>
+            </div>
+          </fieldset>
+          <fieldset class="fb-group">
+            <legend>هل كانت الأصناف والأسعار واضحة؟</legend>
+            <div class="fb-choices">
+              <button
+                type="button"
+                data-feedback-field="menu_clarity"
+                data-feedback-value="excellent"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                ممتاز
+              </button>
+              <button
+                type="button"
+                data-feedback-field="menu_clarity"
+                data-feedback-value="good"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                جيد
+              </button>
+              <button
+                type="button"
+                data-feedback-field="menu_clarity"
+                data-feedback-value="acceptable"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                مقبول
+              </button>
+              <button
+                type="button"
+                data-feedback-field="menu_clarity"
+                data-feedback-value="poor"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                سيئ
+              </button>
+            </div>
+          </fieldset>
+          <fieldset class="fb-group">
+            <legend>كيف كانت سهولة استخدام المنيو؟</legend>
+            <div class="fb-choices">
+              <button
+                type="button"
+                data-feedback-field="menu_usability"
+                data-feedback-value="excellent"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                ممتاز
+              </button>
+              <button
+                type="button"
+                data-feedback-field="menu_usability"
+                data-feedback-value="good"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                جيد
+              </button>
+              <button
+                type="button"
+                data-feedback-field="menu_usability"
+                data-feedback-value="acceptable"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                مقبول
+              </button>
+              <button
+                type="button"
+                data-feedback-field="menu_usability"
+                data-feedback-value="poor"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                سيئ
+              </button>
+            </div>
+          </fieldset>
+          <fieldset class="fb-group">
+            <legend>كيف تقيّم تجربة الطلب بشكل عام؟</legend>
+            <div class="fb-choices">
+              <button
+                type="button"
+                data-feedback-field="overall_experience"
+                data-feedback-value="excellent"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                ممتاز
+              </button>
+              <button
+                type="button"
+                data-feedback-field="overall_experience"
+                data-feedback-value="good"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                جيد
+              </button>
+              <button
+                type="button"
+                data-feedback-field="overall_experience"
+                data-feedback-value="acceptable"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                مقبول
+              </button>
+              <button
+                type="button"
+                data-feedback-field="overall_experience"
+                data-feedback-value="poor"
+                onclick="selectOrderFeedback(this)"
+                class="order-feedback-choice"
+              >
+                سيئ
+              </button>
+            </div>
+          </fieldset>
+
+          <label class="fb-label">
+            ملاحظتك (اختياري)
+            <textarea
+              id="order-feedback-comment"
+              rows="3"
+              maxlength="1000"
+              placeholder="اكتب ملاحظتك هنا..."
+            ></textarea>
+          </label>
+
+          <p id="order-feedback-error" class="fb-error hidden"></p>
+          <div id="order-feedback-form-actions" class="fb-actions">
+            <button
+              type="button"
+              onclick="dismissOrderFeedback()"
+              class="sm-btn sm-btn--ghost"
+            >
+              لاحقًا
+            </button>
+            <button
+              id="order-feedback-submit"
+              type="submit"
+              class="sm-btn sm-btn--primary"
+            >
+              إرسال التقييم
+            </button>
+          </div>
+        </form>
+
+        <div id="order-feedback-success" class="fb-done hidden">
+          <div class="fb-done-ico" aria-hidden="true">
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#heart"></use>
+            </svg>
+          </div>
+          <h4>شكرًا لتقييمك</h4>
+          <p>ملاحظتك تساعدنا على تحسين تجربة الطلب.</p>
+          <div class="sm-row">
+            <button
+              type="button"
+              onclick="
+                cancelPendingAfterFeedback();
+                closeOrderFeedback(false);
+                openOrderTracking();
+              "
+              class="sm-btn sm-btn--primary"
+            >
+              <svg class="lucide-icon" aria-hidden="true" focusable="false">
+                <use href="#map-pin"></use>
+              </svg>
+              متابعة الطلب
+            </button>
+            <button
+              type="button"
+              onclick="closeOrderFeedback(false)"
+              class="sm-btn sm-btn--ghost"
+            >
+              إغلاق
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="order-tracking-modal"
+      class="fixed inset-0 flex items-end sm:items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-2 sm:px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="order-tracking-title"
+    >
+      <div class="lp-sheet glass-panel">
+        <div class="lp-handle" aria-hidden="true"></div>
+
+        <header class="lp-head">
+          <div>
+            <p class="lp-hello">حالة الطلب</p>
+            <h3 id="order-tracking-title" class="lp-name">متابعة الطلب</h3>
+            <p id="order-tracking-reference" class="lp-balance"></p>
+          </div>
+          <button
+            type="button"
+            onclick="closeOrderTracking()"
+            class="lp-close"
+            aria-label="إغلاق"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#x"></use>
+            </svg>
+          </button>
+        </header>
+
+        <div id="order-tracking-loading" class="lp-state">
+          جاري تحديث حالة الطلب...
+        </div>
+        <div
+          id="order-tracking-error"
+          class="hidden lp-state"
+          style="color: #f87171"
+        >
+          تعذر الوصول إلى حالة الطلب الآن. حاول مرة أخرى.
+        </div>
+        <div id="order-tracking-empty" class="hidden lp-state">
+          لم نتمكن من العثور على هذا الطلب.
+        </div>
+
+        <div id="order-tracking-content" class="hidden lp-body">
+          <div id="order-tracking-cancelled" class="hidden lp-cancel">
+            <div class="lp-cancel-ico" aria-hidden="true">✕</div>
+            <strong>تم إلغاء الطلب</strong>
+            <p>تم إلغاء هذا الطلب.</p>
+          </div>
+
+          <div id="order-tracking-progress" class="lp-steps" role="list"></div>
+
+          <div class="lp-status-card" aria-live="polite">
+            <strong id="order-tracking-status" class="lp-status-title"></strong>
+            <p id="order-tracking-description" class="lp-status-desc"></p>
+          </div>
+
+          <div class="lp-total">
+            <span>الإجمالي</span>
+            <strong id="order-tracking-total"></strong>
+          </div>
+
+          <section id="order-tracking-items-wrap" class="hidden">
+            <div class="lp-section-head">
+              <h4 class="lp-section-title">ملخص الطلب</h4>
+            </div>
+            <ul id="order-tracking-items" class="lp-list"></ul>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="customer-account-modal"
+      class="fixed inset-0 z-[70] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="w-full max-w-md glass-panel rounded-3xl p-6 md:p-7 space-y-4 relative animate-fade-in border border-primary/30 shadow-2xl"
+      >
+        <button
+          type="button"
+          onclick="closeCustomerAccountModal()"
+          class="absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors"
+          aria-label="إغلاق"
+        >
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
         </button>
+
+        <div class="text-right pr-8">
+          <h3 class="font-tajawal text-2xl text-primary font-bold mb-1">
+            إنشاء حساب العميل
+          </h3>
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            بعد الحفظ سيتم ربط هذا الطلب بحسابك داخل هذا المطعم.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="space-y-1.5">
+            <label
+              for="customer-account-name"
+              class="text-xs font-bold uppercase tracking-wider text-primary"
+              >الاسم</label
+            >
+            <input
+              id="customer-account-name"
+              type="text"
+              class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 transition-all"
+              placeholder="اسمك الكريم"
+            />
+          </div>
+          <div class="space-y-1.5">
+            <label
+              for="customer-account-phone"
+              class="text-xs font-bold uppercase tracking-wider text-primary"
+              >رقم الجوال</label
+            >
+            <input
+              id="customer-account-phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              oninput="handleCustomerPhoneInput()"
+              class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/60 transition-all"
+              placeholder="مثال: 0599123456 أو +970599123456"
+            />
+          </div>
+        </div>
+
+        <p
+          id="customer-account-existing-hint"
+          class="hidden text-xs rounded-xl border border-primary/20 bg-primary/10 px-3 py-2 text-primary"
+        ></p>
+
+        <p
+          id="customer-account-feedback"
+          class="hidden text-xs rounded-xl px-3 py-2"
+        ></p>
+
+        <div class="flex flex-col sm:flex-row gap-2 pt-1">
+          <button
+            type="button"
+            onclick="submitCustomerAccountConversion()"
+            id="customer-account-submit"
+            class="flex-1 bg-primary text-on-primary font-bold py-3 rounded-xl text-sm hover:bg-primary-container transition-all"
+          >
+            ربط الطلب بالحساب
+          </button>
+          <button
+            type="button"
+            onclick="closeCustomerAccountModal()"
+            class="flex-1 bg-surface-container text-on-surface-variant font-bold py-3 rounded-xl text-sm border border-outline-variant/40 hover:text-primary transition-all"
+          >
+            إلغاء
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="customer-session-modal"
+      class="fixed inset-0 z-[75] flex items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="حساب العميل"
+    >
+      <div
+        class="w-full max-w-md glass-panel rounded-3xl p-6 md:p-7 space-y-4 relative animate-fade-in border border-primary/30 shadow-2xl"
+      >
+        <button
+          type="button"
+          onclick="closeCustomerSessionEntry()"
+          class="absolute top-4 left-4 p-2 text-on-surface-variant hover:text-primary transition-colors"
+          aria-label="إغلاق"
+        >
+          <svg class="lucide-icon" aria-hidden="true" focusable="false">
+            <use href="#x"></use>
+          </svg>
+        </button>
+        <div class="text-right pr-8">
+          <h3
+            id="customer-session-title"
+            class="font-tajawal text-2xl text-primary font-bold mb-1"
+          >
+            تسجيل الدخول
+          </h3>
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            استخدم رقم هاتفك للوصول إلى حسابك داخل هذا المطعم.
+          </p>
+        </div>
+        <div class="space-y-3">
+          <div class="space-y-1.5">
+            <label
+              for="customer-session-name"
+              class="text-xs font-bold text-primary"
+              >الاسم</label
+            >
+            <input
+              id="customer-session-name"
+              type="text"
+              autocomplete="name"
+              class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:border-primary"
+              placeholder="اسمك الكريم"
+            />
+          </div>
+          <div class="space-y-1.5">
+            <label
+              for="customer-session-phone"
+              class="text-xs font-bold text-primary"
+              >رقم الهاتف</label
+            >
+            <input
+              id="customer-session-phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              class="w-full bg-surface-container-low/80 border border-outline-variant/40 rounded-xl px-4 py-3 text-on-surface text-sm focus:outline-none focus:border-primary"
+              placeholder="مثال: 0599123456"
+            />
+          </div>
+        </div>
+        <p
+          id="customer-session-feedback"
+          class="hidden text-xs rounded-xl px-3 py-2"
+        ></p>
+        <button
+          id="customer-session-submit"
+          type="button"
+          onclick="submitCustomerSession()"
+          class="w-full bg-primary text-on-primary font-bold py-3 rounded-xl text-sm hover:bg-primary-container transition-all"
+        >
+          تسجيل الدخول
+        </button>
+        <button
+          id="customer-session-switch"
+          type="button"
+          onclick="toggleCustomerSessionMode()"
+          class="w-full text-sm font-bold text-primary"
+        >
+          ليس لديك حساب؟ إنشاء حساب
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="rewards-modal"
+      class="fixed inset-0 flex items-end sm:items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-2 sm:px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="المكافآت"
+    >
+      <div class="lp-sheet glass-panel">
+        <div class="lp-handle" aria-hidden="true"></div>
+
+        <header class="lp-head">
+          <div>
+            <h3 class="lp-name">
+              <svg class="lp-svg" aria-hidden="true" focusable="false">
+                <use href="#gift"></use></svg
+              >المكافآت
+            </h3>
+            <p class="lp-balance">
+              رصيدك <strong id="rewards-balance"></strong> نقطة
+            </p>
+          </div>
+          <button
+            type="button"
+            onclick="closeRewardsModal()"
+            class="lp-close"
+            aria-label="إغلاق"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#x"></use>
+            </svg>
+          </button>
+        </header>
+
+        <div id="rewards-loading" class="lp-state">جاري التحميل...</div>
+        <div id="rewards-error" class="hidden lp-state" style="color: #f87171">
+          تعذر تحميل المكافآت. حاول مرة أخرى.
+        </div>
+
+        <div id="rewards-list-view" class="hidden lp-body">
+          <div class="lp-tabs">
+            <button
+              type="button"
+              id="rewards-tab-available"
+              onclick="showRewardsTab('available')"
+              class="lp-tab"
+            >
+              المكافآت المتاحة
+            </button>
+            <button
+              type="button"
+              id="rewards-tab-mine"
+              onclick="showRewardsTab('mine')"
+              class="lp-tab"
+            >
+              مكافآتي
+            </button>
+          </div>
+          <ul id="rewards-available" class="lp-cards"></ul>
+          <ul id="rewards-mine" class="hidden lp-cards"></ul>
+          <p id="rewards-empty" class="hidden lp-empty"></p>
+        </div>
+
+        <div id="rewards-confirm-view" class="hidden lp-confirm">
+          <h4 class="lp-section-title">استبدال المكافأة</h4>
+          <p id="rewards-confirm-name" class="lp-confirm-name"></p>
+          <div class="lp-kv">
+            <div>
+              <span>تكلفة المكافأة</span
+              ><strong id="rewards-confirm-cost"></strong>
+            </div>
+            <div>
+              <span>رصيدك الحالي</span
+              ><strong id="rewards-confirm-balance"></strong>
+            </div>
+            <div class="is-total">
+              <span>الرصيد بعد الاستبدال</span
+              ><strong id="rewards-confirm-after"></strong>
+            </div>
+          </div>
+          <p id="rewards-confirm-error" class="hidden lp-err"></p>
+          <div class="lp-btns">
+            <button
+              type="button"
+              id="rewards-confirm-btn"
+              onclick="confirmRewardRedemption()"
+              class="lp-btn lp-btn-primary"
+            >
+              تأكيد الاستبدال
+            </button>
+            <button
+              type="button"
+              onclick="cancelRewardConfirm()"
+              class="lp-btn lp-btn-ghost"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+
+        <div id="rewards-result-view" class="hidden lp-result">
+          <span class="lp-result-emoji" aria-hidden="true">🎉</span>
+          <h4>تمت عملية الاستبدال</h4>
+          <p id="rewards-result-name" class="lp-confirm-name"></p>
+          <p class="lp-hello">رمز المكافأة</p>
+          <p id="rewards-result-code" dir="ltr" class="lp-code"></p>
+          <p id="rewards-result-expiry" class="lp-hello"></p>
+          <button
+            type="button"
+            onclick="backToRewardsList()"
+            class="lp-btn lp-btn-primary"
+          >
+            رجوع
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="missions-modal"
+      class="fixed inset-0 flex items-end sm:items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-2 sm:px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="المهام"
+    >
+      <div class="lp-sheet glass-panel">
+        <div class="lp-handle" aria-hidden="true"></div>
+
+        <header class="lp-head">
+          <div>
+            <h3 class="lp-name">
+              <svg class="lp-svg" aria-hidden="true" focusable="false">
+                <use href="#target"></use></svg
+              >المهام
+            </h3>
+            <p class="lp-hello">أكمل المهام واحصل على نقاط وخبرة.</p>
+          </div>
+          <button
+            type="button"
+            onclick="closeMissionsModal()"
+            class="lp-close"
+            aria-label="إغلاق"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#x"></use>
+            </svg>
+          </button>
+        </header>
+
+        <div id="missions-loading" class="lp-state">جاري التحميل...</div>
+        <div id="missions-error" class="hidden lp-state" style="color: #f87171">
+          تعذر تحميل المهام. حاول مرة أخرى.
+        </div>
+        <div id="missions-list-view" class="hidden lp-body">
+          <ul id="missions-list" class="lp-cards"></ul>
+          <p id="missions-empty" class="hidden lp-empty">
+            لا توجد مهام متاحة حاليًا.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="loyalty-modal"
+      class="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-2 sm:px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="حسابي ونقاطي"
+    >
+      <div class="lp-sheet glass-panel">
+        <div class="lp-handle" aria-hidden="true"></div>
+
+        <header class="lp-head">
+          <div>
+            <p class="lp-hello">أهلاً</p>
+            <h3 id="profile-name" class="lp-name"></h3>
+          </div>
+          <button
+            type="button"
+            onclick="closeLoyaltyModal()"
+            class="lp-close"
+            aria-label="إغلاق"
+          >
+            <svg class="lucide-icon" aria-hidden="true" focusable="false">
+              <use href="#x"></use>
+            </svg>
+          </button>
+        </header>
+        <div class="flex justify-end -mt-2">
+          <button
+            type="button"
+            onclick="logoutCustomerSession()"
+            class="text-xs font-bold text-on-surface-variant hover:text-primary transition-colors"
+          >
+            تسجيل الخروج
+          </button>
+        </div>
+
+        <div id="loyalty-loading" class="lp-state">جاري التحميل...</div>
+        <div
+          id="loyalty-error"
+          class="hidden lp-state"
+          style="color: rgb(var(--error, 248 113 113))"
+        >
+          تعذر تحميل بيانات حسابك. حاول مرة أخرى.
+        </div>
+        <div id="loyalty-unlinked" class="hidden lp-state">
+          لا يوجد حساب عميل مرتبط بهذا الطلب.
+        </div>
+
+        <div id="loyalty-content" class="hidden lp-body">
+          <section class="lp-level">
+            <div class="lp-level-top">
+              <span id="profile-level-badge" class="lp-badge"></span>
+              <strong id="profile-level-name" class="lp-level-name"></strong>
+              <strong id="profile-xp" class="lp-xp"></strong>
+            </div>
+            <div
+              class="lp-track"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div
+                id="profile-progress-bar"
+                class="lp-fill"
+                style="width: 0%"
+              ></div>
+            </div>
+            <div class="lp-level-labels">
+              <span id="profile-current-level"></span>
+              <span id="profile-progress-percent" class="lp-pct"></span>
+              <span id="profile-next-level"></span>
+            </div>
+            <div class="lp-level-foot">
+              <span id="profile-xp-into-level"></span>
+              <span id="profile-xp-to-next"></span>
+            </div>
+          </section>
+
+          <section class="lp-stats">
+            <div class="lp-stat is-hl">
+              <span class="lp-stat-label">رصيد النقاط</span>
+              <strong id="profile-points" class="lp-stat-value"></strong>
+            </div>
+            <div class="lp-stat is-hl">
+              <span class="lp-stat-label">النقاط المكتسبة</span>
+              <strong
+                id="profile-lifetime-points"
+                class="lp-stat-value"
+              ></strong>
+            </div>
+            <div class="lp-stat">
+              <span class="lp-stat-label">الطلبات المكتملة</span>
+              <strong
+                id="profile-completed-orders"
+                class="lp-stat-value"
+              ></strong>
+            </div>
+            <div class="lp-stat">
+              <span class="lp-stat-label">إجمالي الإنفاق</span>
+              <strong
+                id="profile-total-spending"
+                class="lp-stat-value"
+              ></strong>
+            </div>
+          </section>
+
+          <section class="lp-actions">
+            <button
+              type="button"
+              onclick="openRewardsModal()"
+              class="lp-action"
+            >
+              <span class="lp-action-ico" aria-hidden="true"
+                ><svg class="lp-svg" aria-hidden="true" focusable="false">
+                  <use href="#gift"></use></svg
+              ></span>
+              <span class="lp-action-txt"
+                ><span>المكافآت</span><b id="profile-rewards-summary"></b
+              ></span>
+            </button>
+            <button
+              type="button"
+              onclick="openMissionsModal()"
+              class="lp-action"
+            >
+              <span class="lp-action-ico" aria-hidden="true"
+                ><svg class="lp-svg" aria-hidden="true" focusable="false">
+                  <use href="#target"></use></svg
+              ></span>
+              <span class="lp-action-txt"
+                ><span>المهام</span><b id="profile-missions-summary"></b
+              ></span>
+            </button>
+          </section>
+
+          <section>
+            <div class="lp-section-head">
+              <h4 class="lp-section-title">الطلبات الأخيرة</h4>
+              <span class="lp-section-hint">آخر 5 طلبات</span>
+            </div>
+            <ul id="profile-orders" class="lp-list"></ul>
+            <p id="profile-orders-empty" class="hidden lp-empty">
+              لا توجد طلبات بعد.
+            </p>
+          </section>
+
+          <section>
+            <div class="lp-section-head">
+              <h4 class="lp-section-title">النشاط الأخير</h4>
+            </div>
+            <ul id="profile-activity" class="lp-list"></ul>
+            <p id="profile-activity-empty" class="hidden lp-empty">
+              لا يوجد نشاط حتى الآن.
+            </p>
+          </section>
+        </div>
       </div>
     </div>
 
@@ -1699,14 +4320,14 @@
         class="dev-credit flex items-center gap-2 opacity-40 hover:opacity-80 transition-opacity duration-500 cursor-default select-none"
         dir="ltr"
       >
-        <svg
+        <!-- <svg
           class="lucide-icon text-sm text-primary"
           style="font-size: 14px"
           aria-hidden="true"
           focusable="false"
         >
           <use href="#code"></use>
-        </svg>
+        </svg> -->
         <span
           class="text-[11px] tracking-widest text-on-surface-variant uppercase font-cairo"
         >
@@ -1720,14 +4341,14 @@
             Mersalak
           </button>
         </span>
-        <svg
+        <!-- <svg
           class="lucide-icon text-sm text-primary"
           style="font-size: 14px"
           aria-hidden="true"
           focusable="false"
         >
           <use href="#terminal"></use>
-        </svg>
+        </svg> -->
       </div>
     </footer>
 
@@ -1900,6 +4521,8 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-config.js"></script>
+    <script src="../js/menu-rewards.js"></script>
+    <script src="../js/menu-missions.js"></script>
 
     <script>
       /* ============================================================
@@ -2108,9 +4731,15 @@
       function updateTableContextFromUrl() {
         const tableBadge = document.getElementById("menu-table-context");
         if (!tableBadge) return;
+        const syncBodyFlag = () =>
+          document.body.classList.toggle(
+            "has-table-context",
+            !tableBadge.classList.contains("hidden"),
+          );
 
         if (!MENU_IS_TABLE_MODE) {
           tableBadge.classList.add("hidden");
+          syncBodyFlag();
           return;
         }
 
@@ -2124,6 +4753,71 @@
           tableBadge.textContent = "طلب عادي";
           tableBadge.classList.add("hidden");
         }
+        syncBodyFlag();
+      }
+
+      /* Subscription gate. The backend (get_restaurant_order_access) is the
+         source of truth; if it cannot be reached the menu behaves as before. */
+      let MENU_ORDERING_DISABLED = false;
+
+      function buildPublicMenuUrl(access) {
+        const slug = String((access && access.slug) || MENU_SLUG || "").trim();
+        if (slug) {
+          return window.location.protocol === "file:"
+            ? `Menu.html?slug=${encodeURIComponent(slug)}&mode=public`
+            : `/${encodeURIComponent(slug)}`;
+        }
+        return `/Pages/Menu.html?restaurant_id=${encodeURIComponent(MENU_RESTAURANT_ID)}&mode=public`;
+      }
+
+      function showOrderingDisabledNotice() {
+        const section = document.getElementById("screen-menu");
+        if (!section || document.getElementById("menu-ordering-disabled"))
+          return;
+        const box = document.createElement("div");
+        box.id = "menu-ordering-disabled";
+        box.setAttribute("role", "status");
+        box.className =
+          "mb-6 mx-auto max-w-xl rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-center";
+        box.innerHTML =
+          '<p class="text-sm font-bold text-primary">الطلب الإلكتروني غير متاح حاليًا</p>' +
+          '<p class="mt-1 text-xs text-on-surface-variant">يمكنك تصفح قائمة المطعم، لكن الطلب الإلكتروني متوقف حاليًا.</p>';
+        section.insertBefore(box, section.firstChild);
+      }
+
+      async function enforceOrderingAccess() {
+        if (!window.supabase || !MENU_RESTAURANT_ID) return false;
+        let access = null;
+        try {
+          const { data, error } = await supabase.rpc(
+            "get_restaurant_order_access",
+            { p_restaurant_id: MENU_RESTAURANT_ID },
+          );
+          if (error) throw error;
+          access = data;
+        } catch (error) {
+          console.warn("Ordering access check unavailable:", error);
+          return false;
+        }
+        if (!access || access.order_enabled !== false) return false;
+
+        const noticeKey = `Mersalak_TableQrFallback_${MENU_RESTAURANT_ID}`;
+        if (MENU_IS_TABLE_MODE) {
+          // Marks that the visitor came from a table QR so only they see the notice.
+          try {
+            sessionStorage.setItem(noticeKey, "1");
+          } catch (_) {}
+          window.location.replace(buildPublicMenuUrl(access));
+          return true;
+        }
+        MENU_ORDERING_DISABLED = true;
+        document.body.classList.add("ordering-disabled");
+        let cameFromTableQr = false;
+        try {
+          cameFromTableQr = sessionStorage.getItem(noticeKey) === "1";
+        } catch (_) {}
+        if (cameFromTableQr) showOrderingDisabledNotice();
+        return false;
       }
 
       async function validateTableQrCode() {
@@ -2316,6 +5010,14 @@
       let activeWaiterInquiryDish = null;
       let activeServiceRatingOrder = null;
       let selectedServiceRating = 0;
+      let lastPlacedOrderContext = null;
+      let orderTrackingTimer = null;
+      let orderTrackingRequest = 0;
+      let activeOrderFeedbackId = null;
+      let orderFeedbackSubmitting = false;
+      let orderFeedbackAnswers = {};
+      let customerLookupDebounceTimer = null;
+      let customerConversionSubmitting = false;
       const selectedCardSizes = {};
 
       function requiresWaiterInquiry(dish) {
@@ -3739,7 +6441,7 @@
           menu_item_size_id: item.dish?.sizeId || null,
         }));
 
-        const { data: orderId, error: orderError } = await supabase.rpc(
+        const { data: orderResult, error: orderError } = await supabase.rpc(
           "create_guest_order",
           {
             p_restaurant_id: MENU_RESTAURANT_ID,
@@ -3757,7 +6459,39 @@
         );
 
         if (orderError) throw orderError;
-        return { id: orderId };
+        const orderId =
+          typeof orderResult === "string" ? orderResult : orderResult?.id;
+        const trackingToken =
+          typeof orderResult === "object" ? orderResult?.trackingToken : null;
+        if (!orderId) throw new Error("ORDER_ID_MISSING");
+        return { id: orderId, trackingToken };
+      }
+
+      // Best-effort: new orders inherit the customer of the remembered loyalty order (server-validated).
+      async function autoLinkNewOrder(newOrderId, newTrackingToken) {
+        try {
+          if (!newOrderId || !window.supabase || !MENU_RESTAURANT_ID) return;
+          const sourceOrderId = localStorage.getItem(getLoyaltyStorageKey());
+          const sourceTrackingToken = localStorage.getItem(
+            getLoyaltyTrackingTokenKey(),
+          );
+          if (!sourceOrderId || !sourceTrackingToken || !newTrackingToken)
+            return;
+          const { data, error } = await supabase.rpc(
+            "link_order_to_remembered_customer",
+            {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+              p_new_order_id: newOrderId,
+              p_source_order_id: sourceOrderId,
+              p_new_tracking_token: newTrackingToken,
+              p_source_tracking_token: sourceTrackingToken,
+            },
+          );
+          if (error) throw error;
+          if (data?.status === "linked") refreshLoyaltyButton();
+        } catch (error) {
+          console.warn("Order auto-link skipped:", error);
+        }
       }
 
       async function processCheckout(paymentData = {}) {
@@ -3776,10 +6510,11 @@
         const nameInput = document.getElementById("customer-name");
         const locSelect = document.getElementById("customer-location");
         const notesInput = document.getElementById("order-notes");
+        let createdOrder = null;
 
         try {
           if (window.supabase && MENU_RESTAURANT_ID) {
-            await saveOrderToSupabase(
+            createdOrder = await saveOrderToSupabase(
               {
                 customer_name: checkoutData.customer_name,
                 customer_phone: checkoutData.customer_phone || "",
@@ -3794,8 +6529,18 @@
           }
         } catch (error) {
           console.error("Failed to save order to Supabase:", error);
-          showToast("تعذر إرسال الطلب. حاول مرة أخرى.");
+          showToast(
+            String(error?.message || "").includes("ORDERING_DISABLED")
+              ? "الطلب الإلكتروني غير متاح حاليًا."
+              : "تعذر إرسال الطلب. حاول مرة أخرى.",
+          );
           return;
+        }
+
+        if (createdOrder?.id) {
+          rememberOrderTracking(createdOrder.id, createdOrder.trackingToken);
+          prepareOrderFeedback(createdOrder.id);
+          void autoLinkNewOrder(createdOrder.id, createdOrder.trackingToken);
         }
 
         const guestNameEl = document.getElementById("success-guest-name");
@@ -3810,6 +6555,19 @@
               ? "تم إرسال الطلب وإشعار الدفع للمطعم للمراجعة."
               : "يرجى التوجه إلى الكاشير لإتمام الدفع.";
         }
+
+        lastPlacedOrderContext = {
+          orderId: createdOrder?.id || null,
+          trackingToken: createdOrder?.trackingToken || null,
+          customerName: checkoutData.customer_name || "",
+        };
+        const referenceEl = document.getElementById("success-order-reference");
+        if (referenceEl) {
+          referenceEl.textContent = createdOrder?.id
+            ? `#${String(createdOrder.id).slice(0, 8)}`
+            : "—";
+        }
+        updatePostOrderAccountCta();
 
         closeCartModal();
 
@@ -3831,6 +6589,1357 @@
         const successModal = document.getElementById("success-modal");
         if (successModal)
           successModal.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      /* Whatever the customer taps on the success modal (track order, create
+         account, "later", back to browsing), the quick-feedback modal comes
+         first. The tapped action then runs once feedback is closed.
+         If feedback was already answered/dismissed, the action runs at once. */
+      let pendingAfterFeedbackAction = null;
+
+      function cancelPendingAfterFeedback() {
+        pendingAfterFeedbackAction = null;
+      }
+
+      function afterSuccessThen(action) {
+        closeSuccessModal();
+        const run = typeof action === "function" ? action : null;
+        const orderId =
+          activeOrderFeedbackId || lastPlacedOrderContext?.orderId;
+        if (
+          !orderId ||
+          !MENU_RESTAURANT_ID ||
+          !window.supabase ||
+          getOrderFeedbackFlag(orderId)
+        ) {
+          if (run) run();
+          return;
+        }
+        pendingAfterFeedbackAction = run;
+        setTimeout(() => openOrderFeedback(orderId), 350);
+      }
+
+      function getOrderTrackingStorageKey() {
+        return `Mersalak_OrderTracking_${MENU_RESTAURANT_ID}`;
+      }
+
+      function getOrderTrackingTokenStorageKey() {
+        return `Mersalak_OrderTrackingToken_${MENU_RESTAURANT_ID}`;
+      }
+
+      function getLoyaltyTrackingTokenKey() {
+        return `Mersalak_LoyaltyTrackingToken_${MENU_RESTAURANT_ID}`;
+      }
+
+      function rememberOrderTracking(orderId, trackingToken) {
+        if (!orderId || !MENU_RESTAURANT_ID) return;
+        try {
+          sessionStorage.setItem(getOrderTrackingStorageKey(), orderId);
+          if (trackingToken) {
+            sessionStorage.setItem(
+              getOrderTrackingTokenStorageKey(),
+              trackingToken,
+            );
+          } else {
+            sessionStorage.removeItem(getOrderTrackingTokenStorageKey());
+          }
+        } catch (_) {}
+        refreshOrderTrackingButton();
+      }
+
+      function getRememberedOrderTrackingToken() {
+        try {
+          return sessionStorage.getItem(getOrderTrackingTokenStorageKey());
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function getCustomerTrackingToken(orderId) {
+        if (!orderId || !MENU_RESTAURANT_ID) return null;
+        try {
+          const trackingId = sessionStorage.getItem(
+            getOrderTrackingStorageKey(),
+          );
+          const trackingToken = sessionStorage.getItem(
+            getOrderTrackingTokenStorageKey(),
+          );
+          if (trackingId === orderId && trackingToken) return trackingToken;
+          const loyaltyId = localStorage.getItem(getLoyaltyStorageKey());
+          const loyaltyToken = localStorage.getItem(
+            getLoyaltyTrackingTokenKey(),
+          );
+          return loyaltyId === orderId ? loyaltyToken : null;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function getRememberedOrderTrackingId() {
+        if (!MENU_RESTAURANT_ID) return null;
+        try {
+          return sessionStorage.getItem(getOrderTrackingStorageKey());
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function setOrderTrackingButtonVisible(visible) {
+        const button = document.getElementById("order-tracking-open-btn");
+        if (!button) return;
+        button.classList.toggle("hidden", !visible);
+      }
+
+      async function refreshOrderTrackingButton() {
+        const orderId = getRememberedOrderTrackingId();
+        if (!orderId) {
+          setOrderTrackingButtonVisible(false);
+          return;
+        }
+
+        setOrderTrackingButtonVisible(true);
+        if (!window.supabase || !MENU_RESTAURANT_ID) return;
+
+        try {
+          const rpcArgs = {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_order_id: orderId,
+          };
+          const trackingToken = getRememberedOrderTrackingToken();
+          if (trackingToken) rpcArgs.p_tracking_token = trackingToken;
+          const { data, error } = await supabase.rpc(
+            "get_customer_order_status",
+            rpcArgs,
+          );
+          if (error) return;
+          if (!data?.found || !data.order) {
+            setOrderTrackingButtonVisible(false);
+            return;
+          }
+          setOrderTrackingButtonVisible(
+            !["served", "cancelled"].includes(data.order.status),
+          );
+        } catch (_) {
+          // Keep the button available when a status refresh temporarily fails.
+        }
+      }
+
+      function closeOrderTracking() {
+        clearInterval(orderTrackingTimer);
+        orderTrackingTimer = null;
+        orderTrackingRequest += 1;
+        document
+          .getElementById("order-tracking-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      function orderTrackingStatusLabel(status) {
+        return (
+          {
+            new: "تم استلام الطلب",
+            accepted: "تم قبول الطلب",
+            preparing: "جاري التحضير",
+            ready: "الطلب جاهز",
+            served: "تم تقديم الطلب",
+            cancelled: "تم إلغاء الطلب",
+          }[status] || "حالة الطلب"
+        );
+      }
+
+      function orderTrackingStatusDescription(status) {
+        return (
+          {
+            new: "تم استلام طلبك وننتظر تأكيد المطعم.",
+            accepted: "تم قبول طلبك وسيبدأ تجهيزه.",
+            preparing: "المطبخ يعمل على تجهيز طلبك الآن.",
+            ready: "طلبك جاهز للتقديم.",
+            served: "تم تقديم طلبك. بالهناء والشفاء ❤️",
+            cancelled: "تم إلغاء هذا الطلب.",
+          }[status] || "يتم تحديث حالة طلبك."
+        );
+      }
+
+      function renderOrderTracking(order) {
+        const steps = [
+          { status: "new", label: "تم استلام الطلب" },
+          { status: "accepted", label: "تم قبول الطلب" },
+          { status: "preparing", label: "جاري التحضير" },
+          { status: "ready", label: "الطلب جاهز" },
+          { status: "served", label: "تم تقديم الطلب" },
+        ];
+        const currentIndex = steps.findIndex(
+          (step) => step.status === order.status,
+        );
+        const progress = document.getElementById("order-tracking-progress");
+        const cancelled = document.getElementById("order-tracking-cancelled");
+        const statusEl = document.getElementById("order-tracking-status");
+        const descriptionEl = document.getElementById(
+          "order-tracking-description",
+        );
+        const totalEl = document.getElementById("order-tracking-total");
+
+        if (order.status === "cancelled") {
+          cancelled?.classList.remove("hidden");
+          progress?.classList.add("hidden");
+        } else {
+          cancelled?.classList.add("hidden");
+          progress?.classList.remove("hidden");
+          if (progress) {
+            progress.replaceChildren();
+            steps.forEach((step, index) => {
+              const row = document.createElement("div");
+              const isComplete = currentIndex >= 0 && index < currentIndex;
+              const isCurrent = index === currentIndex;
+              row.className = `lp-step ${isComplete ? "is-done" : isCurrent ? "is-current" : "is-todo"}`;
+              row.setAttribute("role", "listitem");
+              if (isCurrent) row.setAttribute("aria-current", "step");
+              const marker = document.createElement("span");
+              marker.className = "lp-step-dot";
+              marker.setAttribute("aria-hidden", "true");
+              marker.textContent = isComplete ? "✓" : String(index + 1);
+              const label = document.createElement("span");
+              label.textContent = step.label;
+              row.append(marker, label);
+              progress.appendChild(row);
+            });
+          }
+        }
+
+        if (statusEl)
+          statusEl.textContent = orderTrackingStatusLabel(order.status);
+        if (descriptionEl)
+          descriptionEl.textContent = orderTrackingStatusDescription(
+            order.status,
+          );
+        if (totalEl)
+          totalEl.textContent = `₪${Number(order.total ?? 0).toLocaleString("ar")}`;
+
+        const referenceEl = document.getElementById("order-tracking-reference");
+        if (referenceEl) {
+          referenceEl.textContent = order.orderNumber
+            ? `رقم الطلب: #${order.orderNumber}`
+            : `مرجع الطلب: #${String(order.id || "").slice(0, 8)}`;
+        }
+
+        const items = Array.isArray(order.items) ? order.items : [];
+        const itemsWrap = document.getElementById("order-tracking-items-wrap");
+        const itemsList = document.getElementById("order-tracking-items");
+        itemsWrap?.classList.toggle("hidden", items.length === 0);
+        if (itemsList) {
+          itemsList.replaceChildren();
+          items.forEach((item) => {
+            const row = document.createElement("li");
+            row.className = "lp-row";
+            const name = document.createElement("span");
+            name.className = "lp-row-main";
+            name.textContent = item.name || "صنف";
+            const quantity = document.createElement("strong");
+            quantity.className = "lp-qty";
+            quantity.textContent = `× ${item.quantity ?? 1}`;
+            row.append(name, quantity);
+            itemsList.appendChild(row);
+          });
+        }
+      }
+
+      async function loadOrderTracking(orderId, trackingToken, silent = false) {
+        const requestId = ++orderTrackingRequest;
+        const loading = document.getElementById("order-tracking-loading");
+        const errorEl = document.getElementById("order-tracking-error");
+        const empty = document.getElementById("order-tracking-empty");
+        const content = document.getElementById("order-tracking-content");
+        if (!silent) {
+          loading?.classList.remove("hidden");
+          errorEl?.classList.add("hidden");
+          empty?.classList.add("hidden");
+          content?.classList.add("hidden");
+        }
+
+        try {
+          const rpcArgs = {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_order_id: orderId,
+          };
+          const rpcName = trackingToken
+            ? "get_customer_order_status"
+            : "get_customer_order_status";
+          if (trackingToken) rpcArgs.p_tracking_token = trackingToken;
+          const { data, error } = await supabase.rpc(rpcName, rpcArgs);
+          if (error) throw error;
+          if (requestId !== orderTrackingRequest) return;
+          loading?.classList.add("hidden");
+          if (!data?.found || !data.order) {
+            empty?.classList.remove("hidden");
+            content?.classList.add("hidden");
+            clearInterval(orderTrackingTimer);
+            orderTrackingTimer = null;
+            return null;
+          }
+          errorEl?.classList.add("hidden");
+          empty?.classList.add("hidden");
+          content?.classList.remove("hidden");
+          renderOrderTracking(data.order);
+          if (["served", "cancelled"].includes(data.order.status)) {
+            setOrderTrackingButtonVisible(false);
+            clearInterval(orderTrackingTimer);
+            orderTrackingTimer = null;
+          } else {
+            setOrderTrackingButtonVisible(true);
+          }
+          return data.order.status;
+        } catch (error) {
+          console.error("Order tracking failed:", error);
+          if (requestId !== orderTrackingRequest) return;
+          loading?.classList.add("hidden");
+          if (!silent) errorEl?.classList.remove("hidden");
+          return null;
+        }
+      }
+
+      async function openOrderTracking(
+        orderId = getRememberedOrderTrackingId(),
+      ) {
+        if (!orderId || !window.supabase || !MENU_RESTAURANT_ID) {
+          showToast("لا يوجد طلب محفوظ للمتابعة.");
+          return;
+        }
+        closeSuccessModal();
+        const modal = document.getElementById("order-tracking-modal");
+        modal?.classList.remove("opacity-0", "pointer-events-none");
+        clearInterval(orderTrackingTimer);
+        orderTrackingTimer = null;
+        const trackingToken = getRememberedOrderTrackingToken();
+        const status = await loadOrderTracking(orderId, trackingToken);
+        if (
+          status &&
+          !["served", "cancelled"].includes(status) &&
+          modal &&
+          !modal.classList.contains("pointer-events-none")
+        ) {
+          orderTrackingTimer = setInterval(
+            () => loadOrderTracking(orderId, trackingToken, true),
+            8000,
+          );
+        }
+      }
+
+      function getOrderFeedbackStorageKey(orderId = activeOrderFeedbackId) {
+        return `Mersalak_Feedback_${MENU_RESTAURANT_ID}_${orderId}`;
+      }
+
+      function getOrderFeedbackFlag(orderId = activeOrderFeedbackId) {
+        if (!orderId || !MENU_RESTAURANT_ID) return null;
+        try {
+          return sessionStorage.getItem(getOrderFeedbackStorageKey(orderId));
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function setOrderFeedbackFlag(flag, orderId = activeOrderFeedbackId) {
+        if (!orderId || !MENU_RESTAURANT_ID) return;
+        try {
+          sessionStorage.setItem(getOrderFeedbackStorageKey(orderId), flag);
+        } catch (_) {}
+      }
+
+      function showOrderSuccessModal() {
+        document
+          .getElementById("success-modal")
+          ?.classList.remove("opacity-0", "pointer-events-none");
+      }
+
+      function hideInstantFeedbackPrompt() {
+        document
+          .getElementById("instant-feedback-prompt")
+          ?.classList.add("hidden");
+      }
+
+      async function checkOrderFeedbackStatus(orderId) {
+        if (!orderId || !window.supabase || !MENU_RESTAURANT_ID) return;
+        try {
+          const { data, error } = await supabase.rpc(
+            "get_order_feedback_status",
+            {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+              p_order_id: orderId,
+              p_tracking_token: getCustomerTrackingToken(orderId),
+            },
+          );
+          if (error) throw error;
+          if (data?.submitted) {
+            setOrderFeedbackFlag("submitted", orderId);
+            hideInstantFeedbackPrompt();
+            const feedbackModal = document.getElementById(
+              "order-feedback-modal",
+            );
+            if (
+              feedbackModal &&
+              !feedbackModal.classList.contains("pointer-events-none")
+            ) {
+              renderOrderFeedbackSuccess();
+            }
+          }
+        } catch (error) {
+          console.warn("Feedback status check skipped:", error);
+        }
+      }
+
+      function prepareOrderFeedback(orderId) {
+        activeOrderFeedbackId = orderId || null;
+        if (!activeOrderFeedbackId) {
+          hideInstantFeedbackPrompt();
+          return;
+        }
+        orderFeedbackAnswers = {};
+        const prompt = document.getElementById("instant-feedback-prompt");
+        const shouldShow = !getOrderFeedbackFlag(activeOrderFeedbackId);
+        prompt?.classList.toggle("hidden", !shouldShow);
+        if (shouldShow) checkOrderFeedbackStatus(activeOrderFeedbackId);
+      }
+
+      function updateOrderFeedbackProgress() {
+        const total = 4;
+        const done = Math.min(
+          Object.keys(orderFeedbackAnswers || {}).length,
+          total,
+        );
+        const text = document.getElementById("order-feedback-progress-text");
+        const fill = document.getElementById("order-feedback-progress-fill");
+        if (text) text.textContent = `${done} / ${total}`;
+        if (fill) fill.style.width = `${(done / total) * 100}%`;
+      }
+
+      function resetOrderFeedbackForm() {
+        orderFeedbackAnswers = {};
+        updateOrderFeedbackProgress();
+        const comment = document.getElementById("order-feedback-comment");
+        if (comment) comment.value = "";
+        document.querySelectorAll("[data-feedback-field]").forEach((button) => {
+          button.classList.remove("is-selected");
+          button.setAttribute("aria-pressed", "false");
+        });
+      }
+
+      function showOrderFeedbackForm() {
+        document
+          .getElementById("order-feedback-head")
+          ?.classList.remove("hidden");
+        document
+          .getElementById("instant-feedback-form")
+          ?.classList.remove("hidden");
+        document
+          .getElementById("order-feedback-success")
+          ?.classList.add("hidden");
+        document
+          .getElementById("order-feedback-error")
+          ?.classList.add("hidden");
+      }
+
+      function openOrderFeedback(
+        orderId = activeOrderFeedbackId || lastPlacedOrderContext?.orderId,
+      ) {
+        if (!orderId || !MENU_RESTAURANT_ID || !window.supabase) {
+          showToast("لا يوجد طلب متاح للتقييم.");
+          return;
+        }
+        const isNewOrder = activeOrderFeedbackId !== orderId;
+        activeOrderFeedbackId = orderId;
+        if (isNewOrder) resetOrderFeedbackForm();
+        showOrderFeedbackForm();
+        document
+          .getElementById("success-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+        document
+          .getElementById("order-feedback-modal")
+          ?.classList.remove("opacity-0", "pointer-events-none");
+        checkOrderFeedbackStatus(orderId);
+      }
+
+      function selectOrderFeedback(button) {
+        const field = button?.dataset.feedbackField;
+        const value = button?.dataset.feedbackValue;
+        if (!field || !value || orderFeedbackSubmitting) return;
+        orderFeedbackAnswers[field] = value;
+        updateOrderFeedbackProgress();
+        document
+          .querySelectorAll(`[data-feedback-field="${field}"]`)
+          .forEach((choice) => {
+            const selected = choice === button;
+            choice.classList.toggle("is-selected", selected);
+            choice.setAttribute("aria-pressed", selected ? "true" : "false");
+          });
+      }
+
+      function setOrderFeedbackError(message) {
+        const errorEl = document.getElementById("order-feedback-error");
+        if (!errorEl) return;
+        errorEl.textContent = message || "";
+        errorEl.classList.toggle("hidden", !message);
+      }
+
+      function renderOrderFeedbackSuccess() {
+        setOrderFeedbackFlag("submitted");
+        hideInstantFeedbackPrompt();
+        document.getElementById("order-feedback-head")?.classList.add("hidden");
+        document
+          .getElementById("instant-feedback-form")
+          ?.classList.add("hidden");
+        document
+          .getElementById("order-feedback-success")
+          ?.classList.remove("hidden");
+      }
+
+      async function submitOrderFeedback() {
+        if (orderFeedbackSubmitting || !activeOrderFeedbackId) return;
+        const requiredFields = [
+          "ease_of_order",
+          "menu_clarity",
+          "menu_usability",
+          "overall_experience",
+        ];
+        if (requiredFields.some((field) => !orderFeedbackAnswers[field])) {
+          setOrderFeedbackError("اختر إجابة لكل سؤال من فضلك.");
+          return;
+        }
+
+        orderFeedbackSubmitting = true;
+        setOrderFeedbackError("");
+        const submitButton = document.getElementById("order-feedback-submit");
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = "جارٍ إرسال التقييم...";
+        }
+
+        try {
+          const { data, error } = await supabase.rpc("submit_order_feedback", {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_order_id: activeOrderFeedbackId,
+            p_tracking_token: getCustomerTrackingToken(activeOrderFeedbackId),
+            p_ease_of_order: orderFeedbackAnswers.ease_of_order,
+            p_menu_clarity: orderFeedbackAnswers.menu_clarity,
+            p_menu_usability: orderFeedbackAnswers.menu_usability,
+            p_overall_experience: orderFeedbackAnswers.overall_experience,
+            p_comment:
+              document.getElementById("order-feedback-comment")?.value || null,
+          });
+          if (error) throw error;
+          if (
+            data?.status === "already_submitted" ||
+            data?.submitted === true
+          ) {
+            renderOrderFeedbackSuccess();
+            return;
+          }
+          if (data?.status === "not_eligible") {
+            setOrderFeedbackError("لم تعد هذه الاستبانة متاحة لهذا الطلب.");
+            return;
+          }
+          if (data?.status === "not_found") {
+            setOrderFeedbackError("لم نتمكن من العثور على هذا الطلب.");
+            return;
+          }
+          setOrderFeedbackError("تعذر إرسال التقييم. حاول مرة أخرى.");
+        } catch (error) {
+          console.error("Order feedback submission failed:", error);
+          setOrderFeedbackError("تعذر إرسال التقييم الآن. حاول مرة أخرى.");
+        } finally {
+          orderFeedbackSubmitting = false;
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "إرسال التقييم";
+          }
+        }
+      }
+
+      function dismissOrderFeedback() {
+        if (!activeOrderFeedbackId) return;
+        setOrderFeedbackFlag("dismissed");
+        hideInstantFeedbackPrompt();
+        closeOrderFeedback();
+      }
+
+      function closeOrderFeedback(restoreSuccess = false) {
+        if (
+          !orderFeedbackSubmitting &&
+          activeOrderFeedbackId &&
+          getOrderFeedbackFlag() !== "submitted"
+        ) {
+          setOrderFeedbackFlag("dismissed");
+        }
+        document
+          .getElementById("order-feedback-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+        if (restoreSuccess) showOrderSuccessModal();
+        const next = pendingAfterFeedbackAction;
+        pendingAfterFeedbackAction = null;
+        if (next) setTimeout(next, 250);
+      }
+
+      function updatePostOrderAccountCta() {
+        const cta = document.getElementById("post-order-account-cta");
+        if (!cta) return;
+
+        const shouldShow = Boolean(
+          lastPlacedOrderContext?.orderId && MENU_RESTAURANT_ID,
+        );
+        cta.classList.toggle("hidden", !shouldShow);
+      }
+
+      function dismissPostOrderAccountCta() {
+        const cta = document.getElementById("post-order-account-cta");
+        if (!cta) return;
+        cta.classList.add("hidden");
+      }
+
+      function openCustomerAccountModal() {
+        if (!lastPlacedOrderContext?.orderId || !MENU_RESTAURANT_ID) {
+          showToast("تعذر ربط الحساب لهذا الطلب.");
+          return;
+        }
+
+        const nameInput = document.getElementById("customer-account-name");
+        const phoneInput = document.getElementById("customer-account-phone");
+        if (nameInput) {
+          nameInput.value = (lastPlacedOrderContext.customerName || "").trim();
+        }
+        if (phoneInput) phoneInput.value = "";
+        setCustomerAccountFeedback("", "");
+        hideExistingCustomerHint();
+
+        const modal = document.getElementById("customer-account-modal");
+        if (modal) {
+          modal.classList.remove("opacity-0", "pointer-events-none");
+        }
+        setTimeout(() => phoneInput?.focus(), 80);
+      }
+
+      function closeCustomerAccountModal() {
+        const modal = document.getElementById("customer-account-modal");
+        if (modal) {
+          modal.classList.add("opacity-0", "pointer-events-none");
+        }
+        customerConversionSubmitting = false;
+        clearTimeout(customerLookupDebounceTimer);
+      }
+
+      function setCustomerAccountFeedback(type, message) {
+        const feedback = document.getElementById("customer-account-feedback");
+        if (!feedback) return;
+
+        if (!message) {
+          feedback.classList.add("hidden");
+          feedback.textContent = "";
+          feedback.classList.remove(
+            "bg-error/10",
+            "border",
+            "border-error/30",
+            "text-error",
+            "bg-primary/10",
+            "border-primary/30",
+            "text-primary",
+          );
+          return;
+        }
+
+        feedback.textContent = message;
+        feedback.classList.remove("hidden");
+        feedback.classList.remove(
+          "bg-error/10",
+          "border",
+          "border-error/30",
+          "text-error",
+          "bg-primary/10",
+          "border-primary/30",
+          "text-primary",
+        );
+
+        if (type === "error") {
+          feedback.classList.add(
+            "bg-error/10",
+            "border",
+            "border-error/30",
+            "text-error",
+          );
+        } else {
+          feedback.classList.add(
+            "bg-primary/10",
+            "border",
+            "border-primary/30",
+            "text-primary",
+          );
+        }
+      }
+
+      function hideExistingCustomerHint() {
+        const hint = document.getElementById("customer-account-existing-hint");
+        if (!hint) return;
+        hint.classList.add("hidden");
+        hint.textContent = "";
+      }
+
+      let customerSessionMode = "login";
+      let customerSessionSubmitting = false;
+      let customerSessionDisplayName = "";
+
+      function getCustomerSessionStorageKey() {
+        return `Mersalak_CustomerSession_${MENU_RESTAURANT_ID}`;
+      }
+
+      function getCustomerSessionToken() {
+        try {
+          return localStorage.getItem(getCustomerSessionStorageKey()) || "";
+        } catch (_) {
+          return "";
+        }
+      }
+
+      function setCustomerSessionToken(token) {
+        try {
+          if (token)
+            localStorage.setItem(getCustomerSessionStorageKey(), token);
+          else localStorage.removeItem(getCustomerSessionStorageKey());
+        } catch (_) {}
+      }
+
+      function updateCustomerSessionButton() {
+        const label = document.getElementById("customer-session-label");
+        const button = document.getElementById("customer-session-btn");
+        const token = getCustomerSessionToken();
+        if (!label || !button) return;
+        label.textContent = token
+          ? customerSessionDisplayName || "حسابي"
+          : "تسجيل الدخول";
+        button.classList.toggle("is-signed-in", Boolean(token));
+        button.setAttribute(
+          "aria-label",
+          token ? "فتح حساب العميل" : "تسجيل الدخول",
+        );
+        button.setAttribute(
+          "title",
+          token ? "فتح حساب العميل" : "تسجيل الدخول",
+        );
+      }
+
+      async function restoreCustomerSession() {
+        const token = getCustomerSessionToken();
+        if (!token || !window.supabase || !MENU_RESTAURANT_ID) {
+          updateCustomerSessionButton();
+          return;
+        }
+        try {
+          const { data, error } = await supabase.rpc("customer_get_session", {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_session_token: token,
+          });
+          if (error || !data?.authenticated) {
+            setCustomerSessionToken("");
+          } else {
+            customerSessionDisplayName = data.displayName || "";
+          }
+        } catch (_) {
+          // Keep the local token during transient network failures.
+        }
+        updateCustomerSessionButton();
+      }
+
+      function openCustomerSessionEntry() {
+        if (getCustomerSessionToken()) {
+          openLoyaltyModal();
+          return;
+        }
+        customerSessionMode = "login";
+        updateCustomerSessionModal();
+        document
+          .getElementById("customer-session-modal")
+          ?.classList.remove("opacity-0", "pointer-events-none");
+        setTimeout(
+          () => document.getElementById("customer-session-phone")?.focus(),
+          80,
+        );
+      }
+
+      function closeCustomerSessionEntry() {
+        document
+          .getElementById("customer-session-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+        customerSessionSubmitting = false;
+      }
+
+      function updateCustomerSessionModal() {
+        const title = document.getElementById("customer-session-title");
+        const submit = document.getElementById("customer-session-submit");
+        const switchButton = document.getElementById("customer-session-switch");
+        if (customerSessionMode === "register") {
+          if (title) title.textContent = "إنشاء حساب";
+          if (submit) submit.textContent = "إنشاء الحساب";
+          if (switchButton)
+            switchButton.textContent = "لديك حساب؟ تسجيل الدخول";
+        } else {
+          if (title) title.textContent = "تسجيل الدخول";
+          if (submit) submit.textContent = "تسجيل الدخول";
+          if (switchButton)
+            switchButton.textContent = "ليس لديك حساب؟ إنشاء حساب";
+        }
+        setCustomerSessionFeedback("");
+      }
+
+      function toggleCustomerSessionMode() {
+        customerSessionMode =
+          customerSessionMode === "login" ? "register" : "login";
+        updateCustomerSessionModal();
+      }
+
+      function setCustomerSessionFeedback(message, success) {
+        const el = document.getElementById("customer-session-feedback");
+        if (!el) return;
+        el.textContent = message || "";
+        el.classList.toggle("hidden", !message);
+        el.classList.toggle("bg-error/10", Boolean(message) && !success);
+        el.classList.toggle("border", Boolean(message));
+        el.classList.toggle("border-error/30", Boolean(message) && !success);
+        el.classList.toggle("text-error", Boolean(message) && !success);
+        el.classList.toggle(
+          "bg-primary/10",
+          Boolean(message) && Boolean(success),
+        );
+        el.classList.toggle(
+          "border-primary/30",
+          Boolean(message) && Boolean(success),
+        );
+        el.classList.toggle(
+          "text-primary",
+          Boolean(message) && Boolean(success),
+        );
+      }
+
+      async function submitCustomerSession() {
+        if (
+          customerSessionSubmitting ||
+          !window.supabase ||
+          !MENU_RESTAURANT_ID
+        )
+          return;
+        const name = normalizeGuestName(
+          document.getElementById("customer-session-name")?.value,
+        );
+        const phone = String(
+          document.getElementById("customer-session-phone")?.value || "",
+        ).trim();
+        if (phone.replace(/\D/g, "").length < 7) {
+          setCustomerSessionFeedback("الرجاء إدخال رقم هاتف صحيح.", false);
+          return;
+        }
+        if (customerSessionMode === "register" && !isValidGuestName(name)) {
+          setCustomerSessionFeedback("الرجاء إدخال اسم صحيح.", false);
+          return;
+        }
+        customerSessionSubmitting = true;
+        const submit = document.getElementById("customer-session-submit");
+        if (submit) {
+          submit.disabled = true;
+          submit.textContent = "جارٍ التحقق...";
+        }
+        try {
+          const rpcName =
+            customerSessionMode === "register"
+              ? "customer_register"
+              : "customer_login";
+          const { data, error } = await supabase.rpc(rpcName, {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_customer_name: name || null,
+            p_customer_phone: phone,
+          });
+          if (error || !data?.authenticated || !data?.sessionToken) {
+            setCustomerSessionFeedback(
+              customerSessionMode === "register"
+                ? "تعذر إنشاء الحساب حاليًا."
+                : "تعذر تسجيل الدخول بالبيانات المدخلة.",
+              false,
+            );
+            return;
+          }
+          setCustomerSessionToken(data.sessionToken);
+          customerSessionDisplayName = data.displayName || name || "";
+          updateCustomerSessionButton();
+          setCustomerSessionFeedback("تم تسجيل الدخول بنجاح.", true);
+          setTimeout(() => {
+            closeCustomerSessionEntry();
+            openLoyaltyModal();
+          }, 350);
+        } catch (_) {
+          setCustomerSessionFeedback(
+            "تعذر إتمام العملية الآن. حاول مرة أخرى.",
+            false,
+          );
+        } finally {
+          customerSessionSubmitting = false;
+          if (submit) submit.disabled = false;
+          updateCustomerSessionModal();
+        }
+      }
+
+      async function logoutCustomerSession() {
+        const token = getCustomerSessionToken();
+        if (token && window.supabase) {
+          try {
+            await supabase.rpc("customer_logout", {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+              p_session_token: token,
+            });
+          } catch (_) {}
+        }
+        setCustomerSessionToken("");
+        customerSessionDisplayName = "";
+        updateCustomerSessionButton();
+        closeLoyaltyModal();
+      }
+
+      function showExistingCustomerHint(message) {
+        const hint = document.getElementById("customer-account-existing-hint");
+        if (!hint) return;
+        hint.textContent = message;
+        hint.classList.remove("hidden");
+      }
+
+      function handleCustomerPhoneInput() {
+        hideExistingCustomerHint();
+        clearTimeout(customerLookupDebounceTimer);
+        customerLookupDebounceTimer = setTimeout(
+          () => lookupExistingCustomerByPhone(),
+          380,
+        );
+      }
+
+      async function lookupExistingCustomerByPhone() {
+        const phoneInput = document.getElementById("customer-account-phone");
+        if (!phoneInput || !window.supabase || !MENU_RESTAURANT_ID) return;
+
+        const rawPhone = String(phoneInput.value || "").trim();
+        const digitCount = rawPhone.replace(/\D/g, "").length;
+        if (digitCount < 7) {
+          hideExistingCustomerHint();
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase.rpc(
+            "lookup_restaurant_customer_by_phone",
+            {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+              p_customer_phone: rawPhone,
+            },
+          );
+          if (error) throw error;
+
+          if (data?.exists) {
+            const customerName = String(data.customerName || "").trim();
+            showExistingCustomerHint(
+              customerName
+                ? `تم العثور على حساب سابق باسم: ${customerName}`
+                : "تم العثور على حساب سابق بهذا الرقم.",
+            );
+          } else {
+            hideExistingCustomerHint();
+          }
+        } catch (_) {
+          hideExistingCustomerHint();
+        }
+      }
+
+      async function submitCustomerAccountConversion() {
+        if (customerConversionSubmitting) return;
+        if (!lastPlacedOrderContext?.orderId || !MENU_RESTAURANT_ID) {
+          setCustomerAccountFeedback("error", "لا يوجد طلب قابل للربط حاليًا.");
+          return;
+        }
+
+        const nameInput = document.getElementById("customer-account-name");
+        const phoneInput = document.getElementById("customer-account-phone");
+        const submitButton = document.getElementById("customer-account-submit");
+
+        const customerName = normalizeGuestName(nameInput?.value);
+        const customerPhone = String(phoneInput?.value || "").trim();
+
+        if (!isValidGuestName(customerName)) {
+          setCustomerAccountFeedback(
+            "error",
+            "الرجاء إدخال اسم صحيح مكوّن من حرفين على الأقل.",
+          );
+          nameInput?.focus();
+          return;
+        }
+
+        if (customerPhone.replace(/\D/g, "").length < 7) {
+          setCustomerAccountFeedback("error", "الرجاء إدخال رقم جوال صحيح.");
+          phoneInput?.focus();
+          return;
+        }
+
+        customerConversionSubmitting = true;
+        setCustomerAccountFeedback("", "");
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = "جاري الربط...";
+        }
+
+        try {
+          const { data, error } = await supabase.rpc(
+            "convert_guest_order_to_customer",
+            {
+              p_restaurant_id: MENU_RESTAURANT_ID,
+              p_order_id: lastPlacedOrderContext.orderId,
+              p_tracking_token: lastPlacedOrderContext.trackingToken,
+              p_customer_name: customerName,
+              p_customer_phone: customerPhone,
+            },
+          );
+          if (error) throw error;
+
+          const status = data?.status || "linked";
+          setCustomerAccountFeedback(
+            "success",
+            status === "already_linked"
+              ? "هذا الطلب مرتبط مسبقًا بحساب عميل."
+              : "تم إنشاء/تحديث حسابك وربط الطلب بنجاح.",
+          );
+
+          dismissPostOrderAccountCta();
+          rememberLoyaltyOrder(
+            lastPlacedOrderContext.orderId,
+            lastPlacedOrderContext.trackingToken,
+          );
+
+          setTimeout(() => {
+            closeCustomerAccountModal();
+          }, 900);
+        } catch (error) {
+          console.error("Customer conversion failed:", error);
+          setCustomerAccountFeedback(
+            "error",
+            "تعذر ربط الحساب الآن. يرجى المحاولة مرة أخرى.",
+          );
+        } finally {
+          customerConversionSubmitting = false;
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "ربط الطلب بالحساب";
+          }
+        }
+      }
+
+      /* Loyalty summary (all numbers and levels come from the server) */
+      function getLoyaltyStorageKey() {
+        return `Mersalak_LoyaltyOrder_${MENU_RESTAURANT_ID}`;
+      }
+
+      function rememberLoyaltyOrder(orderId, trackingToken) {
+        if (!orderId || !trackingToken || !MENU_RESTAURANT_ID) return;
+        try {
+          localStorage.setItem(getLoyaltyStorageKey(), orderId);
+          localStorage.setItem(getLoyaltyTrackingTokenKey(), trackingToken);
+        } catch (_) {}
+        refreshLoyaltyButton();
+      }
+
+      function refreshLoyaltyButton() {
+        const button = document.getElementById("loyalty-open-btn");
+        if (!button || !MENU_RESTAURANT_ID) return;
+        let stored = null;
+        try {
+          stored = localStorage.getItem(getLoyaltyStorageKey());
+        } catch (_) {}
+        button.classList.toggle(
+          "hidden",
+          !stored || !getCustomerTrackingToken(stored),
+        );
+      }
+
+      function closeLoyaltyModal() {
+        document
+          .getElementById("loyalty-modal")
+          ?.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      async function openLoyaltyModal() {
+        const sessionToken = getCustomerSessionToken();
+        if (!window.supabase) return;
+        if (sessionToken) {
+          const modal = document.getElementById("loyalty-modal");
+          const loading = document.getElementById("loyalty-loading");
+          const errorEl = document.getElementById("loyalty-error");
+          const unlinked = document.getElementById("loyalty-unlinked");
+          const content = document.getElementById("loyalty-content");
+          loading?.classList.remove("hidden");
+          errorEl?.classList.add("hidden");
+          unlinked?.classList.add("hidden");
+          content?.classList.add("hidden");
+          modal?.classList.remove("opacity-0", "pointer-events-none");
+          try {
+            const { data, error } = await supabase.rpc(
+              "get_customer_profile_by_session",
+              {
+                p_restaurant_id: MENU_RESTAURANT_ID,
+                p_session_token: sessionToken,
+              },
+            );
+            if (error || !data?.authenticated)
+              throw error || new Error("session_invalid");
+            customerSessionDisplayName =
+              data.customer?.displayName || customerSessionDisplayName;
+            updateCustomerSessionButton();
+            renderCustomerProfile(data);
+            loading?.classList.add("hidden");
+            content?.classList.remove("hidden");
+          } catch (_) {
+            loading?.classList.add("hidden");
+            errorEl?.classList.remove("hidden");
+          }
+          return;
+        }
+        let orderId = null;
+        try {
+          orderId = localStorage.getItem(getLoyaltyStorageKey());
+        } catch (_) {}
+        if (!orderId || !window.supabase) return;
+        const trackingToken = getCustomerTrackingToken(orderId);
+        if (!trackingToken) return;
+
+        const modal = document.getElementById("loyalty-modal");
+        const loading = document.getElementById("loyalty-loading");
+        const errorEl = document.getElementById("loyalty-error");
+        const unlinked = document.getElementById("loyalty-unlinked");
+        const content = document.getElementById("loyalty-content");
+        loading?.classList.remove("hidden");
+        errorEl?.classList.add("hidden");
+        unlinked?.classList.add("hidden");
+        content?.classList.add("hidden");
+        modal?.classList.remove("opacity-0", "pointer-events-none");
+
+        try {
+          const { data, error } = await supabase.rpc("get_customer_profile", {
+            p_restaurant_id: MENU_RESTAURANT_ID,
+            p_order_id: orderId,
+            p_tracking_token: trackingToken,
+          });
+          if (error) throw error;
+          if (!data?.linked) {
+            loading?.classList.add("hidden");
+            unlinked?.classList.remove("hidden");
+            return;
+          }
+          renderCustomerProfile(data);
+          loading?.classList.add("hidden");
+          content?.classList.remove("hidden");
+        } catch (error) {
+          console.error("Customer profile failed:", error);
+          loading?.classList.add("hidden");
+          errorEl?.classList.remove("hidden");
+        }
+      }
+
+      function formatProfileNumber(value) {
+        return Number(value ?? 0).toLocaleString("ar");
+      }
+
+      function formatProfileDate(value) {
+        if (!value) return "—";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "—";
+        return date.toLocaleDateString("ar", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+
+      function profileStatusLabel(status) {
+        return (
+          {
+            new: "جديد",
+            accepted: "تم القبول",
+            preparing: "قيد التحضير",
+            ready: "جاهز",
+            served: "مكتمل",
+            cancelled: "ملغى",
+          }[status] ||
+          status ||
+          "—"
+        );
+      }
+
+      function createProfileIcon(name) {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("class", "lp-svg");
+        svg.setAttribute("aria-hidden", "true");
+        svg.setAttribute("focusable", "false");
+        const use = document.createElementNS(ns, "use");
+        use.setAttribute("href", `#${name}`);
+        svg.appendChild(use);
+        return svg;
+      }
+
+      function profileLevelIconName(raw) {
+        const v = String(raw || "");
+        if (/👑/.test(v)) return "crown";
+        if (/💎/.test(v)) return "gem";
+        if (/🔥/.test(v)) return "flame";
+        if (/🏆/.test(v)) return "trophy";
+        if (/[⭐🌟✨]/.test(v)) return "star";
+        return "award";
+      }
+
+      function appendProfileActivity(list, item) {
+        const labels = {
+          completed_order: ["receipt-text", "طلب مكتمل"],
+          loyalty_transaction: ["sparkles", "نشاط الولاء"],
+          mission_completed: ["target", "مهمة مكتملة"],
+          reward_redeemed: ["gift", "مكافأة مستبدلة"],
+        };
+        const [icon, labelText] = labels[item?.type] || ["info", "نشاط"];
+        const row = document.createElement("li");
+        row.className = "lp-row lp-act";
+
+        const ico = document.createElement("span");
+        ico.className = "lp-act-ico";
+        ico.setAttribute("aria-hidden", "true");
+        ico.appendChild(createProfileIcon(icon));
+
+        const body = document.createElement("div");
+        body.className = "lp-act-body";
+        const top = document.createElement("div");
+        top.className = "lp-act-top";
+        const title = document.createElement("strong");
+        title.className = "lp-act-title";
+        title.textContent = labelText;
+        const date = document.createElement("span");
+        date.className = "lp-act-date";
+        date.textContent = formatProfileDate(item?.createdAt);
+        top.append(title, date);
+        body.appendChild(top);
+
+        const description = document.createElement("span");
+        description.className = "lp-act-desc";
+        if (item?.type === "loyalty_transaction") {
+          description.textContent = item.reason || "تحديث رصيد الولاء";
+        } else if (item?.type === "mission_completed") {
+          description.textContent = item.missionTitle || "تم إكمال المهمة";
+        } else if (item?.type === "reward_redeemed") {
+          description.textContent = item.rewardName || "تم استبدال المكافأة";
+        } else if (item?.type === "completed_order") {
+          description.textContent =
+            item.total == null
+              ? "تم إكمال الطلب"
+              : `الإجمالي ${formatProfileNumber(item.total)}`;
+        }
+        body.appendChild(description);
+
+        row.append(ico, body);
+        list.appendChild(row);
+      }
+
+      function renderCustomerProfile(profile) {
+        const setText = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = value;
+        };
+
+        const customer = profile.customer || {};
+        const level = customer.level || {};
+        const nextLevel = customer.nextLevel || {};
+        const progress = customer.levelProgress || {};
+        const stats = profile.stats || {};
+        const missions = profile.missions || {};
+        const rewards = profile.rewards || {};
+
+        setText("profile-name", customer.displayName || "");
+        const levelBadgeEl = document.getElementById("profile-level-badge");
+        if (levelBadgeEl)
+          levelBadgeEl.replaceChildren(
+            createProfileIcon(profileLevelIconName(level.badge)),
+          );
+        setText("profile-level-name", level.name || "—");
+        setText("profile-xp", `${formatProfileNumber(customer.xp)} XP`);
+        setText("profile-points", formatProfileNumber(customer.points));
+        setText(
+          "profile-lifetime-points",
+          formatProfileNumber(customer.lifetimePoints),
+        );
+        setText("profile-current-level", `${level.name || "—"}`);
+        setText("profile-next-level", `${nextLevel.name || "—"}`);
+        setText(
+          "profile-progress-percent",
+          `${formatProfileNumber(progress.percent)}%`,
+        );
+        setText(
+          "profile-xp-into-level",
+          `${formatProfileNumber(progress.xpIntoLevel)} XP في المستوى`,
+        );
+        setText(
+          "profile-xp-to-next",
+          nextLevel.name
+            ? `${formatProfileNumber(progress.xpToNextLevel)} XP للمستوى التالي`
+            : "أعلى مستوى",
+        );
+        setText(
+          "profile-completed-orders",
+          formatProfileNumber(stats.completedOrders),
+        );
+        setText(
+          "profile-total-spending",
+          formatProfileNumber(stats.totalSpending),
+        );
+        setText(
+          "profile-missions-summary",
+          `${formatProfileNumber(missions.active)} نشطة · ${formatProfileNumber(missions.completed)} مكتملة`,
+        );
+        setText(
+          "profile-rewards-summary",
+          `${formatProfileNumber(rewards.available)} متاحة · ${formatProfileNumber(rewards.redeemed)} مستبدلة`,
+        );
+
+        const bar = document.getElementById("profile-progress-bar");
+        if (bar) bar.style.width = `${progress.percent ?? 0}%`;
+
+        const orders = Array.isArray(profile.recentOrders)
+          ? profile.recentOrders
+          : [];
+        const ordersList = document.getElementById("profile-orders");
+        const ordersEmpty = document.getElementById("profile-orders-empty");
+        if (ordersList) {
+          ordersList.replaceChildren();
+          orders.forEach((order) => {
+            const row = document.createElement("li");
+            row.className = "lp-row";
+            const info = document.createElement("div");
+            info.className = "lp-row-main";
+            const dateEl = document.createElement("span");
+            dateEl.textContent = formatProfileDate(order.created_at);
+            const pill = document.createElement("span");
+            pill.className = "lp-pill";
+            pill.dataset.s = order.status || "";
+            pill.textContent = profileStatusLabel(order.status);
+            info.append(dateEl, pill);
+            const total = document.createElement("strong");
+            total.className = "lp-row-total";
+            total.textContent = formatProfileNumber(order.total);
+            row.append(info, total);
+            ordersList.appendChild(row);
+          });
+        }
+        ordersEmpty?.classList.toggle("hidden", orders.length > 0);
+
+        const activity = Array.isArray(profile.recentActivity)
+          ? profile.recentActivity
+          : [];
+        const activityList = document.getElementById("profile-activity");
+        const activityEmpty = document.getElementById("profile-activity-empty");
+        if (activityList) {
+          activityList.replaceChildren();
+          activity.forEach((item) => appendProfileActivity(activityList, item));
+        }
+        activityEmpty?.classList.toggle("hidden", activity.length > 0);
       }
 
       /* Theme Toggle */
@@ -4027,6 +8136,8 @@
 
         try {
           await resolveMenuRestaurantBySlug();
+          if (await enforceOrderingAccess()) return;
+          await restoreCustomerSession();
 
           // استخدم الكاش فورًا، ثم اجلب branding + menu بالتوازي.
           updateRestaurantBrandName(getCachedRestaurantName());
@@ -4049,6 +8160,8 @@
           renderDishes();
 
           subscribeToMenuChanges();
+          refreshLoyaltyButton();
+          refreshOrderTrackingButton();
           document.body.classList.remove("menu-data-loading");
         } catch (error) {
           console.error("Failed to load menu from Supabase:", error);

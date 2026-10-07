@@ -1,5 +1,14 @@
 /* ═══ AdminDashboard-Specific Styles ═══ */
 
+/* Loyalty tables use the same compact icon actions as the rest of the system. */
+.loyalty-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    white-space: nowrap;
+}
+
 @font-face {
     font-family: "MazaqMenuTelma";
     src: url("/FontMenu/Telma_Complete/Fonts/WEB/fonts/Telma-Variable.woff2") format("woff2");

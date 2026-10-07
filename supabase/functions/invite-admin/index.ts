@@ -46,7 +46,7 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    if (!["starter", "professional", "enterprise"].includes(plan)) {
+    if (!["starter", "professional", "business", "enterprise"].includes(plan)) {
       return new Response(JSON.stringify({ error: "الخطة المحددة غير صالحة." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
