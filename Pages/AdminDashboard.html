@@ -25,7 +25,7 @@
     />
     <link
       rel="stylesheet"
-      href="../css/pages/admin.css?v=20261012-payment-confirm-modal"
+      href="../css/pages/admin.css?v=20261012-invoice-back-button-right"
     />
     <link rel="stylesheet" href="../css/components/feature-gates.css" />
 
@@ -6663,12 +6663,13 @@
                   class="btn-secondary"
                   type="button"
                 >
+                  العودة إلى الفواتير
+
                   <i
                     data-lucide="arrow-right"
                     class="lucide-icon"
                     aria-hidden="true"
                   ></i>
-                  العودة إلى الفواتير
                 </button>
                 <span
                   id="invoiceDetailStatus"
@@ -6685,9 +6686,31 @@
                 hidden
               ></div>
               <div id="invoiceDetailContent" class="invoice-detail-grid" hidden>
+                <article
+                  class="invoice-paper"
+                  id="invoiceDetailPaper"
+                ></article>
                 <aside class="invoice-side-panel">
+                  <div class="invoice-meta-panel">
+                    <h3>
+                      <i
+                        data-lucide="credit-card"
+                        class="lucide-icon"
+                        aria-hidden="true"
+                      ></i>
+                      معلومات الدفع
+                    </h3>
+                    <div id="invoicePaymentMeta"></div>
+                  </div>
                   <div class="invoice-actions-panel">
-                    <h3>إجراءات الفاتورة</h3>
+                    <h3>
+                      <i
+                        data-lucide="settings-2"
+                        class="lucide-icon"
+                        aria-hidden="true"
+                      ></i>
+                      إجراءات الفاتورة
+                    </h3>
                     <button
                       id="invoiceReprintBtn"
                       class="button-primary"
@@ -6731,18 +6754,17 @@
                     ></div>
                   </div>
                   <div class="invoice-meta-panel">
-                    <h3>معلومات الدفع</h3>
-                    <div id="invoicePaymentMeta"></div>
-                  </div>
-                  <div class="invoice-meta-panel">
-                    <h3>معلومات إضافية</h3>
+                    <h3>
+                      <i
+                        data-lucide="info"
+                        class="lucide-icon"
+                        aria-hidden="true"
+                      ></i>
+                      معلومات إضافية
+                    </h3>
                     <div id="invoiceOrderMeta"></div>
                   </div>
                 </aside>
-                <article
-                  class="invoice-paper"
-                  id="invoiceDetailPaper"
-                ></article>
               </div>
             </div>
           </div>
@@ -12540,7 +12562,11 @@
         >
           <i data-lucide="x" class="lucide-icon" aria-hidden="true"></i>
         </button>
-        <div id="paymentConfirmIcon" class="payment-confirm-icon" aria-hidden="true">
+        <div
+          id="paymentConfirmIcon"
+          class="payment-confirm-icon"
+          aria-hidden="true"
+        >
           <i data-lucide="wallet" class="lucide-icon"></i>
         </div>
         <h3 id="paymentConfirmTitle">تأكيد الدفع</h3>
@@ -18129,25 +18155,27 @@
 
         function orderActionsHTML(o) {
           const defs = getOrdersPageActions(o.status);
-          return defs
-            .map(function (a) {
-              return (
-                '<button class="order-action-btn ' +
-                a.cls +
-                '" data-act="' +
-                a.to +
-                '" data-id="' +
-                o.id +
-                '" data-tooltip="' +
-                a.label +
-                '" title="' +
-                a.label +
-                '">' +
-                window.lucideIcon(a.icon) +
-                "</button>"
-              );
-            })
-            .join("") + orderPaymentListActionHTML(o, false);
+          return (
+            defs
+              .map(function (a) {
+                return (
+                  '<button class="order-action-btn ' +
+                  a.cls +
+                  '" data-act="' +
+                  a.to +
+                  '" data-id="' +
+                  o.id +
+                  '" data-tooltip="' +
+                  a.label +
+                  '" title="' +
+                  a.label +
+                  '">' +
+                  window.lucideIcon(a.icon) +
+                  "</button>"
+                );
+              })
+              .join("") + orderPaymentListActionHTML(o, false)
+          );
         }
 
         function orderPaymentListActionHTML(order, isMobile) {
@@ -18698,7 +18726,7 @@
                 String(o.payment_proof_data).replace(/"/g, "&quot;") +
                 '"><i data-lucide="image" class="lucide-icon"></i>عرض إشعار الدفع</button>'
               : "") +
-            '<span>حالة الدفع: <strong>' +
+            "<span>حالة الدفع: <strong>" +
             (paymentStatusLabels[o.payment_status] || "غير محددة") +
             "</strong></span>" +
             paymentActions +
@@ -18791,8 +18819,7 @@
                 "اعتماد الدفع الإلكتروني",
                 "verified",
                 "is-payment-confirm",
-              ) +
-              button("رفض إثبات الدفع", "rejected", "is-payment-reject")
+              ) + button("رفض إثبات الدفع", "rejected", "is-payment-reject")
             );
           }
           return "";
@@ -21352,7 +21379,15 @@ body{font-family:Tahoma,Arial,sans-serif}
           }
         }
 
-        function invoiceMetaRow(label, value) {
+        function invoiceIcon(name) {
+          const icon = document.createElement("i");
+          icon.setAttribute("data-lucide", name);
+          icon.className = "lucide-icon";
+          icon.setAttribute("aria-hidden", "true");
+          return icon;
+        }
+
+        function invoiceMetaRow(label, value, iconName, tone) {
           if (
             value === null ||
             value === undefined ||
@@ -21360,9 +21395,18 @@ body{font-family:Tahoma,Arial,sans-serif}
           )
             return null;
           const row = document.createElement("div");
-          row.className = "invoice-meta-row";
+          row.className = "invoice-meta-row" + (tone ? " is-" + tone : "");
           const caption = document.createElement("span");
-          caption.textContent = label;
+          caption.className = "invoice-meta-key";
+          if (iconName) {
+            const tile = document.createElement("span");
+            tile.className = "invoice-meta-icon";
+            tile.appendChild(invoiceIcon(iconName));
+            caption.appendChild(tile);
+          }
+          const captionText = document.createElement("span");
+          captionText.textContent = label;
+          caption.appendChild(captionText);
           const valueNode = document.createElement("strong");
           valueNode.textContent = String(value);
           row.append(caption, valueNode);
@@ -21372,7 +21416,7 @@ body{font-family:Tahoma,Arial,sans-serif}
         function appendInvoiceMeta(target, fields) {
           target.replaceChildren();
           fields.forEach(function (field) {
-            const row = invoiceMetaRow(field[0], field[1]);
+            const row = invoiceMetaRow(field[0], field[1], field[2], field[3]);
             if (row) target.appendChild(row);
           });
         }
@@ -21403,7 +21447,16 @@ body{font-family:Tahoma,Arial,sans-serif}
           const status = invoicePaymentState(order);
           const statusBadge = document.getElementById("invoiceDetailStatus");
           statusBadge.className = `invoice-status-badge ${status.className}`;
-          statusBadge.textContent = status.label;
+          const statusIcons = {
+            "is-paid": "circle-check",
+            "is-pending": "clock",
+            "is-unpaid": "circle-alert",
+            "is-cancelled": "ban",
+          };
+          statusBadge.replaceChildren(
+            invoiceIcon(statusIcons[status.className] || "circle"),
+            document.createTextNode(status.label),
+          );
 
           const paper = document.getElementById("invoiceDetailPaper");
           const itemRows = selectedInvoice.items
@@ -21411,7 +21464,7 @@ body{font-family:Tahoma,Arial,sans-serif}
               const quantity = Number(item.quantity) || 0;
               const unitCents = invoiceAmountCents(item.unit_price);
               const lineCents = unitCents * quantity;
-              return `<tr><td>${index + 1}</td><td>${escapeInvoiceText(item.item_name || "صنف")}</td><td dir="ltr">${quantity}</td><td dir="ltr">${formatInvoiceAmount(unitCents, true)}</td><td dir="ltr"><strong>${formatInvoiceAmount(lineCents, true)}</strong></td></tr>`;
+              return `<tr><td><div class="inv-item"><span class="inv-item-thumb"><i data-lucide="utensils" class="lucide-icon" aria-hidden="true"></i></span><span class="inv-item-name">${escapeInvoiceText(item.item_name || "صنف")}</span></div></td><td dir="ltr">${quantity}</td><td dir="ltr">${formatInvoiceAmount(unitCents, true)}</td><td dir="ltr"><strong>${formatInvoiceAmount(lineCents, true)}</strong></td></tr>`;
             })
             .join("");
           const subtotalCents = selectedInvoice.items.reduce(function (
@@ -21432,13 +21485,52 @@ body{font-family:Tahoma,Arial,sans-serif}
           const outstandingCents = Math.max(0, totalCents - paidCents);
           const itemContent =
             itemRows ||
-            '<tr><td colspan="5">تفاصيل الأصناف غير متاحة لهذا الطلب.</td></tr>';
+            '<tr><td colspan="4" class="inv-empty">تفاصيل الأصناف غير متاحة لهذا الطلب.</td></tr>';
+          // الخصم والضريبة: تُقرأ من الطلب إن وُجدت، وإلا يُشتق الخصم من الفرق.
+          const taxCents = invoiceAmountCents(
+            order.tax_amount ?? order.tax ?? 0,
+          );
+          const explicitDiscount = order.discount_amount ?? order.discount;
+          const discountCents =
+            explicitDiscount !== undefined && explicitDiscount !== null
+              ? invoiceAmountCents(explicitDiscount)
+              : Math.max(0, subtotalCents + taxCents - totalCents);
+          const sumRow = function (label, cents) {
+            return `<div class="inv-sum-row"><span>${label}</span><strong dir="ltr">${formatInvoiceAmount(cents, true)}</strong></div>`;
+          };
+          const tableLabel = selectedInvoice.restaurant_tables
+            ? `${table.name}${table.code ? ` - ${table.code}` : ""}`
+            : "خارج الطاولة";
+          const factCell = function (icon, label, value, ltr) {
+            return `<div class="inv-fact"><span class="inv-fact-icon"><i data-lucide="${icon}" class="lucide-icon" aria-hidden="true"></i></span><div><span class="inv-fact-label">${label}</span><strong${ltr ? ' dir="ltr"' : ""}>${value}</strong></div></div>`;
+          };
 
           paper.innerHTML =
-            `<header class="invoice-paper-head"><div><h2 class="invoice-brand-name">${escapeInvoiceText(brand.name || "المطعم")}</h2><div class="invoice-brand-contact">${[brand.address, brand.phone].filter(Boolean).map(escapeInvoiceText).join(" · ")}</div></div><div class="invoice-paper-number"><span>رقم الفاتورة</span><strong>${selectedInvoice.invoiceNumber}</strong></div></header>` +
-            `<div class="invoice-paper-meta"><div><span>رقم الطلب</span><strong dir="ltr">#${escapeInvoiceText(order.order_number)}</strong></div><div><span>${invoiceDateLabel}</span><strong>${escapeInvoiceText(formatInvoiceDate(invoiceDate, true))}</strong></div><div><span>الطاولة</span><strong>${escapeInvoiceText(selectedInvoice.restaurant_tables ? `${table.name}${table.code ? ` · ${table.code}` : ""}` : "خارج الطاولة")}</strong></div><div><span>نوع الطلب</span><strong>${selectedInvoice.restaurant_tables ? "طلب طاولة" : "طلب خارج الطاولة"}</strong></div></div>` +
-            `<div class="invoice-items-wrap"><table class="invoice-items-table"><thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>${itemContent}</tbody></table></div>` +
-            `<div class="invoice-totals"><div class="invoice-total-row"><span>مجموع الأصناف حسب الأسعار المسجلة</span><strong>${formatInvoiceAmount(subtotalCents, true)}</strong></div><div class="invoice-total-row"><span>المبلغ المدفوع</span><strong>${formatInvoiceAmount(paidCents, true)}</strong></div><div class="invoice-total-row"><span>المتبقي</span><strong>${formatInvoiceAmount(outstandingCents, true)}</strong></div><div class="invoice-total-row is-grand"><span>الإجمالي النهائي</span><strong>${formatInvoiceAmount(totalCents, true)}</strong></div></div>` +
+            `<header class="inv-head"><div class="inv-brand"><span class="inv-brand-mark"><i data-lucide="store" class="lucide-icon" aria-hidden="true"></i></span><div><h2 class="inv-brand-name">${escapeInvoiceText(brand.name || "المطعم")}</h2><div class="inv-brand-contact">${[brand.address, brand.phone].filter(Boolean).map(escapeInvoiceText).join(" · ") || "المطعم"}</div></div></div><div class="inv-number"><span>رقم الفاتورة</span><strong dir="ltr"># ${escapeInvoiceText(selectedInvoice.invoiceNumber)}</strong></div></header>` +
+            `<div class="inv-facts">` +
+            factCell(
+              "shopping-basket",
+              "رقم الطلب",
+              `#${escapeInvoiceText(order.order_number)}`,
+              true,
+            ) +
+            factCell(
+              "calendar-days",
+              escapeInvoiceText(invoiceDateLabel),
+              escapeInvoiceText(formatInvoiceDate(invoiceDate, true)),
+            ) +
+            factCell("armchair", "رقم الطاولة", escapeInvoiceText(tableLabel)) +
+            factCell(
+              "utensils-crossed",
+              "نوع الطلب",
+              selectedInvoice.restaurant_tables
+                ? "طلب طاولة"
+                : "طلب خارج الطاولة",
+            ) +
+            `</div>` +
+            `<div class="inv-lines"><table class="inv-lines-table"><thead><tr><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>${itemContent}</tbody></table></div>` +
+            `<div class="inv-sums">${sumRow("المجموع الفرعي", subtotalCents)}${sumRow("الخصم", discountCents)}${sumRow("الضريبة", taxCents)}</div>` +
+            `<div class="inv-grand"><span class="inv-grand-label"><i data-lucide="coins" class="lucide-icon" aria-hidden="true"></i>الإجمالي النهائي</span><strong dir="ltr">${formatInvoiceAmount(totalCents, true)}</strong></div>` +
             (order.notes
               ? `<p class="invoice-paper-notes"><strong>ملاحظات الطلب:</strong> ${escapeInvoiceText(order.notes)}</p>`
               : "");
@@ -21455,27 +21547,43 @@ body{font-family:Tahoma,Arial,sans-serif}
             rejected: "تم رفض الدفع",
           };
           appendInvoiceMeta(document.getElementById("invoicePaymentMeta"), [
-            ["طريقة الدفع", methodLabels[order.payment_method] || null],
+            [
+              "طريقة الدفع",
+              methodLabels[order.payment_method] || null,
+              "banknote",
+            ],
             [
               "حالة الدفع",
               paymentLabels[order.payment_status] ||
                 (order.payment_method === "points" ? "مدفوعة بالنقاط" : null),
+              "circle-check",
+              order.payment_status === "verified" ||
+              order.payment_method === "points"
+                ? "success"
+                : order.payment_status === "rejected"
+                  ? "danger"
+                  : "warn",
             ],
-            ["مزود الدفع", order.payment_provider || null],
-            ["المبلغ المدفوع", formatInvoiceAmount(paidCents, true)],
-            ["المبلغ المتبقي", formatInvoiceAmount(outstandingCents, true)],
+            ["مزود الدفع", order.payment_provider || null, "landmark"],
+            ["المبلغ المدفوع", formatInvoiceAmount(paidCents, true), "coins"],
+            [
+              "المبلغ المتبقي",
+              formatInvoiceAmount(outstandingCents, true),
+              "wallet",
+            ],
           ]);
           renderInvoicePaymentActions(order);
           appendInvoiceMeta(document.getElementById("invoiceOrderMeta"), [
-            ["رقم الفاتورة", selectedInvoice.invoiceNumber],
-            ["رقم الطلب", `#${order.order_number}`],
-            ["العميل", order.customer_name || null],
-            ["هاتف العميل", order.customer_phone || null],
+            ["رقم الفاتورة", selectedInvoice.invoiceNumber, "receipt"],
+            ["رقم الطلب", `#${order.order_number}`, "hash"],
+            ["العميل", order.customer_name || null, "user-round"],
+            ["هاتف العميل", order.customer_phone || null, "phone"],
             [
               "الطاولة",
               selectedInvoice.restaurant_tables
                 ? `${table.name}${table.code ? ` · ${table.code}` : ""}`
                 : "خارج الطاولة",
+              "armchair",
             ],
             [
               "حالة الطلب",
@@ -21484,6 +21592,7 @@ body{font-family:Tahoma,Arial,sans-serif}
                 : order.status === "served"
                   ? "تم التقديم"
                   : order.status,
+              "clipboard-check",
             ],
           ]);
         }
@@ -21559,8 +21668,7 @@ body{font-family:Tahoma,Arial,sans-serif}
           const order =
             orders.find(function (entry) {
               return entry.id === orderId;
-            }) ||
-            (selectedInvoice?.id === orderId ? selectedInvoice : null);
+            }) || (selectedInvoice?.id === orderId ? selectedInvoice : null);
           if (!order) return;
           if (!isOrderPaymentEligible(order)) {
             Notifications.warning(
@@ -21571,8 +21679,7 @@ body{font-family:Tahoma,Arial,sans-serif}
           }
           if (
             !["verified", "rejected"].includes(targetStatus) ||
-            (targetStatus === "verified" &&
-              order.payment_status === "verified")
+            (targetStatus === "verified" && order.payment_status === "verified")
           ) {
             return;
           }
@@ -21600,9 +21707,7 @@ body{font-family:Tahoma,Arial,sans-serif}
           const total = Number(order.total);
           document.getElementById("paymentConfirmAmount").textContent =
             formatInvoiceAmount(
-              Number.isFinite(total) && total > 0
-                ? total
-                : orderTotal(order),
+              Number.isFinite(total) && total > 0 ? total : orderTotal(order),
             );
           document.getElementById("paymentConfirmSubmit").textContent =
             isVerifying ? "تأكيد استلام الدفع" : "تأكيد الرفض";
@@ -21617,9 +21722,7 @@ body{font-family:Tahoma,Arial,sans-serif}
           const pendingUpdate = pendingOrderPaymentUpdate;
           if (!pendingUpdate) return;
           const { orderId, targetStatus } = pendingUpdate;
-          const submitButton = document.getElementById(
-            "paymentConfirmSubmit",
-          );
+          const submitButton = document.getElementById("paymentConfirmSubmit");
           submitButton.disabled = true;
           submitButton.textContent = "جارٍ تحديث الدفع...";
           try {
@@ -21683,6 +21786,8 @@ body{font-family:Tahoma,Arial,sans-serif}
           }
           document.getElementById("invoiceListView").hidden = true;
           document.getElementById("invoiceDetailView").hidden = false;
+          document.getElementById("pageSubtitle").textContent =
+            "تفاصيل الفاتورة وإجراءاتها";
           document.getElementById("invoiceDetailLoading").hidden = false;
           document.getElementById("invoiceDetailError").hidden = true;
           document.getElementById("invoiceDetailContent").hidden = true;
@@ -21752,6 +21857,8 @@ body{font-family:Tahoma,Arial,sans-serif}
           selectedInvoice = null;
           document.getElementById("invoiceDetailView").hidden = true;
           document.getElementById("invoiceListView").hidden = false;
+          document.getElementById("pageSubtitle").textContent =
+            "استعراض الفواتير الصادرة وإعادة طباعتها";
           if (updateRoute && location.hash.startsWith("#invoice=")) {
             history.replaceState(
               null,
