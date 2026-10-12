@@ -1,5 +1,5 @@
-// Admin rewards: reward management, redemption history and staff code verification.
-// Eligibility, balances and code state are all decided server-side by Supabase RPCs.
+// Admin rewards: reward management and redemption history.
+// Eligibility and balances are decided server-side by Supabase RPCs.
 (function () {
     "use strict";
 
@@ -21,8 +21,6 @@
     let rewards = [];
     let menuItemsLoaded = false;
     let saving = false;
-    let verifying = false;
-    let using = false;
     let filterTimer = null;
 
     const byId = (id) => document.getElementById(id);
@@ -184,9 +182,18 @@
             phone.textContent = item.customerPhone || "";
             customer.appendChild(phone);
             cell(row, item.rewardName);
-            cell(row, item.code).dir = "ltr";
+            const orderCell = cell(
+                row,
+                item.orderNumber ? `#${item.orderNumber}` : "رمز قديم",
+            );
+            orderCell.dir = "ltr";
             cell(row, fmt(item.pointsCost));
-            cell(row, STATUS_LABELS[item.status] || item.status);
+            cell(
+                row,
+                item.orderNumber
+                    ? "طلب بالنقاط"
+                    : STATUS_LABELS[item.status] || item.status,
+            );
             cell(row, fmtDate(item.createdAt));
             cell(row, fmtDate(item.usedAt));
             cell(row, item.usedBy || "—");
@@ -350,98 +357,6 @@
         else if (window.confirm(message)) await run();
     }
 
-    // ------------------------------------------------------ code verification
-    function renderVerifyResult(result, code) {
-        const box = byId("rewardVerifyResult");
-        box.innerHTML = "";
-        box.hidden = false;
-
-        const heading = document.createElement("strong");
-        heading.style.display = "block";
-        heading.style.marginBottom = "8px";
-
-        if (!result.valid) {
-            heading.textContent = "❌ " + (ERROR_MESSAGES[result.reason] || "الرمز غير صالح.");
-            box.appendChild(heading);
-            if (result.redemption) box.appendChild(detailLines(result));
-            return;
-        }
-
-        heading.textContent = "✅ المكافأة صالحة";
-        box.appendChild(heading);
-        box.appendChild(detailLines(result));
-
-        const useBtn = document.createElement("button");
-        useBtn.type = "button";
-        useBtn.className = "button-primary";
-        useBtn.style.marginTop = "12px";
-        useBtn.textContent = "استخدام المكافأة";
-        useBtn.addEventListener("click", () => useCode(code, useBtn));
-        box.appendChild(useBtn);
-    }
-
-    function detailLines(result) {
-        const redemption = result.redemption;
-        const wrap = document.createElement("div");
-        wrap.style.display = "grid";
-        wrap.style.gap = "4px";
-        [
-            ["العميل", result.customerName || "—"],
-            ["المكافأة", redemption.rewardName],
-            ["الحالة", STATUS_LABELS[redemption.status] || redemption.status],
-            ["تنتهي", fmtDate(redemption.expiresAt)],
-        ].forEach(([label, value]) => {
-            const line = document.createElement("div");
-            line.textContent = `${label}: ${value}`;
-            wrap.appendChild(line);
-        });
-        return wrap;
-    }
-
-    async function verifyCode(event) {
-        event.preventDefault();
-        if (verifying) return;
-        const code = byId("rewardVerifyCode").value.trim();
-        if (!code) return;
-        verifying = true;
-        byId("rewardVerifyBtn").disabled = true;
-        try {
-            const { data, error } = await supabase.rpc("verify_reward_code", { p_code: code });
-            if (error) {
-                console.error(error);
-                if (showRewardsFeatureError(error)) return;
-                return notify("error", "خطأ", friendlyError(error));
-            }
-            renderVerifyResult(data, code);
-        } finally {
-            verifying = false;
-            byId("rewardVerifyBtn").disabled = false;
-        }
-    }
-
-    async function useCode(code, button) {
-        if (using) return;
-        using = true;
-        button.disabled = true;
-        try {
-            const { error } = await supabase.rpc("use_reward_code", { p_code: code });
-            const box = byId("rewardVerifyResult");
-            if (error) {
-                console.error(error);
-                if (!showRewardsFeatureError(error)) notify("error", "خطأ", friendlyError(error));
-                box.hidden = true;
-                return;
-            }
-            notify("success", "تم", "تم استخدام المكافأة.");
-            box.hidden = true;
-            byId("rewardVerifyCode").value = "";
-            await refreshAll();
-        } finally {
-            using = false;
-            button.disabled = false;
-        }
-    }
-
     function scheduleRedemptions() {
         clearTimeout(filterTimer);
         filterTimer = setTimeout(loadRedemptions, 250);
@@ -454,7 +369,6 @@
         byId("rewardCancel").addEventListener("click", closeForm);
         byId("rewardType").addEventListener("change", updateTypeFields);
         byId("rewardForm").addEventListener("submit", saveReward);
-        byId("rewardVerifyForm").addEventListener("submit", verifyCode);
         ["redemptionStatusFilter", "redemptionRewardFilter", "redemptionFrom", "redemptionTo"].forEach((id) =>
             byId(id).addEventListener("change", loadRedemptions));
         byId("redemptionSearch").addEventListener("input", scheduleRedemptions);

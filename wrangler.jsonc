@@ -1,11 +1,40 @@
+
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "rest",
   "main": "worker.js",
   "compatibility_date": "2026-10-01",
+
+  "routes": [
+    {
+      "pattern": "mersalak.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "app.mersalak.com",
+      "custom_domain": true
+    }
+  ],
+
+  "vars": {
+    "SUPABASE_URL": "https://iseiqumfkcqynihehzfy.supabase.co"
+  },
+
+ "r2_buckets": [
+  {
+    "binding": "MENU_IMAGES",
+    "bucket_name": "mersalak-menu-images",
+    "remote": true
+  }
+],
+
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "not_found_handling": "404-page"
-  }
+    "not_found_handling": "404-page",
+    "html_handling": "none"
+  },
+
+  "workers_dev": true,
+"preview_urls": true,
 }

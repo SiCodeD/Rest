@@ -15,6 +15,10 @@
   let total = 0;
   let loading = false;
   let searchTimer = null;
+  let activeProfileCustomerId = null;
+  let profileLoadToken = 0;
+  let selectedCustomerRating = 0;
+  let ratingSaving = false;
 
   function notify(kind, title, message) {
     if (window.Notifications && typeof Notifications[kind] === "function") Notifications[kind](title, message);
@@ -122,8 +126,14 @@
   function closeModal(id) { byId(id).classList.remove("open"); }
 
   async function openProfile(customerId) {
+    activeProfileCustomerId = customerId;
+    const loadToken = ++profileLoadToken;
     openModal("adminCustomerProfileModal");
-    if (window.FeatureGate && !(await window.FeatureGate.hasFeature("customer_profile"))) {
+    const profileEnabled =
+      !window.FeatureGate ||
+      (await window.FeatureGate.hasFeature("customer_profile"));
+    if (loadToken !== profileLoadToken) return;
+    if (!profileEnabled) {
       byId("adminCustomerProfileLoading").hidden = true;
       byId("adminCustomerProfileError").hidden = true;
       byId("adminCustomerProfileContent").hidden = false;
@@ -133,17 +143,146 @@
     byId("adminCustomerProfileLoading").hidden = false;
     byId("adminCustomerProfileError").hidden = true;
     byId("adminCustomerProfileContent").hidden = true;
-    const { data, error } = await supabase.rpc("admin_get_customer_profile", { p_customer_id: customerId });
-    if (error || !data) {
+    try {
+      const [profileResult, ratingResult] = await Promise.all([
+        supabase.rpc("admin_get_customer_profile", {
+          p_customer_id: customerId,
+        }),
+        supabase.rpc("admin_get_customer_restaurant_rating", {
+          p_customer_id: customerId,
+        }),
+      ]);
+      if (
+        loadToken !== profileLoadToken ||
+        activeProfileCustomerId !== customerId
+      ) return;
+      if (profileResult.error || !profileResult.data) {
+        throw profileResult.error || new Error("Customer profile not found");
+      }
+      renderProfile(profileResult.data);
+      if (ratingResult.error) {
+        console.error("Admin customer rating history load failed", ratingResult.error);
+        renderCustomerRestaurantRating(null);
+        setCustomerRatingMessage(
+          "تعذر تحميل سجل التقييمات. تحقق من تطبيق تحديث قاعدة البيانات ثم أعد المحاولة.",
+          true,
+        );
+      } else {
+        renderCustomerRestaurantRating(ratingResult.data);
+      }
+      byId("adminCustomerProfileLoading").hidden = true;
+      byId("adminCustomerProfileContent").hidden = false;
+    } catch (error) {
+      if (
+        loadToken !== profileLoadToken ||
+        activeProfileCustomerId !== customerId
+      ) return;
       console.error("Admin customer profile load failed", error);
       byId("adminCustomerProfileLoading").hidden = true;
       byId("adminCustomerProfileError").hidden = false;
-      if (error && showCustomerError(error, byId("adminCustomerProfileError"))) return;
-      return;
+      if (!showCustomerError(error, byId("adminCustomerProfileError"))) {
+        byId("adminCustomerProfileError").textContent =
+          "تعذر تحميل ملف العميل وتقييم المطعم. حاول مرة أخرى.";
+        notify("error", "خطأ", "تعذر تحميل ملف العميل.");
+      }
     }
-    renderProfile(data);
-    byId("adminCustomerProfileLoading").hidden = true;
-    byId("adminCustomerProfileContent").hidden = false;
+  }
+
+  function renderCustomerRestaurantRating(rating) {
+    selectedCustomerRating = Number(rating?.rating) || 0;
+    byId("adminCustomerRatingNote").value = "";
+    document.querySelectorAll("[data-customer-rating]").forEach((button) => {
+      const value = Number(button.dataset.customerRating);
+      const selected = value <= selectedCustomerRating;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-pressed", String(value === selectedCustomerRating));
+    });
+
+    const meta = byId("adminCustomerRatingMeta");
+    meta.textContent = rating?.rating
+      ? `أحدث تقييم: ${rating.rating} من 5${rating.ratedAt ? ` · ${date(rating.ratedAt)}` : ""}`
+      : "لم يقيّم المطعم هذا العميل بعد.";
+    byId("adminCustomerRatingSave").disabled = !selectedCustomerRating || ratingSaving;
+    renderCustomerRatingHistory(rating?.history);
+    setCustomerRatingMessage("");
+  }
+
+  function renderCustomerRatingHistory(history) {
+    const list = byId("adminCustomerRatingHistory");
+    const empty = byId("adminCustomerRatingHistoryEmpty");
+    list.replaceChildren();
+    const entries = Array.isArray(history) ? history : [];
+    entries.forEach((entry) => {
+      const item = document.createElement("li");
+      item.className = "cpm-rating-history-item";
+
+      const stars = document.createElement("span");
+      stars.className = "cpm-rating-history-stars";
+      stars.setAttribute("aria-label", `التقييم ${entry.rating} من 5`);
+      stars.textContent = `${"★".repeat(Number(entry.rating) || 0)}${"☆".repeat(5 - (Number(entry.rating) || 0))}`;
+
+      const ratedAt = document.createElement("span");
+      ratedAt.textContent = date(entry.ratedAt);
+
+      const details = document.createElement("span");
+      details.textContent = [
+        entry.ratedBy || "المطعم",
+        entry.note || "بدون ملاحظة",
+      ].join(" · ");
+
+      item.append(stars, ratedAt, details);
+      list.appendChild(item);
+    });
+    empty.hidden = entries.length > 0;
+    list.hidden = entries.length === 0;
+  }
+
+  function setCustomerRatingMessage(message, isError) {
+    const node = byId("adminCustomerRatingMessage");
+    node.textContent = message;
+    node.hidden = !message;
+    node.classList.toggle("is-error", Boolean(isError));
+  }
+
+  async function saveCustomerRating() {
+    if (!activeProfileCustomerId || !selectedCustomerRating || ratingSaving) return;
+    const customerId = activeProfileCustomerId;
+    ratingSaving = true;
+    const button = byId("adminCustomerRatingSave");
+    button.disabled = true;
+    button.textContent = "جاري الحفظ...";
+    setCustomerRatingMessage("");
+    try {
+      const { data, error } = await supabase.rpc(
+        "admin_save_customer_restaurant_rating",
+        {
+          p_customer_id: customerId,
+          p_rating: selectedCustomerRating,
+          p_note: byId("adminCustomerRatingNote").value,
+        },
+      );
+      if (error) throw error;
+      if (activeProfileCustomerId === customerId) {
+        renderCustomerRestaurantRating(data);
+      }
+      notify("success", "تم الحفظ", "تمت إضافة التقييم إلى السجل وسيظهر أحدث تقييم في ملف العميل.");
+    } catch (error) {
+      console.error("Customer restaurant rating save failed", error);
+      if (activeProfileCustomerId !== customerId) return;
+      const message = String(error?.message || "").includes("Customer profile")
+        ? CUSTOMER_PROFILE_MESSAGE
+        : "تعذر حفظ تقييم العميل. حاول مرة أخرى.";
+      setCustomerRatingMessage(message, true);
+      if (String(error?.message || "").includes("Customer profile")) {
+        notify("error", CUSTOMER_MANAGEMENT_TITLE, message);
+      } else {
+        notify("error", "خطأ", message);
+      }
+    } finally {
+      ratingSaving = false;
+      button.disabled = !selectedCustomerRating;
+      button.textContent = "إضافة تقييم";
+    }
   }
 
   function renderProfile(data) {
@@ -213,10 +352,57 @@
     byId("customersRefreshBtn").addEventListener("click", () => loadCustomers(false));
     byId("customersPrevBtn").addEventListener("click", () => { if (page > 0) { page -= 1; loadCustomers(false); } });
     byId("customersNextBtn").addEventListener("click", () => { if ((page + 1) * pageSize < total) { page += 1; loadCustomers(false); } });
-    byId("adminCustomerProfileClose").addEventListener("click", () => closeModal("adminCustomerProfileModal"));
+    byId("adminCustomerProfileClose").addEventListener("click", closeCustomerProfile);
+    document.querySelectorAll("[data-customer-rating]").forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedCustomerRating = Number(button.dataset.customerRating);
+        document.querySelectorAll("[data-customer-rating]").forEach((star) => {
+          const value = Number(star.dataset.customerRating);
+          star.classList.toggle("is-selected", value <= selectedCustomerRating);
+          star.setAttribute(
+            "aria-pressed",
+            String(value === selectedCustomerRating),
+          );
+        });
+        byId("adminCustomerRatingSave").disabled = ratingSaving;
+        setCustomerRatingMessage("");
+      });
+    });
+    byId("adminCustomerRatingSave").addEventListener("click", saveCustomerRating);
+    byId("adminCustomerManagePoints").addEventListener("click", () => {
+      if (!activeProfileCustomerId) return;
+      if (window.LoyaltyAdmin?.managePointsForCustomer) {
+        window.LoyaltyAdmin.managePointsForCustomer(activeProfileCustomerId);
+      } else {
+        notify("error", "خطأ", "تعذر فتح إدارة النقاط.");
+      }
+    });
+    byId("adminCustomerLoyaltyHistory").addEventListener("click", () => {
+      if (!activeProfileCustomerId) return;
+      if (window.LoyaltyAdmin?.openCustomerDetails) {
+        window.LoyaltyAdmin.openCustomerDetails(activeProfileCustomerId);
+      } else {
+        notify("error", "خطأ", "تعذر فتح سجل الولاء.");
+      }
+    });
     document.querySelectorAll('.sidebar-link[data-section="customers"]').forEach((button) => button.addEventListener("click", () => loadCustomers(true)));
     loadLevels();
   }
+
+  function closeCustomerProfile() {
+    activeProfileCustomerId = null;
+    profileLoadToken += 1;
+    closeModal("adminCustomerProfileModal");
+  }
+
+  window.refreshAdminCustomerProfile = async (customerId) => {
+    if (
+      activeProfileCustomerId === customerId
+      && byId("adminCustomerProfileModal")?.classList.contains("open")
+    ) {
+      await openProfile(customerId);
+    }
+  };
 
   async function loadLevels() {
     if (window.FeatureGate && !(await window.FeatureGate.hasFeature("customer_management"))) return;

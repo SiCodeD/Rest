@@ -84,7 +84,7 @@
 
     function getWaiterLoginUrl() {
         if (!state.restaurantCode) return null;
-        const loginUrl = new URL("WaiterLogin.html", window.location.href);
+        const loginUrl = new URL("waiter-login", window.location.href);
         loginUrl.search = "";
         return loginUrl.toString();
     }

@@ -1,4 +1,4 @@
-const CACHE_NAME = "mazaq-waiter-shell-v3";
+const CACHE_NAME = "mazaq-waiter-shell-v4";
 const APP_SHELL = [
     "/waiter",
     "/css/local-fonts.css",
@@ -65,22 +65,30 @@ self.addEventListener("push", (event) => {
 
     event.waitUntil((async function () {
         const clientsList = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+        const isCustomerReward = payload.type === "customer_reward";
         const visibleClient = clientsList.find((client) => {
             const path = new URL(client.url).pathname;
-            return client.visibilityState === "visible" && (path.endsWith("/waiter") || path.endsWith("/Pages/WaiterDashboard.html"));
+            return client.visibilityState === "visible" && (
+                isCustomerReward
+                    ? path.endsWith("/Pages/Menu.html") || path === "/"
+                    : path.endsWith("/waiter") || path.endsWith("/Pages/WaiterDashboard.html")
+            );
         });
         if (visibleClient) {
-            visibleClient.postMessage({ type: "WAITER_PUSH_RECEIVED", payload });
-            console.info("Waiter Push received while the app is visible.");
+            visibleClient.postMessage({
+                type: isCustomerReward ? "CUSTOMER_REWARD_PUSH_RECEIVED" : "WAITER_PUSH_RECEIVED",
+                payload,
+            });
+            console.info("Push received while the matching app is visible.");
             return;
         }
 
-        console.info("Showing background waiter Push notification.");
+        console.info("Showing background Push notification.");
         await self.registration.showNotification(payload.title || "نداء جديد", {
-            body: payload.body || "يوجد نداء جديد يحتاج إلى خدمتك.",
+            body: payload.body || "لديك إشعار جديد.",
             icon: "/waiter-icon.svg",
             badge: "/waiter-icon.svg",
-            tag: payload.tag || "waiter-call",
+            tag: payload.tag || (isCustomerReward ? "customer-reward" : "waiter-call"),
             renotify: true,
             data: { url: payload.url || "/waiter" },
         });

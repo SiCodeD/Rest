@@ -220,11 +220,14 @@
             name.className = "text-on-surface";
             name.textContent = item.rewardName || "";
             const status = document.createElement("span");
+            const isPointsOrder = Boolean(item.orderId);
             const isActive = item.status === "active";
             status.className = isActive
                 ? "text-[10px] font-bold text-primary"
                 : "text-[10px] font-bold text-on-surface-variant";
-            status.textContent = STATUS_LABELS[item.status] || item.status || "";
+            status.textContent = isPointsOrder
+                ? "طلب بالنقاط"
+                : STATUS_LABELS[item.status] || item.status || "";
             head.append(name, status);
             row.appendChild(head);
 
@@ -236,13 +239,23 @@
                 row.appendChild(tag);
             }
 
-            const code = document.createElement("p");
-            code.dir = "ltr";
-            code.className = isActive
-                ? "text-lg font-bold tracking-widest text-primary select-all"
-                : "text-lg font-bold tracking-widest text-on-surface-variant line-through select-all";
-            code.textContent = item.code || "";
-            row.appendChild(code);
+            if (item.orderId) {
+                const order = document.createElement("p");
+                order.dir = "ltr";
+                order.className = "text-sm font-bold text-primary";
+                order.textContent = item.orderNumber
+                    ? `طلب رقم #${item.orderNumber}`
+                    : "تم إرسال الطلب للمطعم";
+                row.appendChild(order);
+            } else if (item.code) {
+                const code = document.createElement("p");
+                code.dir = "ltr";
+                code.className = isActive
+                    ? "text-lg font-bold tracking-widest text-primary select-all"
+                    : "text-lg font-bold tracking-widest text-on-surface-variant line-through select-all";
+                code.textContent = item.code;
+                row.appendChild(code);
+            }
 
             const meta = document.createElement("p");
             meta.className = "text-[11px] text-on-surface-variant";
@@ -400,11 +413,11 @@
             if (!redemption) throw new Error("EMPTY_REDEMPTION");
 
             setText("rewards-result-name", redemption.rewardName || reward.name || "");
-            setText("rewards-result-code", redemption.code || "");
             setText(
-                "rewards-result-expiry",
-                redemption.expiresAt ? `صالح حتى ${formatDate(redemption.expiresAt)}` : "",
+                "rewards-result-order",
+                redemption.orderNumber ? `رقم الطلب #${redemption.orderNumber}` : "",
             );
+            setText("rewards-result-message", "تمام، وصل طلبك للمطعم وسيتم تجهيزه بدون أي مبلغ.");
             if (data.points !== undefined && state.data) state.data.points = data.points;
             setBalance(data.points);
             state.selected = null;

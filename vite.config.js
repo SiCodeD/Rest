@@ -75,6 +75,16 @@ export default defineConfig({
     allowedHosts: [
       "gentleman-writer-patches-director.trycloudflare.com"
     ],
+    proxy: {
+      "/api/menu-images": {
+        target: "http://127.0.0.1:8787",
+        changeOrigin: false,
+      },
+      "/images/menu": {
+        target: "http://127.0.0.1:8787",
+        changeOrigin: false,
+      },
+    },
   },
   build: {
     rollupOptions: {
@@ -85,6 +95,7 @@ export default defineConfig({
         waiter_dashboard: resolve(__dirname, 'Pages/WaiterDashboard.html'),
         admin_dashboard: resolve(__dirname, 'Pages/AdminDashboard.html'),
         super_admin_dashboard: resolve(__dirname, 'Pages/SuperAdminDashboard.html'),
+        kitchen: resolve(__dirname, 'Pages/KitchenDisplay.html'),
         menu: resolve(__dirname, 'Pages/Menu.html'),
         landing: resolve(__dirname, 'Pages/Landing.html'),
         setup_password: resolve(__dirname, 'Pages/SetupPassword.html'),

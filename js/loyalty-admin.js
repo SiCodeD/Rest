@@ -3,14 +3,8 @@
 (function () {
     "use strict";
 
-    const SETTING_FIELDS = [
-        "order_enabled", "order_points", "order_xp",
-        "first_order_enabled", "first_order_points", "first_order_xp",
-        "visit_enabled", "visit_points", "visit_xp",
-        "review_enabled", "review_points", "review_xp",
-    ];
-
     let loading = false;
+    let rewardRules = [];
 
     const byId = (id) => document.getElementById(id);
     const fmt = (value) => Number(value || 0).toLocaleString("en-US");
@@ -117,6 +111,18 @@
     const LOYALTY_FEATURE_ERROR = "Loyalty is not available on the current plan.";
     const LOYALTY_FEATURE_TITLE = "الميزة غير متاحة في خطتك";
     const LOYALTY_FEATURE_MESSAGE = "برنامج الولاء غير متاح في خطتك الحالية. قم بترقية خطتك للوصول إلى هذه الميزة.";
+    const RULE_EVENT_LABELS = {
+        order_completed: "إتمام طلب",
+        first_order: "أول طلب",
+        visit: "زيارة عند تسليم الطلب",
+        review_submitted: "إرسال تقييم",
+        manual: "منح يدوي من الإدارة",
+    };
+    const REPEAT_LABELS = {
+        once: "مرة واحدة",
+        unlimited: "بلا حد",
+        limited: "عدد محدد",
+    };
 
     function showLoyaltyFeatureError(error) {
         if (!String(error?.message || "").includes(LOYALTY_FEATURE_ERROR)) return false;
@@ -145,18 +151,20 @@
         if (loading || !window.supabase) return;
         loading = true;
         try {
-            const [overview, config] = await Promise.all([
+            const [overview, config, rules] = await Promise.all([
                 supabase.rpc("admin_get_loyalty_overview"),
                 supabase.rpc("admin_get_loyalty_config"),
+                supabase.rpc("admin_get_loyalty_reward_rules"),
             ]);
             if (overview.error) throw overview.error;
             if (config.error) throw config.error;
+            if (rules.error) throw rules.error;
             const cfgLevels = (config.data && config.data.levels) || [];
+            rewardRules = Array.isArray(rules.data) ? rules.data : [];
             setLevelColors(cfgLevels.length ? cfgLevels : (overview.data && overview.data.levels) || []);
             renderOverview(overview.data || {});
-            renderSettings((config.data && config.data.settings) || {});
+            renderRewardRules(rewardRules);
             renderLevels(cfgLevels);
-            await loadCustomers();
         } catch (error) {
             console.error("Loyalty load failed:", error);
             if (!showLoyaltyFeatureError(error)) notify("error", "خطأ", "تعذر تحميل بيانات الولاء.");
@@ -186,13 +194,204 @@
         else note.textContent = "لا توجد مستويات.";
     }
 
-    function renderSettings(settings) {
-        SETTING_FIELDS.forEach((key) => {
-            const input = document.querySelector(`[data-loyalty-setting="${key}"]`);
-            if (!input || settings[key] === undefined) return;
-            if (input.type === "checkbox") input.checked = settings[key] === true;
-            else input.value = settings[key];
+    function makeRuleCell(label, child) {
+        const cell = document.createElement("td");
+        cell.dataset.label = label;
+        cell.appendChild(child);
+        return cell;
+    }
+
+    function makeRuleSelect(options, value, disabled) {
+        const select = document.createElement("select");
+        select.className = "select-modern";
+        select.disabled = Boolean(disabled);
+        options.forEach(([optionValue, label]) => {
+            const option = document.createElement("option");
+            option.value = optionValue;
+            option.textContent = label;
+            option.selected = optionValue === value;
+            select.appendChild(option);
         });
+        return select;
+    }
+
+    function renderRewardRules(rules) {
+        const body = byId("loyaltyRulesBody");
+        if (!body) return;
+        body.replaceChildren();
+
+        rules.forEach((rule) => {
+            const row = makeRewardRuleRow(rule);
+            body.appendChild(row);
+            enhanceRuleSelects(row);
+        });
+        refreshManualRuleSelect();
+    }
+
+    function enhanceRuleSelects(row) {
+        row.querySelectorAll("select.select-modern").forEach((select) => {
+            window.CustomSelect?.refresh(select);
+            const button = select.previousElementSibling?.querySelector(
+                ".custom-select-button",
+            );
+            if (!button) return;
+            button.disabled = select.disabled;
+            button.setAttribute("aria-label", select.closest("td")?.dataset.label || "");
+        });
+    }
+
+    function makeRewardRuleRow(rule) {
+        const row = document.createElement("tr");
+        row.dataset.ruleId = rule.id || "";
+        row.dataset.builtin = rule.isBuiltin ? "true" : "false";
+
+        const name = document.createElement(rule.isBuiltin ? "strong" : "input");
+        if (rule.isBuiltin) {
+            name.textContent = rule.name;
+            name.className = "lx-evt";
+        } else {
+            name.type = "text";
+            name.className = "input-modern";
+            name.maxLength = 80;
+            name.placeholder = "اسم القاعدة";
+            name.value = rule.name || "";
+            name.dataset.field = "name";
+        }
+        row.appendChild(makeRuleCell("الحدث", name));
+
+        const event = makeRuleSelect(
+            Object.entries(RULE_EVENT_LABELS),
+            rule.eventType || "manual",
+            rule.isBuiltin,
+        );
+        event.dataset.field = "eventType";
+        row.appendChild(makeRuleCell("التفعيل", event));
+
+        const enabled = document.createElement("input");
+        enabled.type = "checkbox";
+        enabled.checked = rule.isEnabled === true;
+        enabled.dataset.field = "isEnabled";
+        row.appendChild(makeRuleCell("مفعّل", enabled));
+
+        ["points", "xp"].forEach((field) => {
+            const input = document.createElement("input");
+            input.type = "number";
+            input.className = "input-modern";
+            input.min = "0";
+            input.max = "100000";
+            input.step = "1";
+            input.value = Number(rule[field]) || 0;
+            input.dataset.field = field;
+            row.appendChild(makeRuleCell(field === "points" ? "نقاط" : "XP", input));
+        });
+
+        const frequency = document.createElement("div");
+        frequency.style.cssText = "display:grid;gap:6px;min-width:130px";
+        const repeat = makeRuleSelect(
+            Object.entries(REPEAT_LABELS),
+            rule.repeatMode || "unlimited",
+            rule.ruleKey === "first_order",
+        );
+        repeat.dataset.field = "repeatMode";
+        const maxAwards = document.createElement("input");
+        maxAwards.type = "number";
+        maxAwards.className = "input-modern";
+        maxAwards.min = "1";
+        maxAwards.max = "100000";
+        maxAwards.step = "1";
+        maxAwards.placeholder = "عدد المرات";
+        maxAwards.value = rule.maxAwards || "";
+        maxAwards.dataset.field = "maxAwards";
+        maxAwards.hidden = repeat.value !== "limited";
+        repeat.addEventListener("change", () => {
+            maxAwards.hidden = repeat.value !== "limited";
+        });
+        frequency.append(repeat, maxAwards);
+        row.appendChild(makeRuleCell("التكرار / الحد", frequency));
+
+        const actions = document.createElement("td");
+        actions.dataset.label = "إجراء";
+        actions.className = "text-right loyalty-actions";
+        if (!rule.isBuiltin) {
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "icon-btn-delete";
+            remove.setAttribute("data-tooltip", "حذف القاعدة");
+            remove.setAttribute("aria-label", "حذف القاعدة");
+            remove.innerHTML = window.lucideIcon("trash-2");
+            remove.addEventListener("click", () => deleteRewardRule(row));
+            actions.appendChild(remove);
+        }
+        row.appendChild(actions);
+        return row;
+    }
+
+    function addRewardRuleRow() {
+        const body = byId("loyaltyRulesBody");
+        if (!body) return;
+        const row = makeRewardRuleRow({
+            name: "",
+            eventType: "manual",
+            isEnabled: true,
+            points: 5,
+            xp: 0,
+            repeatMode: "unlimited",
+            isBuiltin: false,
+        });
+        body.appendChild(row);
+        enhanceRuleSelects(row);
+        row.querySelector('[data-field="name"]')?.focus();
+    }
+
+    function collectRewardRules() {
+        return [...byId("loyaltyRulesBody").querySelectorAll("tr")].map((row) => {
+            const value = (field) => row.querySelector(`[data-field="${field}"]`);
+            const repeatMode = value("repeatMode")?.value || "unlimited";
+            const points = Number(value("points")?.value);
+            const xp = Number(value("xp")?.value);
+            const maxAwards = Number(value("maxAwards")?.value);
+            const name = row.querySelector('[data-field="name"]')?.value?.trim()
+                || row.querySelector(".lx-evt")?.textContent?.trim()
+                || "";
+
+            if (!name || !Number.isInteger(points) || points < 0 || points > 100000
+                || !Number.isInteger(xp) || xp < 0 || xp > 100000) {
+                throw new Error("أدخل اسمًا ومقادير صحيحة للنقاط وXP.");
+            }
+            if (repeatMode === "limited"
+                && (!Number.isInteger(maxAwards) || maxAwards < 1 || maxAwards > 100000)) {
+                throw new Error("أدخل حدًا صحيحًا من 1 إلى 100000.");
+            }
+            return {
+                id: row.dataset.ruleId || null,
+                name,
+                eventType: value("eventType")?.value || "manual",
+                isEnabled: value("isEnabled")?.checked === true,
+                points,
+                xp,
+                repeatMode,
+                maxAwards: repeatMode === "limited" ? maxAwards : null,
+            };
+        });
+    }
+
+    function refreshManualRuleSelect() {
+        const select = byId("loyaltyManualRuleSelect");
+        const button = byId("loyaltyManualRuleAward");
+        if (!select || !button) return;
+        const selected = select.value;
+        select.replaceChildren();
+        rewardRules
+            .filter((rule) => !rule.isBuiltin && rule.eventType === "manual" && rule.isEnabled)
+            .forEach((rule) => {
+                const option = document.createElement("option");
+                option.value = rule.id;
+                option.textContent = rule.name;
+                select.appendChild(option);
+            });
+        if (selected) select.value = selected;
+        select.disabled = select.options.length === 0;
+        button.disabled = select.disabled;
     }
 
     function renderLevels(levels) {
@@ -265,20 +464,75 @@
 
     async function saveSettings(event) {
         event.preventDefault();
-        const payload = {};
-        SETTING_FIELDS.forEach((key) => {
-            const input = document.querySelector(`[data-loyalty-setting="${key}"]`);
-            if (!input) return;
-            payload[key] = input.type === "checkbox" ? input.checked : Number(input.value);
-        });
         await withButton(byId("loyaltySettingsSave"), async () => {
-            const { error } = await supabase.rpc("admin_save_loyalty_settings", { p_settings: payload });
+            try {
+                const rules = collectRewardRules();
+                const { error } = await supabase.rpc("admin_save_loyalty_reward_rules", { p_rules: rules });
+                if (error) throw error;
+                notify("success", "تم الحفظ", "تم تحديث قواعد الولاء.");
+                await loadAll();
+            } catch (error) {
+                console.error("Loyalty rules save failed:", error);
+                if (error instanceof Error && !error.code) {
+                    notify("error", "خطأ", error.message);
+                } else if (!showLoyaltyFeatureError(error)) {
+                    notify("error", "خطأ", friendlyError(error));
+                }
+            }
+        });
+    }
+
+    async function deleteRewardRule(row) {
+        const ruleId = row.dataset.ruleId;
+        if (!ruleId) {
+            row.remove();
+            return;
+        }
+        const { error } = await supabase.rpc("admin_delete_loyalty_reward_rule", { p_id: ruleId });
+        if (error) {
+            console.error("Loyalty rule delete failed:", error);
+            if (!showLoyaltyFeatureError(error)) notify("error", "خطأ", friendlyError(error));
+            return;
+        }
+        notify("success", "تم الحذف", "تم إيقاف القاعدة.");
+        await loadAll();
+    }
+
+    async function awardManualRule() {
+        if (!selectedCustomer) return;
+        const ruleId = byId("loyaltyManualRuleSelect").value;
+        if (!ruleId) return;
+        const button = byId("loyaltyManualRuleAward");
+        await withButton(button, async () => {
+            const { data, error } = await supabase.rpc("admin_award_loyalty_rule", {
+                p_customer_id: selectedCustomer.id,
+                p_rule_id: ruleId,
+            });
             if (error) {
-                console.error(error);
-                if (!showLoyaltyFeatureError(error)) notify("error", "خطأ", friendlyError(error));
+                console.error("Manual loyalty rule award failed:", error);
+                if (/reward limit reached/i.test(error.message || "")) {
+                    notify("error", "تم بلوغ الحد", "استنفد هذا العميل عدد مرات استحقاق القاعدة.");
+                } else if (!showLoyaltyFeatureError(error)) {
+                    notify("error", "خطأ", friendlyError(error));
+                }
                 return;
             }
-            notify("success", "تم الحفظ", "تم تحديث قواعد الولاء.");
+            const awards = Array.isArray(data) ? data : [];
+            if (!awards.length) {
+                notify("error", "لم تُمنح المكافأة", "لم تنطبق القاعدة على هذا العميل.");
+                return;
+            }
+            notify("success", "تم منح المكافأة", awards.map((award) =>
+                `${award.points} نقطة و${award.xp} XP`,
+            ).join("، "));
+            const keepId = selectedCustomer.id;
+            await loadAll();
+            selectedCustomer = await fetchCustomer(keepId);
+            if (selectedCustomer) {
+                renderCustomerHeader();
+                await loadCustomerActivity();
+                await window.refreshAdminCustomerProfile?.(keepId);
+            }
         });
     }
 
@@ -339,89 +593,36 @@
         expiration: "انتهاء صلاحية",
     };
     const MAX_ADJUST_POINTS = 100000;
-    let customers = [];
     let selectedCustomer = null;
     let adjusting = false;
 
     function openModal(id) { byId(id).classList.add("open"); }
     function closeModal(id) { byId(id).classList.remove("open"); }
 
-    async function loadCustomers() {
-        // Row access is restricted to the admin's restaurant by RLS.
+    async function fetchCustomer(customerId) {
         const { data, error } = await supabase
             .from("restaurant_customer_accounts")
             .select("id, display_name, points_balance, xp_total, customer_profiles(normalized_phone), loyalty_levels(name, badge)")
-            .order("created_at", { ascending: false })
-            .limit(500);
-        if (error) {
-            console.error("Loyalty customers load failed:", error);
-            byId("loyaltyCustomersCount").textContent = "تعذر تحميل العملاء.";
-            showLoyaltyFeatureError(error);
-            return;
-        }
-        customers = data || [];
-        renderCustomers();
-    }
-
-    function renderCustomers() {
-        const query = byId("loyaltyCustomerSearch").value.trim().toLowerCase();
-        const rows = customers.filter((c) => {
-            if (!query) return true;
-            const phone = (c.customer_profiles && c.customer_profiles.normalized_phone) || "";
-            return (c.display_name || "").toLowerCase().includes(query) || phone.includes(query);
-        });
-        byId("loyaltyCustomersCount").textContent = `${fmt(rows.length)} عميل`;
-
-        const body = byId("loyaltyCustomersBody");
-        body.innerHTML = "";
-        const labels = headLabels(body);
-        if (!rows.length) {
-            const row = document.createElement("tr");
-            const cell = document.createElement("td");
-            cell.colSpan = 6;
-            cell.className = "empty-row";
-            cell.dataset.label = "";
-            cell.textContent = "لا يوجد عملاء.";
-            row.appendChild(cell);
-            body.appendChild(row);
-            return;
-        }
-        rows.forEach((c) => {
-            const row = document.createElement("tr");
-            const level = c.loyalty_levels;
-            [
-                c.display_name || "—",
-                (c.customer_profiles && c.customer_profiles.normalized_phone) || "—",
-                levelChip(level),
-                fmt(c.xp_total),
-                fmt(c.points_balance),
-            ].forEach((content, index) => {
-                const td = document.createElement("td");
-                td.dataset.label = labels[index] || "";
-                if (typeof content === "string") td.textContent = content;
-                else td.appendChild(content);
-                if (index === 1) td.dir = "ltr";
-                row.appendChild(td);
-            });
-            const actions = document.createElement("td");
-            actions.dataset.label = "";
-            actions.className = "text-right loyalty-actions";
-            const open = document.createElement("button");
-            open.type = "button";
-            open.className = "icon-btn";
-            open.setAttribute("data-tooltip", "عرض تفاصيل العميل");
-            open.setAttribute("aria-label", "عرض تفاصيل العميل");
-            open.innerHTML = window.lucideIcon("eye");
-            open.addEventListener("click", () => openCustomer(c.id));
-            actions.appendChild(open);
-            row.appendChild(actions);
-            body.appendChild(row);
-        });
+            .eq("id", customerId)
+            .maybeSingle();
+        if (error) throw error;
+        return data;
     }
 
     async function openCustomer(customerId) {
-        selectedCustomer = customers.find((c) => c.id === customerId) || null;
-        if (!selectedCustomer) return;
+        try {
+            selectedCustomer = await fetchCustomer(customerId);
+        } catch (error) {
+            console.error("Customer loyalty details load failed:", error);
+            if (!showLoyaltyFeatureError(error)) {
+                notify("error", "خطأ", "تعذر تحميل سجل الولاء.");
+            }
+            return;
+        }
+        if (!selectedCustomer) {
+            notify("error", "خطأ", "العميل غير موجود.");
+            return;
+        }
         renderCustomerHeader();
         byId("loyaltyCustomerActivity").innerHTML = "";
         openModal("loyaltyCustomerModal");
@@ -481,6 +682,23 @@
         byId("loyaltyAdjustAmount").focus();
     }
 
+    async function managePointsForCustomer(customerId) {
+        try {
+            selectedCustomer = await fetchCustomer(customerId);
+        } catch (error) {
+            console.error("Customer points management lookup failed:", error);
+            if (!showLoyaltyFeatureError(error)) {
+                notify("error", "خطأ", "تعذر تحميل رصيد العميل.");
+            }
+            return;
+        }
+        if (!selectedCustomer) {
+            notify("error", "خطأ", "العميل غير موجود.");
+            return;
+        }
+        openAdjustModal();
+    }
+
     async function submitAdjustment(event) {
         event.preventDefault();
         if (adjusting || !selectedCustomer) return;
@@ -522,11 +740,12 @@
             closeModal("loyaltyAdjustModal");
             const keepId = selectedCustomer.id;
             await loadAll();
-            selectedCustomer = customers.find((c) => c.id === keepId) || null;
+            selectedCustomer = await fetchCustomer(keepId);
             if (selectedCustomer) {
                 renderCustomerHeader();
                 await loadCustomerActivity();
             }
+            await window.refreshAdminCustomerProfile?.(keepId);
         } finally {
             adjusting = false;
             submit.disabled = false;
@@ -535,13 +754,17 @@
 
     function init() {
         if (!byId("section-loyalty")) return;
-        byId("loyaltyCustomerSearch").addEventListener("input", renderCustomers);
         byId("loyaltyCustomerClose").addEventListener("click", () => closeModal("loyaltyCustomerModal"));
-        byId("loyaltyManagePointsBtn").addEventListener("click", openAdjustModal);
+        byId("loyaltyManagePointsBtn").addEventListener("click", () => {
+            closeModal("loyaltyCustomerModal");
+            openAdjustModal();
+        });
         byId("loyaltyAdjustClose").addEventListener("click", () => closeModal("loyaltyAdjustModal"));
         byId("loyaltyAdjustCancel").addEventListener("click", () => closeModal("loyaltyAdjustModal"));
         byId("loyaltyAdjustForm").addEventListener("submit", submitAdjustment);
         byId("loyaltySettingsForm").addEventListener("submit", saveSettings);
+        byId("loyaltyRuleAdd").addEventListener("click", addRewardRuleRow);
+        byId("loyaltyManualRuleAward").addEventListener("click", awardManualRule);
         byId("loyaltyLevelForm").addEventListener("submit", saveLevel);
         byId("loyaltyLevelCancel").addEventListener("click", resetLevelForm);
         document.querySelectorAll('.sidebar-link[data-section="loyalty"]').forEach((button) => {
@@ -549,5 +772,6 @@
         });
     }
 
+    window.LoyaltyAdmin = { managePointsForCustomer, openCustomerDetails: openCustomer };
     document.addEventListener("DOMContentLoaded", init);
 })();   

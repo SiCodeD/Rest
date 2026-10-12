@@ -40,6 +40,7 @@
 
         const dropdown = document.createElement('div');
         dropdown.className = 'custom-select-dropdown';
+        dropdown.wrapper = wrapper;
 
         // Render options
         renderOptions(nativeSelect, button, dropdown);
@@ -170,11 +171,9 @@
 
     function closeDropdown(dropdown) {
         dropdown.classList.remove('open');
-        const wrapper = document.querySelector('.custom-select-wrapper:has(+ select[data-initialized])') ||
-            document.querySelector('.custom-select-wrapper');
+        const wrapper = dropdown.wrapper;
         if (wrapper) {
             wrapper.classList.remove('open');
-            // Remove the parent card class
             const parentCard = wrapper.closest('.card, .table-card, .attendance-container');
             if (parentCard) {
                 parentCard.classList.remove('dropdown-open');
@@ -185,7 +184,7 @@
     function closeAllDropdowns() {
         document.querySelectorAll('.custom-select-dropdown.open').forEach(d => {
             d.classList.remove('open');
-            const wrapper = document.querySelector('.custom-select-wrapper.open');
+            const wrapper = d.wrapper;
             if (wrapper) {
                 wrapper.classList.remove('open');
                 const parentCard = wrapper.closest('.card, .table-card, .attendance-container');

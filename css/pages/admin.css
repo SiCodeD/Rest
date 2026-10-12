@@ -1,12 +1,14 @@
 /* ═══ AdminDashboard-Specific Styles ═══ */
 
-/* Loyalty tables use the same compact icon actions as the rest of the system. */
+/* Keep action cells in the table layout so row separators span the full table. */
 .loyalty-actions {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6px;
+    display: table-cell;
+    text-align: start;
     white-space: nowrap;
+}
+
+.loyalty-actions>*+* {
+    margin-inline-start: 6px;
 }
 
 @font-face {
@@ -1653,6 +1655,44 @@
 
 .order-action-btn:hover {
     transform: translateY(-2px);
+}
+
+.order-payment-action-btn,
+.order-payment-state {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.order-payment-action-btn {
+    border: 1px solid var(--primary);
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+}
+
+.order-payment-action-btn:hover {
+    filter: brightness(0.92);
+}
+
+.order-payment-action-btn .lucide-icon,
+.order-payment-state .lucide-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.order-payment-state {
+    border: 1px solid rgba(22, 163, 74, 0.18);
+    background: rgba(22, 163, 74, 0.08);
+    color: #15803d;
 }
 
 .orders-desktop-table .order-actions,
@@ -4112,6 +4152,16 @@ END DISABLED LEGACY */
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0) scale(1);
+}
+
+.reports-calendar.opens-up {
+    top: auto;
+    bottom: calc(100% + 10px);
+    transform-origin: bottom right;
+}
+
+.reports-calendar.opens-up:not(.open) {
+    transform: translateY(6px) scale(0.98);
 }
 
 .reports-calendar-header,
@@ -8750,6 +8800,7 @@ body.menu-color-picker-open {
     --oc-edge: #d9cfc5;
     --oc-line: #e6ddd4;
     --oc-track: rgba(44, 37, 34, 0.12);
+    --oc-who-bg: rgba(113, 0, 20, 0.06);
     --oc-ink: var(--text, #2c2522);
     --oc-muted: var(--muted, #7b706b);
     --oc-green: var(--primary, #710014);
@@ -8768,6 +8819,7 @@ body.menu-color-picker-open {
     --oc-edge: var(--stroke, #343a42);
     --oc-line: rgba(255, 255, 255, 0.12);
     --oc-track: rgba(255, 255, 255, 0.14);
+    --oc-who-bg: rgba(255, 255, 255, 0.07);
     --oc-accent-ink: var(--primary, #1b8f79);
     --oc-chip: rgba(27, 143, 121, 0.2);
     --oc-note-bg: rgba(192, 154, 93, 0.16);
@@ -8870,6 +8922,7 @@ body.menu-color-picker-open {
 
 #ordersTableWrap.orders-cards-mode #ordersMobileCards {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 1fr;
     align-items: stretch;
     gap: 32px 18px;
     padding: 24px 20px 36px;
@@ -9024,7 +9077,7 @@ body.menu-color-picker-open {
     flex-direction: column;
     align-items: flex-end;
     gap: 6px;
-    max-width: 58%;
+    max-width: 100%;
 }
 
 .oc .status-badge {
@@ -9046,24 +9099,41 @@ body.menu-color-picker-open {
 
 .oc-who {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 4px 10px;
+    width: 100%;
     max-width: 100%;
-    font-size: 12px;
+    margin: 10px 0 2px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--oc-who-bg);
+    text-align: right;
     color: var(--oc-muted);
 }
 
 .oc-num {
     flex: none;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--oc-track);
+    font-size: 12px;
     font-weight: 800;
-    color: var(--oc-ink);
+    line-height: 1.6;
+    color: var(--oc-muted);
 }
 
 .oc-cust {
+    flex: 1 1 auto;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: var(--oc-ink);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    text-align: right;
 }
 
 /* ── time row ── */
@@ -9100,7 +9170,7 @@ body.menu-color-picker-open {
 
 /* ── dashed "perforation" divider ── */
 .oc-ds {
-    margin: 12px 0;
+    margin: 10px 0;
     border-top: 1.5px dashed var(--oc-line);
 }
 
@@ -9213,6 +9283,7 @@ body.menu-color-picker-open {
 
 .oc-ac {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 12px;
 }
@@ -9251,6 +9322,30 @@ body.menu-color-picker-open {
     filter: brightness(0.92);
 }
 
+.oc-payment-state {
+    display: inline-flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 10px;
+    border: 1px solid rgba(22, 163, 74, 0.18);
+    border-radius: 10px;
+    background: rgba(22, 163, 74, 0.08);
+    color: #15803d;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.oc-payment-state svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+}
+
 .oc-btn-ghost {
     border: 1px solid var(--oc-btn-line);
     background: transparent;
@@ -9283,7 +9378,18 @@ body.menu-color-picker-open {
 }
 
 .oc-ac .oc-btn-ghost:not(.is-wide) {
-    flex: 0 0 auto;
+    flex: 1 1 100%;
+}
+
+/* labels stay inside their buttons */
+.oc-ac .oc-btn {
+    padding-inline: 8px;
+}
+
+.oc-ac .oc-btn>span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .oc-btn-danger:hover {
@@ -9300,14 +9406,6 @@ body.menu-color-picker-open {
         padding-inline: 12px;
     }
 
-    .oc-btn-ghost:not(.is-wide) span {
-        display: none;
-    }
-
-    .oc-btn-ghost:not(.is-wide) {
-        width: 40px;
-        padding: 0;
-    }
 }
 
 /* =========================================================
@@ -9342,6 +9440,178 @@ body.menu-color-picker-open {
     }
 
     #attentionCards .oc {
+        width: 100%;
+    }
+}
+
+/* Payment confirmation */
+.payment-confirm-modal {
+    z-index: 2147482500;
+    padding: 20px;
+    background: rgba(24, 17, 18, 0.56);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+}
+
+.payment-confirm-content {
+    position: relative;
+    width: min(100%, 440px);
+    padding: 32px;
+    overflow: hidden;
+    border-color: color-mix(in srgb, var(--primary) 16%, var(--stroke));
+    border-radius: 24px;
+    text-align: center;
+}
+
+.payment-confirm-content::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), #c28b56);
+    content: "";
+}
+
+.payment-confirm-close {
+    position: absolute;
+    top: 15px;
+    inset-inline-start: 15px;
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--surface-soft, rgba(0, 0, 0, 0.04));
+}
+
+.payment-confirm-close .lucide-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.payment-confirm-icon {
+    display: grid;
+    width: 62px;
+    height: 62px;
+    margin: 4px auto 16px;
+    place-items: center;
+    border: 1px solid rgba(22, 163, 74, 0.16);
+    border-radius: 20px;
+    background: linear-gradient(
+        145deg,
+        rgba(22, 163, 74, 0.12),
+        rgba(22, 163, 74, 0.04)
+    );
+    color: #15803d;
+}
+
+.payment-confirm-icon .lucide-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.payment-confirm-content h3 {
+    margin: 0 0 8px;
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+.payment-confirm-content > p {
+    max-width: 340px;
+    margin: 0 auto 20px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.8;
+}
+
+.payment-confirm-summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px 18px;
+    margin-bottom: 22px;
+    padding: 16px;
+    border: 1px solid var(--stroke);
+    border-radius: 15px;
+    background: var(--surface-soft, rgba(0, 0, 0, 0.025));
+    text-align: start;
+}
+
+.payment-confirm-summary span {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.payment-confirm-summary strong {
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 850;
+}
+
+.payment-confirm-summary strong:last-child {
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.payment-confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 10px;
+}
+
+.payment-confirm-actions button {
+    min-height: 44px;
+    justify-content: center;
+    border-radius: 11px;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 850;
+}
+
+.payment-confirm-actions button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.payment-confirm-modal.is-rejecting .payment-confirm-icon {
+    border-color: rgba(180, 35, 24, 0.16);
+    background: rgba(180, 35, 24, 0.07);
+    color: #b42318;
+}
+
+.payment-confirm-modal.is-rejecting .payment-confirm-icon .lucide-icon {
+    color: inherit;
+}
+
+.payment-confirm-modal.is-rejecting
+    .payment-confirm-actions
+    .button-primary {
+    border-color: #b42318;
+    background: #b42318;
+}
+
+@media (max-width: 560px) {
+    .payment-confirm-modal {
+        align-items: center;
+        padding: 12px !important;
+    }
+
+    .payment-confirm-modal .payment-confirm-content {
+        width: min(100%, 440px) !important;
+        padding: 28px 18px 18px !important;
+        border-radius: 20px !important;
+    }
+
+    .payment-confirm-summary {
+        gap: 10px 12px;
+        padding: 13px;
+    }
+
+    .payment-confirm-actions {
+        grid-template-columns: 1fr 1.2fr !important;
+        flex-direction: row !important;
+    }
+
+    .payment-confirm-actions button {
         width: 100%;
     }
 }
@@ -9505,4 +9775,1088 @@ body.menu-color-picker-open {
         margin-top: 10px;
         padding: 12px 16px;
     }
+}
+
+#section-invoices .invoices-section {
+    --invoice-wine: #710014;
+    --invoice-paper: #fffdf8;
+    --invoice-ink: #24211f;
+    --invoice-muted: #77716b;
+    --invoice-line: #ece7de;
+    color: var(--text);
+}
+
+#section-invoices [hidden] {
+    display: none !important;
+}
+
+#section-invoices .invoices-toolbar,
+#section-invoices .invoice-detail-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+#section-invoices #invoiceListView {
+    display: grid;
+    gap: 18px;
+}
+
+#section-invoices .invoices-count {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+#section-invoices .invoices-count strong {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+#section-invoices .invoices-filter-card {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) auto auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--stroke);
+    border-radius: 16px;
+    background: var(--panel);
+}
+
+#section-invoices .invoice-search-field,
+#section-invoices .invoice-date-field {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid var(--stroke);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--muted);
+}
+
+#section-invoices .invoice-search-field {
+    min-width: 0;
+}
+
+#section-invoices .invoice-search-field input,
+#section-invoices .invoice-date-field input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+}
+
+#section-invoices .invoice-date-field span {
+    flex: none;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+#section-invoices .invoice-date-field input {
+    min-width: 132px;
+}
+
+#section-invoices .invoices-table-card {
+    overflow: hidden;
+}
+
+#section-invoices .invoices-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+}
+
+#section-invoices .invoices-table th,
+#section-invoices .invoices-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--stroke);
+    vertical-align: middle;
+}
+
+#section-invoices .invoices-table th {
+    background: var(--surface-soft, rgba(128, 128, 128, 0.06));
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+#section-invoices .invoices-table td {
+    color: var(--text);
+    font-size: 0.86rem;
+}
+
+#section-invoices .invoice-row {
+    cursor: pointer;
+    transition: background 140ms ease;
+}
+
+#section-invoices .invoice-row:hover {
+    background: transparent;
+}
+
+#section-invoices .invoice-row:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+#section-invoices .invoice-number {
+    color: var(--primary);
+    font-weight: 900;
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+#section-invoices .invoice-total-cell {
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+#section-invoices .invoice-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+#section-invoices .invoice-status-badge.is-paid {
+    color: #127448;
+    background: rgba(22, 163, 74, 0.1);
+    border-color: rgba(22, 163, 74, 0.2);
+}
+
+#section-invoices .invoice-status-badge.is-pending {
+    color: #93600c;
+    background: rgba(217, 150, 24, 0.12);
+    border-color: rgba(217, 150, 24, 0.22);
+}
+
+#section-invoices .invoice-status-badge.is-unpaid,
+#section-invoices .invoice-status-badge.is-cancelled {
+    color: #a3333d;
+    background: rgba(185, 48, 59, 0.09);
+    border-color: rgba(185, 48, 59, 0.18);
+}
+
+#section-invoices .invoice-row-open {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 1px solid var(--stroke);
+    border-radius: 9px;
+    background: var(--panel);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#section-invoices .invoice-row-open:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+#section-invoices .invoice-list-empty,
+#section-invoices .invoice-detail-state {
+    display: grid;
+    min-height: 180px;
+    place-content: center;
+    justify-items: center;
+    gap: 10px;
+    padding: 24px;
+    color: var(--muted);
+    text-align: center;
+}
+
+#section-invoices .invoice-list-empty strong {
+    color: var(--text);
+}
+
+#section-invoices .invoice-list-empty .lucide-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--primary);
+}
+
+#section-invoices .invoice-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 14px;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+#section-invoices .invoice-detail-view {
+    display: grid;
+    gap: 16px;
+}
+
+#section-invoices .invoice-detail-toolbar {
+    padding: 0 2px;
+}
+
+#section-invoices .invoice-detail-toolbar .invoice-status-badge {
+    min-height: 36px;
+}
+
+#section-invoices .invoice-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(245px, 0.78fr) minmax(0, 2fr);
+    align-items: start;
+    gap: 18px;
+}
+
+#section-invoices .invoice-side-panel {
+    display: grid;
+    gap: 14px;
+}
+
+#section-invoices .invoice-actions-panel,
+#section-invoices .invoice-meta-panel {
+    display: grid;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid var(--stroke);
+    border-radius: 16px;
+    background: var(--panel);
+    box-shadow: 0 5px 18px rgba(28, 21, 19, 0.035);
+}
+
+#section-invoices .invoice-actions-panel h3,
+#section-invoices .invoice-meta-panel h3 {
+    margin: 0 0 2px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+
+#section-invoices .invoice-actions-panel button {
+    width: 100%;
+    min-height: 42px;
+    justify-content: center;
+}
+
+#section-invoices .invoice-payment-actions {
+    display: grid;
+    gap: 8px;
+}
+
+#section-invoices .invoice-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--stroke);
+    font-size: 0.79rem;
+}
+
+#section-invoices .invoice-meta-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+#section-invoices .invoice-meta-row span {
+    color: var(--muted);
+}
+
+#section-invoices .invoice-meta-row strong {
+    color: var(--text);
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+#section-invoices .invoice-paper {
+    min-width: 0;
+    padding: clamp(18px, 3vw, 36px);
+    border: 1px solid #e9e2d7;
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at 100% 0, rgba(113, 0, 20, 0.035), transparent 36%),
+        var(--invoice-paper);
+    color: var(--invoice-ink);
+    box-shadow: 0 12px 30px rgba(39, 28, 24, 0.07);
+}
+
+#section-invoices .invoice-paper-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--invoice-line);
+}
+
+#section-invoices .invoice-brand-name {
+    margin: 0;
+    color: var(--invoice-ink);
+    font-size: clamp(1.15rem, 2vw, 1.65rem);
+    font-weight: 900;
+}
+
+#section-invoices .invoice-brand-contact {
+    margin-top: 5px;
+    color: var(--invoice-muted);
+    font-size: 0.78rem;
+    line-height: 1.7;
+}
+
+#section-invoices .invoice-paper-number {
+    text-align: left;
+}
+
+#section-invoices .invoice-paper-number span {
+    display: block;
+    color: var(--invoice-muted);
+    font-size: 0.72rem;
+}
+
+#section-invoices .invoice-paper-number strong {
+    display: block;
+    margin-top: 3px;
+    color: var(--invoice-wine);
+    font-size: clamp(1.1rem, 2.4vw, 1.7rem);
+    font-weight: 900;
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+#section-invoices .invoice-paper-meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--invoice-line);
+}
+
+#section-invoices .invoice-paper-meta div {
+    min-width: 0;
+}
+
+#section-invoices .invoice-paper-meta span {
+    display: block;
+    color: var(--invoice-muted);
+    font-size: 0.7rem;
+}
+
+#section-invoices .invoice-paper-meta strong {
+    display: block;
+    margin-top: 4px;
+    color: var(--invoice-ink);
+    font-size: 0.84rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+#section-invoices .invoice-items-wrap {
+    overflow-x: auto;
+}
+
+#section-invoices .invoice-items-table {
+    width: 100%;
+    min-width: 470px;
+    border-collapse: collapse;
+    text-align: right;
+}
+
+#section-invoices .invoice-items-table th,
+#section-invoices .invoice-items-table td {
+    padding: 13px 10px;
+    border-bottom: 1px solid var(--invoice-line);
+}
+
+#section-invoices .invoice-items-table th {
+    color: var(--invoice-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+#section-invoices .invoice-items-table td {
+    color: var(--invoice-ink);
+    font-size: 0.82rem;
+}
+
+#section-invoices .invoice-items-table td:first-child {
+    width: 44px;
+    color: var(--invoice-muted);
+}
+
+#section-invoices .invoice-items-table td:nth-child(n + 3),
+#section-invoices .invoice-items-table th:nth-child(n + 3) {
+    text-align: center;
+    white-space: nowrap;
+}
+
+#section-invoices .invoice-totals {
+    display: grid;
+    gap: 10px;
+    width: min(100%, 360px);
+    margin: 20px 0 0 auto;
+}
+
+#section-invoices .invoice-total-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    color: var(--invoice-muted);
+    font-size: 0.82rem;
+}
+
+#section-invoices .invoice-total-row strong {
+    color: var(--invoice-ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+#section-invoices .invoice-total-row.is-grand {
+    margin-top: 3px;
+    padding: 14px 16px;
+    border: 1px solid rgba(113, 0, 20, 0.22);
+    border-radius: 12px;
+    background: rgba(113, 0, 20, 0.045);
+    color: var(--invoice-wine);
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+#section-invoices .invoice-total-row.is-grand strong {
+    color: var(--invoice-wine);
+    font-size: 1.2rem;
+}
+
+#section-invoices .invoice-paper-notes {
+    margin: 22px 0 0;
+    padding-top: 14px;
+    border-top: 1px dashed var(--invoice-line);
+    color: var(--invoice-muted);
+    font-size: 0.78rem;
+    white-space: pre-wrap;
+}
+
+#section-invoices .invoice-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--stroke);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: invoice-spin 0.75s linear infinite;
+}
+
+#section-invoices .invoice-detail-state.is-error {
+    color: var(--danger);
+}
+
+@keyframes invoice-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 900px) {
+    #section-invoices .invoices-filter-card {
+        grid-template-columns: minmax(220px, 1fr) minmax(0, 1fr);
+    }
+
+    #section-invoices .invoice-search-field {
+        grid-column: 1 / -1;
+    }
+
+    #section-invoices .invoice-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #section-invoices .invoice-side-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+    }
+
+    #section-invoices .invoice-actions-panel {
+        grid-row: span 2;
+    }
+}
+
+@media (max-width: 640px) {
+    #section-invoices .invoices-toolbar {
+        align-items: flex-start;
+        padding: 18px;
+        gap: 14px;
+    }
+
+    #section-invoices .invoices-count {
+        width: 100%;
+    }
+
+    #section-invoices .invoices-filter-card {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px;
+    }
+
+    #section-invoices .invoice-search-field,
+    #section-invoices .invoice-date-field,
+    #section-invoices .invoices-filter-card>button {
+        grid-column: auto;
+        width: 100%;
+    }
+
+    #section-invoices .invoice-date-field input {
+        min-width: 0;
+    }
+
+    #section-invoices .invoices-table,
+    #section-invoices .invoices-table tbody,
+    #section-invoices .invoices-table tr,
+    #section-invoices .invoices-table td {
+        display: block;
+        width: 100%;
+    }
+
+    #section-invoices .invoices-table thead {
+        display: none;
+    }
+
+    #section-invoices .invoices-table tr {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--stroke);
+    }
+
+    #section-invoices .invoices-table td {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0;
+        border: 0;
+        text-align: left;
+    }
+
+    #section-invoices .invoices-table td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    #section-invoices .invoice-side-panel {
+        grid-template-columns: 1fr;
+    }
+
+    #section-invoices .invoice-actions-panel {
+        grid-row: auto;
+    }
+
+    #section-invoices .invoice-paper {
+        padding: 18px 14px;
+        border-radius: 14px;
+    }
+
+    #section-invoices .invoice-paper-head {
+        flex-direction: column;
+    }
+
+    #section-invoices .invoice-paper-number {
+        text-align: right;
+    }
+
+    #section-invoices .invoice-paper-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media print {
+    body.invoice-printing * {
+        visibility: hidden !important;
+    }
+}
+
+/* ==========================================================
+   INVOICES — polish pass
+   الصق هذا الملف في آخر admin.css (بعد قواعد #section-invoices)
+   ========================================================== */
+
+#section-invoices .invoices-section {
+    gap: 14px;
+}
+
+#section-invoices .invoices-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    color: #fff;
+    background: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 900;
+}
+
+#section-invoices .invoices-count strong {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+/* 2) الفلاتر: كل العناصر بنفس الارتفاع (الزر كان 50px بسبب !important) */
+#section-invoices .invoices-filter-card {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 14px;
+}
+
+#section-invoices .invoice-search-field,
+#section-invoices .invoice-date-field {
+    min-height: 44px;
+    height: 44px;
+    border-radius: 10px;
+}
+
+#section-invoices .invoice-search-field:focus-within,
+#section-invoices .invoice-date-field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(113, 0, 20, 0.08);
+}
+
+#section-invoices .invoice-date-field input {
+    direction: ltr;
+    text-align: right;
+    min-width: 128px;
+    font-size: 0.82rem;
+}
+
+#section-invoices .invoices-filter-card>.btn-secondary {
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 18px !important;
+    font-size: 0.82rem !important;
+    white-space: nowrap;
+}
+
+/* 3) الجدول */
+#section-invoices .invoices-table th {
+    padding: 13px 18px;
+    background: rgba(113, 0, 20, 0.04);
+    color: var(--muted);
+    font-size: 0.78rem;
+    border-bottom: 1px solid var(--stroke);
+}
+
+#section-invoices .invoices-table td {
+    padding: 13px 18px;
+    font-size: 0.86rem;
+}
+
+#section-invoices .invoices-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+#section-invoices .invoices-table td:nth-child(2) {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+#section-invoices .invoices-table td:nth-child(3) {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+/* عمود التفاصيل: توسيط وعرض ثابت */
+#section-invoices .invoices-table th:last-child,
+#section-invoices .invoices-table td:last-child {
+    width: 110px;
+    text-align: center;
+}
+
+#section-invoices .invoice-row-open {
+    min-height: 32px;
+    padding: 0 12px;
+    background: transparent;
+    border-color: var(--stroke);
+}
+
+#section-invoices .invoice-row-open:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #fff;
+}
+
+/* 4) الترقيم: أزرار أصغر وأخف */
+#section-invoices .invoice-pagination {
+    padding: 14px;
+    border-top: 1px solid var(--stroke);
+    gap: 12px;
+}
+
+#section-invoices .invoice-pagination .btn-secondary {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 16px !important;
+    font-size: 0.8rem !important;
+}
+
+#section-invoices .invoice-pagination .btn-secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* 5) موبايل */
+@media (max-width: 640px) {
+    #section-invoices .invoices-filter-card>.btn-secondary {
+        width: 100%;
+    }
+
+    #section-invoices .invoices-table td:last-child {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* ==========================================================
+   INVOICES — polish v2  (يستبدل invoices-polish.css السابق كاملاً)
+   الصقه في آخر admin.css بعد قواعد #section-invoices
+   ========================================================== */
+
+#section-invoices .invoices-section {
+    gap: 14px;
+}
+
+/* ---------- شريط فلاتر مستقل عن جدول الفواتير ---------- */
+#section-invoices .invoices-filter-card {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) auto auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 14px;
+}
+
+#section-invoices .invoice-search-field,
+#section-invoices .invoice-date-field {
+    height: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--stroke);
+    background: var(--background);
+    transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+#section-invoices .invoice-search-field:focus-within,
+#section-invoices .invoice-date-field:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(113, 0, 20, 0.08);
+}
+
+#section-invoices .invoice-search-field {
+    min-width: 0;
+}
+
+#section-invoices .invoice-search-field .lucide-icon {
+    width: 17px;
+    height: 17px;
+    flex: none;
+}
+
+/* التاريخ: كلمة من/إلى كبادئة مفصولة بخط رفيع */
+#section-invoices .invoice-date-field {
+    position: relative;
+    min-width: 0;
+    gap: 10px;
+}
+
+#section-invoices .invoice-date-field>span {
+    padding-inline-end: 10px;
+    border-inline-end: 1px solid var(--stroke);
+    line-height: 20px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--muted);
+}
+
+#section-invoices .invoice-date-field .reports-date-control {
+    flex: 1;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--primary);
+    text-align: right;
+    box-shadow: none;
+}
+
+#section-invoices .invoice-date-field .reports-date-control:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+#section-invoices .invoice-date-field .reports-date-control .lucide-icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
+}
+
+#section-invoices .invoice-date-field .reports-date-input {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+#section-invoices .invoice-date-field .reports-calendar {
+    top: calc(100% + 8px);
+    right: 0;
+    left: auto;
+    z-index: 1000001;
+}
+
+#section-invoices .invoice-date-field .reports-calendar.opens-up {
+    top: auto;
+    bottom: calc(100% + 8px);
+}
+
+#section-invoices .invoice-date-field .reports-date-value {
+    text-align: right;
+}
+
+#section-invoices .invoice-date-field .reports-date-control:hover .lucide-icon {
+    color: var(--primary);
+}
+
+#section-invoices .invoice-date-field .reports-date-control,
+#section-invoices .invoice-date-field .reports-date-control .lucide-icon {
+    cursor: pointer;
+}
+
+/* زر مسح الفلاتر: هادئ، بدون إطار أسود */
+#section-invoices .invoices-filter-card>.btn-secondary {
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 16px !important;
+    border: 1px solid var(--stroke) !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    color: var(--muted) !important;
+    font-size: 0.82rem !important;
+    font-weight: 800 !important;
+    white-space: nowrap;
+    outline: none;
+    box-shadow: none !important;
+}
+
+#section-invoices .invoices-filter-card>.btn-secondary:hover {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+    background: rgba(113, 0, 20, 0.04) !important;
+}
+
+#section-invoices .invoices-filter-card>.btn-secondary:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ---------- الجدول ---------- */
+#section-invoices .invoices-table th {
+    padding: 13px 18px;
+    background: rgba(113, 0, 20, 0.04);
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+#section-invoices .invoices-table td {
+    padding: 13px 18px;
+    font-size: 0.86rem;
+}
+
+#section-invoices .invoices-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+#section-invoices .invoices-table td:nth-child(2),
+#section-invoices .invoices-table td:nth-child(3) {
+    color: var(--muted);
+}
+
+#section-invoices .invoices-table th:last-child,
+#section-invoices .invoices-table td:last-child {
+    width: 110px;
+    text-align: center;
+}
+
+#section-invoices .invoice-row-open {
+    min-height: 32px;
+    padding: 0 12px;
+    background: transparent;
+}
+
+#section-invoices .invoice-row-open:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #fff;
+}
+
+/* ---------- الترقيم ---------- */
+#section-invoices .invoice-pagination {
+    padding: 14px;
+    border-top: 1px solid var(--stroke);
+    gap: 12px;
+}
+
+#section-invoices .invoice-pagination .btn-secondary {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 16px !important;
+    font-size: 0.8rem !important;
+}
+
+#section-invoices .invoice-pagination .btn-secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width: 640px) {
+
+    #section-invoices .invoice-date-field input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #section-invoices .invoices-table td:last-child {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+@media (max-width: 900px) {
+    #section-invoices .invoices-filter-card {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    #section-invoices .invoice-search-field,
+    #section-invoices .invoices-filter-card>.btn-secondary {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 640px) {
+    #section-invoices #invoiceListView {
+        gap: 14px;
+    }
+
+    #section-invoices .invoices-toolbar {
+        align-items: flex-start;
+        gap: 14px;
+        padding: 18px;
+    }
+
+    #section-invoices .invoices-count {
+        width: 100%;
+    }
+
+    #section-invoices .invoices-filter-card {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px;
+    }
+
+    #section-invoices .invoice-search-field,
+    #section-invoices .invoice-date-field,
+    #section-invoices .invoices-filter-card>.btn-secondary {
+        grid-column: auto;
+        width: 100%;
+    }
+
+    #section-invoices .invoice-date-field input {
+        min-width: 0;
+    }
+}
+
+/* ==========================================================
+   ORDER CARDS — إصلاح الفراغ داخل الكروت
+   الصقه في آخر admin.css (بعد قواعد #ordersMobileCards)
+   ========================================================== */
+
+/* السبب: grid-auto-rows: 1fr كان يجبر كل الصفوف تاخد ارتفاع أطول كرت بالصفحة.
+   الحل: كل صف ياخد ارتفاع أطول كرت فيه هو بس. */
+#ordersTableWrap.orders-cards-mode #ordersMobileCards {
+    grid-auto-rows: auto;
+    align-items: stretch;
+    row-gap: 22px;
+}
+
+/* بطاقة بدون ارتفاع أدنى مفروض */
+#ordersMobileCards .oc,
+#ordersMobileCards>* {
+    min-height: 0;
+}
+
+/* الفراغ الباقي داخل نفس الصف يصير "مقصود": الأصناف فوق،
+   والإجمالي والأزرار مثبتة تحت بخط منقّط واضح بينهم */
+#ordersMobileCards .oc-bt {
+    margin-top: auto;
+    padding-top: 2px;
+}
+
+#ordersMobileCards .oc-items,
+#ordersMobileCards .oc-note {
+    margin-bottom: 10px;
+}
+
+#ordersTableWrap.orders-cards-mode #ordersMobileCards {
+    grid-auto-rows: auto;
+    align-items: start;
+    /* بدل stretch */
+}
+
+#ordersMobileCards .oc-note {
+    padding: 6px 10px;
+    margin: 8px 0;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+#ordersMobileCards .oc-note span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    /* سطر واحد بس */
+    overflow: hidden;
 }

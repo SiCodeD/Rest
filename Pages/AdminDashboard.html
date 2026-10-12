@@ -25,7 +25,7 @@
     />
     <link
       rel="stylesheet"
-      href="../css/pages/admin.css?v=20260921-burgundy-brand"
+      href="../css/pages/admin.css?v=20261012-payment-confirm-modal"
     />
     <link rel="stylesheet" href="../css/components/feature-gates.css" />
 
@@ -44,6 +44,15 @@
       };
     </script>
 
+    <style>
+      html.auth-checking body {
+        visibility: hidden;
+      }
+    </style>
+
+    <script>
+      document.documentElement.classList.add("auth-checking");
+    </script>
     <style id="admin-loyalty-polish">
       /* =====================================================
          Loyalty / Customers / Rewards / Missions
@@ -328,17 +337,12 @@
         margin-bottom: 6px;
         font-size: 0.8125rem;
       }
-      #loyaltyCustomerSearch,
       #customersSearch {
         width: 280px;
       }
       #redemptionSearch {
         width: 240px;
       }
-      #rewardVerifyCode {
-        width: 280px;
-      }
-
       /* forms */
       .lx-form-pad {
         padding: 0 var(--lx-pad) var(--lx-pad);
@@ -434,10 +438,8 @@
         .lx-filter-head > :is(input, select),
         .lx-inline-form > div,
         .lx-inline-form > :is(button, input),
-        #loyaltyCustomerSearch,
         #customersSearch,
-        #redemptionSearch,
-        #rewardVerifyCode {
+        #redemptionSearch {
           width: 100% !important;
           flex: 1 1 100%;
         }
@@ -607,6 +609,11 @@
         right: 0;
         top: calc(100% + 10px);
       }
+      .mission-datetime-picker .reports-calendar.opens-up {
+        top: auto;
+        bottom: calc(100% + 10px);
+        transform-origin: bottom right;
+      }
       /* End-date pickers sit in the left column; anchor left so the calendar stays inside the modal. */
       .mission-datetime-picker[data-datetime-picker="missionEndsAt"]
         .reports-calendar,
@@ -615,6 +622,12 @@
         right: auto;
         left: 0;
         transform-origin: top left;
+      }
+      .mission-datetime-picker[data-datetime-picker="missionEndsAt"]
+        .reports-calendar.opens-up,
+      .mission-datetime-picker[data-datetime-picker="rewardExpiresAt"]
+        .reports-calendar.opens-up {
+        transform-origin: bottom left;
       }
       @media (max-width: 520px) {
         .mission-datetime-picker {
@@ -965,6 +978,20 @@
       #section-loyalty .lx-rules {
         min-width: 560px;
       }
+      #section-loyalty .lx-rules .custom-select-wrapper {
+        min-width: 0;
+        width: 100%;
+      }
+      #section-loyalty .lx-rules .custom-select-button {
+        min-height: var(--lx-field-h);
+        padding-block: 10px;
+        border-radius: 12px;
+        font: inherit;
+      }
+      #section-loyalty .lx-rules .custom-select-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.65;
+      }
       #section-loyalty .lx-rules td:nth-child(n + 2),
       #section-loyalty .lx-rules th:nth-child(n + 2) {
         text-align: center;
@@ -1085,27 +1112,11 @@
         color: var(--muted);
         pointer-events: none;
       }
-      #section-loyalty .lx-search #loyaltyCustomerSearch {
-        width: 100%;
-        padding-inline-start: 42px;
-      }
-      #loyaltyCustomersBody td:nth-child(1) {
-        font-weight: 700;
-      }
-      #loyaltyCustomersBody td:nth-child(2) {
-        direction: ltr;
-        unicode-bidi: isolate;
-        color: var(--muted);
-        white-space: nowrap;
-        text-align: end;
-      }
-      #loyaltyCustomersBody td:nth-child(n + 4):nth-child(-n + 5),
       #loyaltyLevelsBody td:nth-child(n + 2):nth-child(-n + 3) {
         font-weight: 700;
         white-space: nowrap;
       }
-      #loyaltyLevelsBody td:last-child,
-      #loyaltyCustomersBody td:last-child {
+      #loyaltyLevelsBody td:last-child {
         white-space: nowrap;
       }
 
@@ -1335,17 +1346,12 @@
           margin: 0;
           width: 110px;
         }
-        #loyaltyCustomersBody td:nth-child(2) {
-          justify-content: space-between;
-        }
-        #loyaltyLevelsBody td:last-child,
-        #loyaltyCustomersBody td:last-child {
+        #loyaltyLevelsBody td:last-child {
           flex-wrap: wrap;
           justify-content: stretch;
           padding-top: 10px !important;
         }
-        #loyaltyLevelsBody td:last-child > button,
-        #loyaltyCustomersBody td:last-child > button {
+        #loyaltyLevelsBody td:last-child > button {
           flex: 1 1 0;
           margin: 0 !important;
           justify-content: center;
@@ -1487,47 +1493,6 @@
         background: var(--surface-soft, rgba(113, 0, 20, 0.04));
       }
 
-      /* التحقق من مكافأة */
-      #section-rewards .rw-verify {
-        padding: var(--lx-gap) var(--lx-pad);
-        align-items: stretch;
-      }
-      #section-rewards .rw-code {
-        position: relative;
-        flex: 1 1 280px;
-        max-width: 420px;
-      }
-      #section-rewards .rw-code .lucide-icon {
-        position: absolute;
-        inset-inline-start: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 18px;
-        height: 18px;
-        color: var(--muted);
-        pointer-events: none;
-      }
-      #section-rewards .rw-code #rewardVerifyCode {
-        width: 100%;
-        padding-inline-start: 42px;
-        direction: ltr;
-        text-align: start;
-        font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-      }
-      #section-rewards .rw-verify .button-primary {
-        min-height: var(--lx-field-h);
-        padding-inline: 28px;
-      }
-      #section-rewards .lx-result {
-        padding-top: 0;
-      }
-      #section-rewards .lx-result:not([hidden]) > * {
-        border-radius: 14px;
-      }
-
       /* قائمة المكافآت */
       #section-rewards .rw-table {
         min-width: 760px;
@@ -1618,26 +1583,18 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         transition: inset-inline-start 0.2s ease;
       }
-      #rewardActive:checked {
+      #rewardModal .rw-switch input:checked {
         background: var(--primary);
       }
-      #rewardActive:checked::after {
+      #rewardModal .rw-switch input:checked::after {
         inset-inline-start: 21px;
       }
-      #rewardActive:focus-visible {
+      #rewardModal .rw-switch input:focus-visible {
         outline: 2px solid var(--primary);
         outline-offset: 2px;
       }
 
       @media (max-width: 720px) {
-        #section-rewards .rw-code {
-          max-width: none;
-          flex: 1 1 100%;
-        }
-        #section-rewards .rw-verify .button-primary {
-          width: 100%;
-          justify-content: center;
-        }
         #section-rewards table.lx-stack-table {
           min-width: 0;
         }
@@ -1687,7 +1644,6 @@
         #rewardsBody td:last-child,
         #missionsBody td:last-child,
         #loyaltyLevelsBody td:last-child,
-        #loyaltyCustomersBody td:last-child,
         #customersBody td:last-child {
           display: flex;
           width: 100%;
@@ -1697,7 +1653,6 @@
         #rewardsBody td:last-child > button,
         #missionsBody td:last-child > button,
         #loyaltyLevelsBody td:last-child > button,
-        #loyaltyCustomersBody td:last-child > button,
         #customersBody td:last-child > button {
           flex: 1 1 0 !important;
           width: 0 !important;
@@ -2278,7 +2233,8 @@
       }
       #adminCustomerProfileModal .cpm-state[hidden],
       #adminCustomerProfileModal .cpm-stack[hidden],
-      #adminCustomerProfileModal .cpm-empty[hidden] {
+      #adminCustomerProfileModal .cpm-empty[hidden],
+      #adminCustomerProfileModal .cpm-list[hidden] {
         display: none !important;
       }
       #adminCustomerProfileModal .cpm-spinner {
@@ -2319,6 +2275,84 @@
       #adminCustomerProfileModal .cpm-block-title span {
         font-size: 0.8rem;
         color: var(--muted);
+      }
+      #adminCustomerProfileModal .cpm-rating {
+        display: grid;
+        gap: 12px;
+        padding: 18px;
+      }
+      #adminCustomerProfileModal .cpm-rating-stars {
+        display: flex;
+        gap: 6px;
+      }
+      #adminCustomerProfileModal .cpm-rating-star {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--stroke);
+        border-radius: 12px;
+        background: var(--panel-strong);
+        color: var(--muted);
+        font-size: 24px;
+        cursor: pointer;
+        transition:
+          color 0.16s ease,
+          border-color 0.16s ease,
+          background 0.16s ease,
+          transform 0.16s ease;
+      }
+      #adminCustomerProfileModal .cpm-rating-star:hover,
+      #adminCustomerProfileModal .cpm-rating-star.is-selected {
+        color: #b77908;
+        border-color: rgba(183, 121, 8, 0.32);
+        background: rgba(245, 158, 11, 0.12);
+      }
+      #adminCustomerProfileModal .cpm-rating-star:hover {
+        transform: translateY(-2px);
+      }
+      #adminCustomerProfileModal .cpm-rating-note {
+        width: 100%;
+        min-height: 84px;
+        resize: vertical;
+      }
+      #adminCustomerProfileModal .cpm-rating-meta,
+      #adminCustomerProfileModal .cpm-rating-message {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      #adminCustomerProfileModal .cpm-rating-message.is-error {
+        color: var(--danger);
+      }
+      #adminCustomerProfileModal .cpm-rating-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      #adminCustomerProfileModal .cpm-rating-actions .button-primary {
+        min-height: 40px;
+      }
+      #adminCustomerProfileModal .cpm-rating-history-wrap {
+        display: grid;
+        gap: 8px;
+        padding-top: 12px;
+        border-top: 1px solid var(--stroke);
+      }
+      #adminCustomerProfileModal .cpm-rating-history-wrap h4 {
+        margin: 0;
+        color: var(--text);
+        font-size: 0.88rem;
+        font-weight: 800;
+      }
+      #adminCustomerProfileModal .cpm-rating-history-item {
+        align-items: flex-start;
+      }
+      #adminCustomerProfileModal .cpm-rating-history-stars {
+        color: #b77908;
+        white-space: nowrap;
       }
 
       /* cards */
@@ -2366,6 +2400,42 @@
         margin-top: 2px;
         font-size: 0.8rem;
         line-height: 1.5;
+      }
+      #adminCustomerProfileModal .cpm-manage-points {
+        display: inline-grid;
+        place-items: center;
+        width: 30px !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        flex: 0 0 30px !important;
+        padding: 0 !important;
+        border: 1px solid var(--stroke);
+        border-radius: 9px !important;
+        background: var(--panel-strong);
+        color: var(--muted);
+        box-shadow: none;
+        transition:
+          color 0.18s ease,
+          background 0.18s ease,
+          border-color 0.18s ease,
+          transform 0.18s ease;
+      }
+      #adminCustomerProfileModal .cpm-manage-points:hover {
+        color: var(--primary);
+        border-color: var(--primary-soft);
+        background: var(--primary-soft);
+        transform: translateY(-1px);
+      }
+      #adminCustomerProfileModal .cpm-points-value-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      #adminCustomerProfileModal .cpm-manage-points .lucide-icon {
+        width: 15px;
+        height: 15px;
       }
 
       /* progress */
@@ -2705,6 +2775,127 @@
         }
       }
     </style>
+
+    <style id="order-cards-fix">
+      /* نسخة احتياطية من تعديلات كروت الطلبات (نفس ما في admin.css) */
+      #ordersTableWrap #ordersMobileCards {
+        grid-auto-rows: 1fr;
+        align-items: stretch;
+      }
+      #ordersMobileCards .oc-sg {
+        margin: 14px 0;
+      }
+      #ordersMobileCards .oc-ds {
+        margin: 10px 0;
+      }
+      #ordersMobileCards .oc-bt {
+        margin-top: auto;
+      }
+
+      /* اسم العميل واضح + رقم الطلب كشارة */
+      #ordersMobileCards .oc-who {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px 10px;
+        width: 100%;
+        margin: 10px 0 2px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: var(--oc-who-bg, rgba(113, 0, 20, 0.06));
+        text-align: right;
+      }
+      #ordersMobileCards .oc-cust {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
+        color: var(--oc-ink, #2c2522);
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+        text-align: right;
+      }
+      #ordersMobileCards .oc-num {
+        flex: none;
+        padding: 1px 8px;
+        border-radius: 999px;
+        background: var(--oc-track, rgba(44, 37, 34, 0.12));
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.6;
+        color: var(--oc-muted, #7b706b);
+      }
+
+      /* الأزرار: قبول + رفض بسطر، وتفاصيل بسطر لحاله */
+      #ordersMobileCards .oc-ac {
+        flex-wrap: wrap;
+      }
+      #ordersMobileCards .oc-ac .oc-btn {
+        padding-inline: 8px;
+      }
+      #ordersMobileCards .oc-ac .oc-btn > span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #ordersMobileCards .oc-ac .oc-btn-ghost:not(.is-wide) {
+        flex: 1 1 100%;
+        width: auto;
+      }
+      #ordersMobileCards .oc-ac .oc-btn-ghost:not(.is-wide) span {
+        display: inline;
+      }
+    </style>
+    <style id="invoice-stamp-settings-css">
+      #settings-invoice .lx-stamp-settings {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      #invoiceStampPreview {
+        width: 180px;
+        height: 180px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 2px dashed var(--stroke);
+        border-radius: 16px;
+        background: repeating-conic-gradient(
+            rgba(128, 128, 128, 0.12) 0% 25%,
+            transparent 0% 50%
+          )
+          50% / 16px 16px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      #invoiceStampPreview img {
+        max-width: 86%;
+        max-height: 86%;
+        object-fit: contain;
+      }
+      #settings-invoice .lx-stamp-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+        min-width: 220px;
+      }
+      #settings-invoice .lx-stamp-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      #settings-invoice .lx-hint {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.8rem;
+        line-height: 1.7;
+      }
+    </style>
   </head>
 
   <body>
@@ -2786,6 +2977,15 @@
                 <div class="sidebar-copy"><strong>الطلبات</strong></div>
               </div>
               <span class="sidebar-badge" id="ordersBadge" hidden>0</span>
+            </button>
+
+            <button class="sidebar-link" type="button" data-section="invoices">
+              <div class="sidebar-link-main">
+                <div class="sidebar-icon">
+                  <i data-lucide="file-text" class="lucide-icon"></i>
+                </div>
+                <div class="sidebar-copy"><strong>الفواتير</strong></div>
+              </div>
             </button>
 
             <button class="sidebar-link" type="button" data-section="tables">
@@ -4798,6 +4998,23 @@
               color: var(--primary-deep, var(--primary));
             }
 
+            #orderDetailsBody .payment-proof-link.is-payment-confirm,
+            #orderDetailsBody .payment-proof-link.is-payment-reject {
+              margin-inline-start: 0;
+              padding: 7px 10px;
+              border-radius: 9px;
+              color: #fff;
+              text-decoration: none;
+            }
+
+            #orderDetailsBody .payment-proof-link.is-payment-confirm {
+              background: var(--primary);
+            }
+
+            #orderDetailsBody .payment-proof-link.is-payment-reject {
+              background: #b42318;
+            }
+
             #paymentProofModal {
               position: fixed !important;
               inset: 0 !important;
@@ -6184,6 +6401,353 @@
           </div>
         </section>
 
+        <section id="section-invoices" class="admin-section">
+          <div class="section-stack invoices-section">
+            <div id="invoiceListView">
+              <div class="departments-toolbar invoices-toolbar">
+                <div>
+                  <h3>السجلات المالية</h3>
+                  <p>
+                    تابع فواتير المطعم وابحث عنها وأعد طباعتها من بيانات الطلب
+                    الأصلية.
+                  </p>
+                </div>
+                <div class="invoices-count" role="status" aria-live="polite">
+                  <span>عدد الفواتير</span>
+                  <strong id="invoiceListCount">—</strong>
+                </div>
+              </div>
+
+              <div class="invoices-filter-card">
+                <label class="invoice-search-field">
+                  <i
+                    data-lucide="search"
+                    class="lucide-icon"
+                    aria-hidden="true"
+                  ></i>
+                  <span class="sr-only">البحث في الفواتير</span>
+                  <input
+                    id="invoiceSearch"
+                    type="search"
+                    placeholder="رقم الفاتورة أو اسم العميل..."
+                    autocomplete="off"
+                  />
+                </label>
+                <div class="invoice-date-field">
+                  <span>من</span>
+                  <button
+                    class="reports-date-control reports-date-trigger"
+                    type="button"
+                    data-date-target="invoiceDateFrom"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-label="اختيار تاريخ البداية"
+                  >
+                    <i
+                      data-lucide="calendar-days"
+                      class="lucide-icon"
+                      aria-hidden="true"
+                    ></i>
+                    <span
+                      class="reports-date-value"
+                      data-date-value="invoiceDateFrom"
+                      >اختر تاريخًا</span
+                    >
+                  </button>
+                  <input
+                    type="date"
+                    id="invoiceDateFrom"
+                    class="reports-date-input"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    data-date-pair="invoiceDateTo"
+                  />
+                  <div
+                    class="reports-calendar"
+                    data-date-picker="invoiceDateFrom"
+                    role="dialog"
+                    aria-label="اختيار تاريخ البداية"
+                  >
+                    <div class="reports-calendar-header">
+                      <button
+                        type="button"
+                        class="reports-calendar-nav"
+                        data-calendar-prev="invoiceDateFrom"
+                        aria-label="الشهر السابق"
+                      >
+                        ‹
+                      </button>
+                      <strong data-calendar-title="invoiceDateFrom"></strong>
+                      <button
+                        type="button"
+                        class="reports-calendar-nav"
+                        data-calendar-next="invoiceDateFrom"
+                        aria-label="الشهر التالي"
+                      >
+                        ›
+                      </button>
+                    </div>
+                    <div class="reports-calendar-weekdays" aria-hidden="true">
+                      <span>أحد</span><span>اثن</span><span>ثلا</span
+                      ><span>أرب</span><span>خمي</span><span>جمع</span
+                      ><span>سبت</span>
+                    </div>
+                    <div
+                      class="reports-calendar-days"
+                      data-calendar-days="invoiceDateFrom"
+                    ></div>
+                    <div class="reports-calendar-footer">
+                      <button
+                        type="button"
+                        class="reports-calendar-footer-btn"
+                        data-calendar-today="invoiceDateFrom"
+                      >
+                        اليوم
+                      </button>
+                      <button
+                        type="button"
+                        class="reports-calendar-footer-btn muted"
+                        data-calendar-clear="invoiceDateFrom"
+                      >
+                        مسح
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="invoice-date-field">
+                  <span>إلى</span>
+                  <button
+                    class="reports-date-control reports-date-trigger"
+                    type="button"
+                    data-date-target="invoiceDateTo"
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-label="اختيار تاريخ النهاية"
+                  >
+                    <i
+                      data-lucide="calendar-days"
+                      class="lucide-icon"
+                      aria-hidden="true"
+                    ></i>
+                    <span
+                      class="reports-date-value"
+                      data-date-value="invoiceDateTo"
+                      >اختر تاريخًا</span
+                    >
+                  </button>
+                  <input
+                    type="date"
+                    id="invoiceDateTo"
+                    class="reports-date-input"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    data-date-pair="invoiceDateFrom"
+                  />
+                  <div
+                    class="reports-calendar"
+                    data-date-picker="invoiceDateTo"
+                    role="dialog"
+                    aria-label="اختيار تاريخ النهاية"
+                  >
+                    <div class="reports-calendar-header">
+                      <button
+                        type="button"
+                        class="reports-calendar-nav"
+                        data-calendar-prev="invoiceDateTo"
+                        aria-label="الشهر السابق"
+                      >
+                        ‹
+                      </button>
+                      <strong data-calendar-title="invoiceDateTo"></strong>
+                      <button
+                        type="button"
+                        class="reports-calendar-nav"
+                        data-calendar-next="invoiceDateTo"
+                        aria-label="الشهر التالي"
+                      >
+                        ›
+                      </button>
+                    </div>
+                    <div class="reports-calendar-weekdays" aria-hidden="true">
+                      <span>أحد</span><span>اثن</span><span>ثلا</span
+                      ><span>أرب</span><span>خمي</span><span>جمع</span
+                      ><span>سبت</span>
+                    </div>
+                    <div
+                      class="reports-calendar-days"
+                      data-calendar-days="invoiceDateTo"
+                    ></div>
+                    <div class="reports-calendar-footer">
+                      <button
+                        type="button"
+                        class="reports-calendar-footer-btn"
+                        data-calendar-today="invoiceDateTo"
+                      >
+                        اليوم
+                      </button>
+                      <button
+                        type="button"
+                        class="reports-calendar-footer-btn muted"
+                        data-calendar-clear="invoiceDateTo"
+                      >
+                        مسح
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  id="invoiceFiltersClear"
+                  class="btn-secondary"
+                  type="button"
+                >
+                  مسح الفلاتر
+                </button>
+              </div>
+
+              <div class="table-card invoices-table-card">
+                <div class="departments-table-wrap">
+                  <table class="invoices-table">
+                    <thead>
+                      <tr>
+                        <th>رقم الفاتورة</th>
+                        <th>رقم الطلب</th>
+                        <th>التاريخ والوقت</th>
+                        <th>الطاولة</th>
+                        <th>الإجمالي</th>
+                        <th>حالة الدفع</th>
+                        <th>التفاصيل</th>
+                      </tr>
+                    </thead>
+                    <tbody id="invoiceListBody">
+                      <tr>
+                        <td colspan="7" class="empty-row">
+                          اختر الفواتير لتحميلها.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div id="invoiceListEmpty" class="invoice-list-empty" hidden>
+                  <i
+                    data-lucide="file-search"
+                    class="lucide-icon"
+                    aria-hidden="true"
+                  ></i>
+                  <strong>لا توجد فواتير مطابقة</strong>
+                  <span>ستظهر هنا الفواتير التي تم إصدارها من الطاولات.</span>
+                </div>
+                <div class="invoice-pagination">
+                  <button
+                    id="invoicePrevPage"
+                    class="btn-secondary"
+                    type="button"
+                  >
+                    السابق
+                  </button>
+                  <span id="invoicePageLabel">—</span>
+                  <button
+                    id="invoiceNextPage"
+                    class="btn-secondary"
+                    type="button"
+                  >
+                    التالي
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="invoiceDetailView" class="invoice-detail-view" hidden>
+              <div class="invoice-detail-toolbar">
+                <button
+                  id="invoiceBackToList"
+                  class="btn-secondary"
+                  type="button"
+                >
+                  <i
+                    data-lucide="arrow-right"
+                    class="lucide-icon"
+                    aria-hidden="true"
+                  ></i>
+                  العودة إلى الفواتير
+                </button>
+                <span
+                  id="invoiceDetailStatus"
+                  class="invoice-status-badge"
+                ></span>
+              </div>
+              <div id="invoiceDetailLoading" class="invoice-detail-state">
+                <span class="invoice-spinner" aria-hidden="true"></span>
+                <span>جاري تحميل تفاصيل الفاتورة...</span>
+              </div>
+              <div
+                id="invoiceDetailError"
+                class="invoice-detail-state is-error"
+                hidden
+              ></div>
+              <div id="invoiceDetailContent" class="invoice-detail-grid" hidden>
+                <aside class="invoice-side-panel">
+                  <div class="invoice-actions-panel">
+                    <h3>إجراءات الفاتورة</h3>
+                    <button
+                      id="invoiceReprintBtn"
+                      class="button-primary"
+                      type="button"
+                    >
+                      <i
+                        data-lucide="printer"
+                        class="lucide-icon"
+                        aria-hidden="true"
+                      ></i>
+                      إعادة الطباعة
+                    </button>
+                    <button
+                      id="invoicePdfBtn"
+                      class="button-secondary"
+                      type="button"
+                    >
+                      <i
+                        data-lucide="file-down"
+                        class="lucide-icon"
+                        aria-hidden="true"
+                      ></i>
+                      تحميل PDF
+                    </button>
+                    <button
+                      id="invoiceShareBtn"
+                      class="button-secondary"
+                      type="button"
+                    >
+                      <i
+                        data-lucide="share-2"
+                        class="lucide-icon"
+                        aria-hidden="true"
+                      ></i>
+                      مشاركة / نسخ المرجع
+                    </button>
+                    <div
+                      id="invoicePaymentActions"
+                      class="invoice-payment-actions"
+                      hidden
+                    ></div>
+                  </div>
+                  <div class="invoice-meta-panel">
+                    <h3>معلومات الدفع</h3>
+                    <div id="invoicePaymentMeta"></div>
+                  </div>
+                  <div class="invoice-meta-panel">
+                    <h3>معلومات إضافية</h3>
+                    <div id="invoiceOrderMeta"></div>
+                  </div>
+                </aside>
+                <article
+                  class="invoice-paper"
+                  id="invoiceDetailPaper"
+                ></article>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="section-tables" class="admin-section">
           <div class="section-stack">
             <div class="departments-toolbar">
@@ -6541,9 +7105,17 @@
                 <div>
                   <h3>قواعد النقاط والخبرة</h3>
                   <p>
-                    تُمنح النقاط والخبرة عند تقديم الطلب للعميل المسجّل فقط.
+                    اربط المكافآت بإتمام الطلب أو الزيارة أو التقييم، أو أنشئ
+                    قاعدة يدوية.
                   </p>
                 </div>
+                <button
+                  class="button-secondary"
+                  id="loyaltyRuleAdd"
+                  type="button"
+                >
+                  إضافة قاعدة
+                </button>
               </div>
               <form id="loyaltySettingsForm" class="lx-form-pad">
                 <div class="lx-table-scroll">
@@ -6551,125 +7123,15 @@
                     <thead>
                       <tr>
                         <th>الحدث</th>
+                        <th>التفعيل</th>
                         <th>مفعّل</th>
                         <th>نقاط</th>
                         <th>XP</th>
+                        <th>التكرار / الحد مدى الحياة</th>
+                        <th>إجراء</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <td class="lx-evt" data-label="">إتمام طلب</td>
-                        <td data-label="مفعّل">
-                          <input
-                            type="checkbox"
-                            data-loyalty-setting="order_enabled"
-                          />
-                        </td>
-                        <td data-label="نقاط">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="order_points"
-                          />
-                        </td>
-                        <td data-label="XP">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="order_xp"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="lx-evt" data-label="">مكافأة أول طلب</td>
-                        <td data-label="مفعّل">
-                          <input
-                            type="checkbox"
-                            data-loyalty-setting="first_order_enabled"
-                          />
-                        </td>
-                        <td data-label="نقاط">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="first_order_points"
-                          />
-                        </td>
-                        <td data-label="XP">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="first_order_xp"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="lx-evt" data-label="">
-                          زيارة<span class="lx-soon">قريباً</span>
-                        </td>
-                        <td data-label="مفعّل">
-                          <input
-                            type="checkbox"
-                            data-loyalty-setting="visit_enabled"
-                          />
-                        </td>
-                        <td data-label="نقاط">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="visit_points"
-                          />
-                        </td>
-                        <td data-label="XP">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="visit_xp"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="lx-evt" data-label="">
-                          تقييم<span class="lx-soon">قريباً</span>
-                        </td>
-                        <td data-label="مفعّل">
-                          <input
-                            type="checkbox"
-                            data-loyalty-setting="review_enabled"
-                          />
-                        </td>
-                        <td data-label="نقاط">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="review_points"
-                          />
-                        </td>
-                        <td data-label="XP">
-                          <input
-                            class="input-modern"
-                            type="number"
-                            min="0"
-                            max="100000"
-                            data-loyalty-setting="review_xp"
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
+                    <tbody id="loyaltyRulesBody"></tbody>
                   </table>
                 </div>
                 <div class="lx-actions">
@@ -6753,40 +7215,6 @@
                 </table>
               </div>
             </div>
-
-            <div class="table-card">
-              <div class="table-head section-head">
-                <div>
-                  <h3>العملاء</h3>
-                  <p id="loyaltyCustomersCount">جاري التحميل...</p>
-                </div>
-                <div class="lx-search">
-                  <i data-lucide="search" class="lucide-icon"></i
-                  ><input
-                    class="input-modern"
-                    id="loyaltyCustomerSearch"
-                    type="search"
-                    placeholder="ابحث بالاسم أو رقم الجوال..."
-                    autocomplete="off"
-                  />
-                </div>
-              </div>
-              <div class="departments-table-wrap">
-                <table class="lx-stack-table">
-                  <thead>
-                    <tr>
-                      <th>العميل</th>
-                      <th>الجوال</th>
-                      <th>المستوى</th>
-                      <th>XP</th>
-                      <th>النقاط</th>
-                      <th class="text-right">الإجراءات</th>
-                    </tr>
-                  </thead>
-                  <tbody id="loyaltyCustomersBody"></tbody>
-                </table>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -6826,7 +7254,7 @@
                 <div class="cx-field">
                   <span class="cx-label">النشاط</span>
                   <select
-                    class="input-modern"
+                    class="select-modern"
                     id="customersActivityFilter"
                     aria-label="فلترة النشاط"
                   >
@@ -6838,7 +7266,7 @@
                 <div class="cx-field">
                   <span class="cx-label">المستوى</span>
                   <select
-                    class="input-modern"
+                    class="select-modern"
                     id="customersLevelFilter"
                     aria-label="فلترة المستوى"
                   >
@@ -6848,7 +7276,7 @@
                 <div class="cx-field">
                   <span class="cx-label">الطلبات</span>
                   <select
-                    class="input-modern"
+                    class="select-modern"
                     id="customersOrdersFilter"
                     aria-label="فلترة الطلبات"
                   >
@@ -7224,38 +7652,6 @@
             <div class="table-card">
               <div class="table-head section-head">
                 <div>
-                  <h3>التحقق من مكافأة</h3>
-                  <p>أدخل رمز العميل للتحقق منه ثم استخدامه.</p>
-                </div>
-              </div>
-              <form id="rewardVerifyForm" class="lx-inline-form rw-verify">
-                <div class="rw-code">
-                  <i data-lucide="ticket" class="lucide-icon"></i>
-                  <input
-                    class="input-modern"
-                    id="rewardVerifyCode"
-                    type="text"
-                    dir="ltr"
-                    maxlength="20"
-                    placeholder="MSL-XXXXX-XXXXX"
-                    autocomplete="off"
-                    required
-                  />
-                </div>
-                <button
-                  class="button-primary"
-                  id="rewardVerifyBtn"
-                  type="submit"
-                >
-                  تحقق
-                </button>
-              </form>
-              <div id="rewardVerifyResult" class="lx-result" hidden></div>
-            </div>
-
-            <div class="table-card">
-              <div class="table-head section-head">
-                <div>
                   <h3>قائمة المكافآت</h3>
                   <p id="rewardsCountText">جاري التحميل...</p>
                 </div>
@@ -7484,7 +7880,7 @@
                     <tr>
                       <th>العميل</th>
                       <th>المكافأة</th>
-                      <th>الرمز</th>
+                      <th>رقم الطلب</th>
                       <th>التكلفة</th>
                       <th>الحالة</th>
                       <th>التاريخ</th>
@@ -8710,6 +9106,13 @@
                     <i data-lucide="wallet" class="lucide-icon"></i>
                     طرق الدفع
                   </button>
+                  <button
+                    class="settings-nav-item"
+                    onclick="scrollToSection('settings-invoice', this)"
+                  >
+                    <i data-lucide="stamp" class="lucide-icon"></i>
+                    ختم الفاتورة
+                  </button>
                   <!-- <button
                     class="settings-nav-item"
                     onclick="scrollToSection('settings-school', this)"
@@ -9557,6 +9960,65 @@
                       </button>
                     </div>
                   </form>
+                </div>
+
+                <!-- Invoice stamp -->
+                <div id="settings-invoice" class="card" style="padding: 32px">
+                  <div class="section-head" style="margin-bottom: 24px">
+                    <div>
+                      <h3 style="margin: 0">ختم الفاتورة</h3>
+                      <p style="margin: 4px 0 0; color: var(--muted)">
+                        ارفع ختم مطعمك ليظهر أسفل كل فاتورة تُطبع، بجانب اسم
+                        المطعم واسم النظام.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="lx-stamp-settings">
+                    <div id="invoiceStampPreview">
+                      <span>لا يوجد ختم بعد</span>
+                    </div>
+                    <div class="lx-stamp-controls">
+                      <input
+                        type="file"
+                        id="invoiceStampFile"
+                        accept="image/png,image/jpeg,image/webp"
+                        hidden
+                      />
+                      <div class="lx-stamp-actions">
+                        <button
+                          type="button"
+                          class="button-secondary"
+                          id="invoiceStampPickBtn"
+                        >
+                          <i data-lucide="upload" class="lucide-icon"></i>
+                          رفع ختم
+                        </button>
+                        <button
+                          type="button"
+                          class="button-secondary"
+                          id="invoiceStampRemoveBtn"
+                          hidden
+                        >
+                          <i data-lucide="trash-2" class="lucide-icon"></i>
+                          إزالة
+                        </button>
+                        <button
+                          type="button"
+                          class="button-primary"
+                          id="invoiceStampSaveBtn"
+                          disabled
+                        >
+                          <i data-lucide="save" class="lucide-icon"></i>
+                          حفظ الختم
+                        </button>
+                      </div>
+                      <p class="lx-hint">
+                        الأفضل PNG بخلفية شفافة. يتم تصغير الصورة تلقائيًا،
+                        والختم خاص بمطعمك فقط.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Restaurant Info -->
@@ -11057,6 +11519,20 @@
           >
             إدارة النقاط
           </button>
+          <div class="lcm-manage" style="display: flex; gap: 8px">
+            <select
+              id="loyaltyManualRuleSelect"
+              class="input-modern"
+              aria-label="قاعدة المكافأة اليدوية"
+            ></select>
+            <button
+              class="button-secondary"
+              id="loyaltyManualRuleAward"
+              type="button"
+            >
+              منح القاعدة
+            </button>
+          </div>
 
           <div class="lcm-activity">
             <h4 class="lcm-activity-title">نشاط النقاط</h4>
@@ -11139,7 +11615,33 @@
                   >
                 </div>
                 <div class="card-info">
-                  <strong class="card-value" id="adminCustomerPoints"></strong>
+                  <div class="cpm-points-value-row">
+                    <strong
+                      class="card-value"
+                      id="adminCustomerPoints"
+                    ></strong>
+                    <button
+                      class="cpm-manage-points"
+                      id="adminCustomerManagePoints"
+                      type="button"
+                      data-tooltip="إدارة النقاط"
+                      aria-label="إدارة نقاط العميل"
+                    >
+                      <i
+                        data-lucide="sliders-horizontal"
+                        class="lucide-icon"
+                      ></i>
+                    </button>
+                    <button
+                      class="cpm-manage-points"
+                      id="adminCustomerLoyaltyHistory"
+                      type="button"
+                      data-tooltip="سجل الولاء والمكافآت"
+                      aria-label="عرض سجل الولاء والمكافآت"
+                    >
+                      <i data-lucide="history" class="lucide-icon"></i>
+                    </button>
+                  </div>
                   <span class="card-label">النقاط</span>
                 </div>
               </div>
@@ -11351,6 +11853,102 @@
                   <span class="card-label">مكافآت مستبدلة</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div class="table-card cpm-rating">
+            <div class="table-head section-head">
+              <div>
+                <h3>تقييم العميل</h3>
+                <p>
+                  أضف تقييمًا جديدًا؛ سيظهر أحدث تقييم للعميل ويُحفظ كل تقييم في
+                  السجل.
+                </p>
+              </div>
+            </div>
+            <div
+              class="cpm-rating-stars"
+              role="group"
+              aria-label="تقييم العميل من نجمة إلى خمس نجوم"
+            >
+              <button
+                class="cpm-rating-star"
+                type="button"
+                data-customer-rating="1"
+                aria-label="نجمة واحدة"
+                aria-pressed="false"
+              >
+                ★
+              </button>
+              <button
+                class="cpm-rating-star"
+                type="button"
+                data-customer-rating="2"
+                aria-label="نجمتان"
+                aria-pressed="false"
+              >
+                ★
+              </button>
+              <button
+                class="cpm-rating-star"
+                type="button"
+                data-customer-rating="3"
+                aria-label="ثلاث نجوم"
+                aria-pressed="false"
+              >
+                ★
+              </button>
+              <button
+                class="cpm-rating-star"
+                type="button"
+                data-customer-rating="4"
+                aria-label="أربع نجوم"
+                aria-pressed="false"
+              >
+                ★
+              </button>
+              <button
+                class="cpm-rating-star"
+                type="button"
+                data-customer-rating="5"
+                aria-label="خمس نجوم"
+                aria-pressed="false"
+              >
+                ★
+              </button>
+            </div>
+            <textarea
+              class="input-modern cpm-rating-note"
+              id="adminCustomerRatingNote"
+              maxlength="500"
+              placeholder="ملاحظة اختيارية لهذا التقييم تظهر للعميل..."
+              aria-label="ملاحظة المطعم على العميل"
+            ></textarea>
+            <div class="cpm-rating-actions">
+              <p class="cpm-rating-meta" id="adminCustomerRatingMeta">
+                اختر التقييم من نجمة إلى خمس نجوم.
+              </p>
+              <button
+                class="button-primary"
+                id="adminCustomerRatingSave"
+                type="button"
+                disabled
+              >
+                إضافة تقييم
+              </button>
+            </div>
+            <p
+              class="cpm-rating-message"
+              id="adminCustomerRatingMessage"
+              role="status"
+              hidden
+            ></p>
+            <div class="cpm-rating-history-wrap">
+              <h4>سجل التقييمات</h4>
+              <ul id="adminCustomerRatingHistory" class="cpm-list"></ul>
+              <p id="adminCustomerRatingHistoryEmpty" class="cpm-empty" hidden>
+                لا توجد تقييمات سابقة.
+              </p>
             </div>
           </div>
 
@@ -11923,6 +12521,58 @@
       </div>
     </div>
 
+    <div
+      id="paymentConfirmModal"
+      class="modal-overlay payment-confirm-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="paymentConfirmTitle"
+      aria-describedby="paymentConfirmDescription"
+    >
+      <div class="modal-content payment-confirm-content">
+        <button
+          id="paymentConfirmClose"
+          class="close-modal payment-confirm-close"
+          type="button"
+          aria-label="إغلاق"
+          data-close-payment-confirm
+        >
+          <i data-lucide="x" class="lucide-icon" aria-hidden="true"></i>
+        </button>
+        <div id="paymentConfirmIcon" class="payment-confirm-icon" aria-hidden="true">
+          <i data-lucide="wallet" class="lucide-icon"></i>
+        </div>
+        <h3 id="paymentConfirmTitle">تأكيد الدفع</h3>
+        <p id="paymentConfirmDescription"></p>
+        <div class="payment-confirm-summary">
+          <span>رقم الطلب</span>
+          <strong id="paymentConfirmOrder"></strong>
+          <span>طريقة الدفع</span>
+          <strong id="paymentConfirmMethod"></strong>
+          <span>المبلغ</span>
+          <strong id="paymentConfirmAmount" dir="ltr"></strong>
+        </div>
+        <div class="payment-confirm-actions">
+          <button
+            id="paymentConfirmCancel"
+            class="button-secondary"
+            type="button"
+            data-close-payment-confirm
+          >
+            رجوع
+          </button>
+          <button
+            id="paymentConfirmSubmit"
+            class="button-primary"
+            type="button"
+          >
+            تأكيد استلام الدفع
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Invoice Preview Modal -->
     <div id="invoicePreviewModal" class="modal-overlay">
       <div class="modal-content invoice-modal-content">
@@ -12307,6 +12957,24 @@
     <script src="../js/security.js"></script>
     <script src="../js/notifications.js"></script>
     <script src="../js/auth.js"></script>
+
+    <script>
+      (async function () {
+        try {
+          const user = await Auth.getCurrentUser();
+
+          if (!user) {
+            window.location.replace("/login");
+            return;
+          }
+
+          document.documentElement.classList.remove("auth-checking");
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.replace("/login");
+        }
+      })();
+    </script>
     <script src="../js/admin-feature-gates.js"></script>
     <script src="../js/subscription-read-only.js"></script>
     <script src="../js/employees.js"></script>
@@ -14103,6 +14771,10 @@
             title: "إدارة الطلبات",
             subtitle: "عرض وإدارة الطلبات الواردة من العملاء",
           },
+          invoices: {
+            title: "الفواتير",
+            subtitle: "استعراض الفواتير الصادرة وإعادة طباعتها",
+          },
           tables: {
             title: "الطاولات",
             subtitle: "إدارة ومتابعة حالة طاولات المطعم",
@@ -14150,6 +14822,7 @@
           menuCategories: [],
           menuItems: [],
         };
+        let pendingMenuItemImageBlob = null;
         window.state = state;
 
         function makeMenuId() {
@@ -14835,6 +15508,7 @@
         function openMenuItemModal(item) {
           const form = document.getElementById("menuItemForm");
           if (!form) return;
+          pendingMenuItemImageBlob = null;
           form.reset();
           renderMenuCategoriesSelect();
           renderMenuItemSizes(
@@ -14912,6 +15586,18 @@
             });
             renderMenuItems();
             Notifications.success("تم الحذف", "تم حذف الصنف: " + item.name);
+            try {
+              await deleteManagedMenuItemImage(restaurantId, item.image);
+            } catch (imageError) {
+              console.error(
+                "Could not remove deleted menu item's image:",
+                imageError,
+              );
+              Notifications.warning(
+                "تم حذف الصنف",
+                "تعذر حذف الصورة القديمة من التخزين.",
+              );
+            }
           } catch (error) {
             console.error("deleteMenuItem error:", error);
             Notifications.error(
@@ -15729,6 +16415,9 @@
           if (section === "reports") {
             window.loadReportsData?.();
           }
+          if (section === "invoices") {
+            loadInvoices();
+          }
         }
 
         window.DashboardSPA = { switch: switchSection };
@@ -16247,8 +16936,10 @@
                 '<td data-label="عدد الأصناف">' +
                 qtyCount +
                 "</td>" +
-                '<td data-label="الإجمالي"><strong class="order-total" dir="ltr">₪' +
-                orderTotal(o) +
+                '<td data-label="الإجمالي"><strong class="order-total"' +
+                (o.payment_method === "points" ? "" : ' dir="ltr"') +
+                ">" +
+                orderTotalDisplay(o) +
                 "</strong></td>" +
                 '<td data-label="الحالة">' +
                 statusHtml +
@@ -17374,6 +18065,12 @@
           }, 0);
         }
 
+        function orderTotalDisplay(o) {
+          return o.payment_method === "points"
+            ? "مستبدل بالنقاط"
+            : "₪" + orderTotal(o);
+        }
+
         function formatOrderTime(iso) {
           const d = new Date(iso);
           return d
@@ -17432,7 +18129,6 @@
 
         function orderActionsHTML(o) {
           const defs = getOrdersPageActions(o.status);
-          if (!defs.length) return "";
           return defs
             .map(function (a) {
               return (
@@ -17451,7 +18147,52 @@
                 "</button>"
               );
             })
-            .join("");
+            .join("") + orderPaymentListActionHTML(o, false);
+        }
+
+        function orderPaymentListActionHTML(order, isMobile) {
+          if (
+            !isOrderPaymentEligible(order) ||
+            order.payment_method === "points" ||
+            order.status === "cancelled"
+          ) {
+            return "";
+          }
+
+          if (order.payment_status === "verified") {
+            return isMobile
+              ? '<span class="oc-payment-state">' +
+                  window.lucideIcon("badge-check") +
+                  "<span>مدفوعة</span></span>"
+              : '<span class="order-payment-state">' +
+                  window.lucideIcon("badge-check") +
+                  "<span>مدفوعة</span></span>";
+          }
+
+          const canConfirm =
+            (order.payment_method === "cash" &&
+              order.payment_status === "cashier_pending") ||
+            (order.payment_method === "electronic" &&
+              order.payment_status === "pending_review");
+          if (!canConfirm) return "";
+
+          const label =
+            order.payment_method === "cash"
+              ? "تأكيد استلام المبلغ النقدي"
+              : "اعتماد الدفع الإلكتروني";
+          return isMobile
+            ? '<button type="button" class="oc-btn oc-btn-primary oc-btn-payment" data-order-payment-status="verified" data-order-payment-id="' +
+                ocEsc(order.id) +
+                '">' +
+                window.lucideIcon("wallet") +
+                "<span>تأكيد الدفع</span></button>"
+            : '<button type="button" class="order-payment-action-btn" data-order-payment-status="verified" data-order-payment-id="' +
+                ocEsc(order.id) +
+                '" title="' +
+                label +
+                '">' +
+                window.lucideIcon("wallet") +
+                "<span>تأكيد الدفع</span></button>";
         }
 
         /* ── Order ticket card (used by the orders list: mobile + laptop "cards" view) ── */
@@ -17566,6 +18307,8 @@
               primary.label +
               "</span></button>";
           }
+          var paymentActionHTML = orderPaymentListActionHTML(o, true);
+          actionsHTML += paymentActionHTML;
           if (reject) {
             actionsHTML +=
               '<button type="button" class="oc-btn oc-btn-danger" data-act="cancelled" data-id="' +
@@ -17582,7 +18325,7 @@
           }
           actionsHTML +=
             '<button type="button" class="oc-btn oc-btn-ghost' +
-            (primary ? "" : " is-wide") +
+            (primary || reject || paymentActionHTML ? "" : " is-wide") +
             '" data-view="' +
             o.id +
             '" title="تفاصيل الطلب" aria-label="تفاصيل الطلب"><i data-lucide="eye" class="lucide-icon"></i><span>تفاصيل</span></button>';
@@ -17608,13 +18351,13 @@
             "</b></div>" +
             '<div class="oc-meta">' +
             statusBadge(o) +
-            '<div class="oc-who"><span class="oc-num" dir="ltr">' +
-            ocEsc(displayOrderNum) +
-            '</span><span class="oc-cust">' +
+            "</div>" +
+            "</div>" +
+            '<div class="oc-who"><span class="oc-cust">' +
             ocEsc(customer) +
+            '</span><span class="oc-num" dir="ltr">طلب #' +
+            ocEsc(String(displayOrderNum).replace(/^#+/, "")) +
             "</span></div>" +
-            "</div>" +
-            "</div>" +
             '<div class="oc-tm"><span class="oc-clock"><i data-lucide="clock" class="lucide-icon"></i>' +
             formatOrderTime(o.created_at) +
             "</span>" +
@@ -17627,8 +18370,12 @@
             '<div class="oc-ds"></div>' +
             '<div class="oc-tt"><span class="oc-tt-l">الإجمالي<em>' +
             orderItemsCount(o).toLocaleString("en-US") +
-            ' أصناف</em></span><b dir="ltr">₪' +
-            ocMoney(orderTotal(o)) +
+            " أصناف</em></span><b" +
+            (o.payment_method === "points" ? "" : ' dir="ltr"') +
+            ">" +
+            (o.payment_method === "points"
+              ? "بالنقاط"
+              : "₪" + ocMoney(orderTotal(o))) +
             "</b></div>" +
             '<div class="oc-ac">' +
             actionsHTML +
@@ -17843,8 +18590,10 @@
               "<td>" +
               orderItemsCount(o) +
               "</td>" +
-              '<td><strong class="order-total" dir="ltr">₪' +
-              orderTotal(o) +
+              '<td><strong class="order-total"' +
+              (o.payment_method === "points" ? "" : ' dir="ltr"') +
+              ">" +
+              orderTotalDisplay(o) +
               "</strong></td>" +
               "<td>" +
               statusBadge(o) +
@@ -17887,8 +18636,12 @@
                 '<span class="order-item-qty">×' +
                 it.qty +
                 "</span>" +
-                '<span class="order-item-price" dir="ltr">₪' +
-                Number(it.price) * Number(it.qty) +
+                '<span class="order-item-price"' +
+                (o.payment_method === "points" ? "" : ' dir="ltr"') +
+                ">" +
+                (o.payment_method === "points"
+                  ? "بالنقاط"
+                  : "₪" + Number(it.price) * Number(it.qty)) +
                 "</span>" +
                 "</div>"
               );
@@ -17924,18 +18677,31 @@
             palpay: "PalPay",
             jawwal_pay: "Jawwal Pay",
           };
+          const paymentStatusLabels = {
+            cashier_pending: "بانتظار الدفع",
+            pending_review: "بانتظار مراجعة الدفع",
+            verified: "مدفوعة",
+            rejected: "مرفوضة",
+          };
+          const paymentActions = orderPaymentActionsHTML(o);
           const paymentSummary =
             '<div class="order-payment-summary"><i data-lucide="wallet" class="lucide-icon"></i><span>طريقة الدفع: <strong>' +
             (o.payment_method === "electronic"
               ? "إلكتروني — " +
                 (paymentProviderLabels[o.payment_provider] || "مزود غير محدد")
-              : "كاش عند الكاشير") +
+              : o.payment_method === "points"
+                ? "مكافأة مستبدلة بالنقاط"
+                : "كاش عند الكاشير") +
             "</strong></span>" +
             (o.payment_proof_data
               ? '<button type="button" class="payment-proof-link" data-payment-proof="' +
                 String(o.payment_proof_data).replace(/"/g, "&quot;") +
                 '"><i data-lucide="image" class="lucide-icon"></i>عرض إشعار الدفع</button>'
               : "") +
+            '<span>حالة الدفع: <strong>' +
+            (paymentStatusLabels[o.payment_status] || "غير محددة") +
+            "</strong></span>" +
+            paymentActions +
             "</div>";
           body.innerHTML =
             '<div class="order-details-head">' +
@@ -17963,14 +18729,73 @@
             "</div>" +
             notes +
             paymentSummary +
-            '<div class="order-total-row"><span>الإجمالي</span><strong dir="ltr">₪' +
-            orderTotal(o) +
+            '<div class="order-total-row"><span>الإجمالي</span><strong' +
+            (o.payment_method === "points" ? "" : ' dir="ltr"') +
+            ">" +
+            orderTotalDisplay(o) +
             "</strong></div>" +
             '<div class="order-modal-actions">' +
             actions +
             "</div>";
 
           document.getElementById("orderDetailsModal").classList.add("open");
+        }
+
+        function isOrderPaymentEligible(order) {
+          return ["accepted", "preparing", "ready", "served"].includes(
+            order.status,
+          );
+        }
+
+        function orderPaymentActionsHTML(order) {
+          if (
+            !isOrderPaymentEligible(order) ||
+            order.status === "cancelled" ||
+            order.payment_status === "verified" ||
+            order.payment_method === "points"
+          ) {
+            return "";
+          }
+
+          const button = function (label, targetStatus, className) {
+            return (
+              '<button type="button" class="payment-proof-link ' +
+              className +
+              '" data-order-payment-status="' +
+              targetStatus +
+              '" data-order-payment-id="' +
+              order.id +
+              '">' +
+              label +
+              "</button>"
+            );
+          };
+
+          if (
+            order.payment_method === "cash" &&
+            order.payment_status === "cashier_pending"
+          ) {
+            return button(
+              "تأكيد استلام المبلغ النقدي",
+              "verified",
+              "is-payment-confirm",
+            );
+          }
+
+          if (
+            order.payment_method === "electronic" &&
+            order.payment_status === "pending_review"
+          ) {
+            return (
+              button(
+                "اعتماد الدفع الإلكتروني",
+                "verified",
+                "is-payment-confirm",
+              ) +
+              button("رفض إثبات الدفع", "rejected", "is-payment-reject")
+            );
+          }
+          return "";
         }
 
         async function executeOrderAction(orderId, toStatus) {
@@ -18207,6 +19032,35 @@
         updateOrdersSoundButton();
 
         document.addEventListener("click", function (e) {
+          const paymentConfirmModal = document.getElementById(
+            "paymentConfirmModal",
+          );
+          if (
+            paymentConfirmModal?.classList.contains("open") &&
+            (e.target === paymentConfirmModal ||
+              e.target.closest("[data-close-payment-confirm]"))
+          ) {
+            closePaymentConfirmModal();
+            return;
+          }
+          if (e.target.closest("#paymentConfirmSubmit")) {
+            void submitOrderPaymentStatus();
+            return;
+          }
+
+          const orderPaymentButton = e.target.closest(
+            "[data-order-payment-status]",
+          );
+          if (orderPaymentButton) {
+            e.preventDefault();
+            e.stopPropagation();
+            void setOrderPaymentStatus(
+              orderPaymentButton.dataset.orderPaymentId,
+              orderPaymentButton.dataset.orderPaymentStatus,
+            );
+            return;
+          }
+
           const proofButton = e.target.closest("[data-payment-proof]");
           if (proofButton) {
             const proofModal = document.getElementById("paymentProofModal");
@@ -18243,6 +19097,13 @@
 
         document.addEventListener("keydown", function (e) {
           if (e.key !== "Escape") return;
+          const paymentConfirmModal = document.getElementById(
+            "paymentConfirmModal",
+          );
+          if (paymentConfirmModal?.classList.contains("open")) {
+            closePaymentConfirmModal();
+            return;
+          }
           const proofModal = document.getElementById("paymentProofModal");
           if (!proofModal?.classList.contains("open")) return;
           proofModal.classList.remove("open");
@@ -19989,7 +20850,1139 @@
           });
         }
 
-        function issueInvoice(id) {
+        /* =====================================================
+           INVOICE — luxury receipt design + restaurant branding
+           ===================================================== */
+        var INVOICE_SYSTEM_NAME = "مِرسالك";
+        var INVOICE_STAMP_RE =
+          /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/;
+        var invoiceBrandingCache = null;
+        var invoicesPage = 0;
+        var invoicesTotal = 0;
+        var invoicesRequestToken = 0;
+        var selectedInvoice = null;
+        var invoiceSearchTimer = null;
+        var invoicesPageSize = 30;
+
+        var LX_INVOICE_CSS = `
+.lx-inv{--ink:#1c1917;--muted:#7a7068;--line:#ddd2bf;--gold:#9a7b2f;--wine:#710014;
+  position:relative;direction:rtl;width:100%;max-width:360px;margin:0 auto;padding:24px 22px 18px;
+  background:#fffdf8;color:var(--ink);font-size:12px;line-height:1.55;box-sizing:border-box;
+  border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.18);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.lx-inv *{box-sizing:border-box}
+.lx-inv::before{content:"";position:absolute;inset:7px;border:1px solid var(--gold);border-radius:3px;opacity:.5;pointer-events:none}
+.lx-brand{text-align:center}
+.lx-sys{font-size:13px;font-weight:800;color:var(--wine)}
+.lx-sys-sub{margin-top:1px;font-size:7.5px;letter-spacing:.22em;color:var(--gold);font-weight:700;direction:ltr}
+.lx-orn{display:flex;align-items:center;gap:8px;margin:10px 0 8px;color:var(--gold)}
+.lx-orn i{flex:1;height:1px;background:var(--gold);opacity:.6}
+.lx-orn b{font-size:9px;line-height:1}
+.lx-rest{margin:0;font-size:23px;font-weight:900;line-height:1.25;color:var(--ink);overflow-wrap:anywhere}
+.lx-contact{margin-top:4px;font-size:10px;color:var(--muted)}
+.lx-title{display:flex;justify-content:center;margin:14px 0 12px}
+.lx-title span{padding:4px 22px;border-top:3px double var(--ink);border-bottom:3px double var(--ink);font-size:12.5px;font-weight:900;letter-spacing:.04em}
+.lx-info{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.lx-cell{min-width:0}
+.lx-cell small{display:block;font-size:9px;color:var(--muted)}
+.lx-cell strong{display:block;font-size:12px;font-weight:800;overflow-wrap:anywhere;text-align:right}
+.lx-notes{margin:9px 0 0;padding:7px 8px;border-inline-start:2px solid var(--gold);background:rgba(154,123,47,.06);font-size:10px;overflow-wrap:anywhere}
+.lx-head,.lx-row{display:grid;grid-template-columns:minmax(0,1fr) 30px 54px 62px;gap:4px;align-items:center}
+.lx-head{margin-top:10px;padding:5px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);font-size:9px;font-weight:800;color:var(--muted)}
+.lx-head span:not(:first-child),.lx-row span:not(:first-child){text-align:center}
+.lx-row{padding:7px 0;border-bottom:1px dashed var(--line)}
+.lx-row:last-child{border-bottom:0}
+.lx-row .lx-name{font-size:12px;font-weight:700;overflow-wrap:anywhere}
+.lx-row span{font-size:11px}
+.lx-row span:last-child{font-weight:800}
+.lx-count{display:flex;justify-content:space-between;margin-top:6px;padding-top:8px;border-top:1px solid var(--ink);font-size:10.5px;color:var(--muted)}
+.lx-total{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:10px 12px;border:3px double var(--ink);border-radius:2px;background:rgba(113,0,20,.05)}
+.lx-total span{font-size:13px;font-weight:900}
+.lx-total strong{font-size:21px;font-weight:900;color:var(--wine);direction:ltr}
+.lx-thanks{margin-top:16px;text-align:center}
+.lx-thanks h3{margin:0;font-size:13px;font-weight:800}
+.lx-thanks p{margin:2px 0 0;font-size:10px;color:var(--muted)}
+.lx-stamp-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:14px}
+.lx-stamp{display:block;max-width:116px;max-height:116px;object-fit:contain;transform:rotate(-6deg);mix-blend-mode:multiply;opacity:.92}
+.lx-stamp-cap{font-size:8px;letter-spacing:.08em;color:var(--muted)}
+.lx-powered{margin-top:12px;padding-top:8px;border-top:1px dashed var(--line);text-align:center;font-size:8.5px;color:var(--muted)}
+.lx-powered b{color:var(--wine);font-weight:800}
+#invoicePreviewBody{padding:4px 0;background:none;border:0;box-shadow:none;border-radius:0;max-width:none}
+`;
+
+        var LX_INVOICE_PRINT_CSS = `
+@page{size:80mm auto;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:80mm;background:#fff}
+body{font-family:Tahoma,Arial,sans-serif}
+.lx-inv{width:80mm;max-width:none;margin:0;padding:5mm 5mm 4mm;border:0;border-radius:0;box-shadow:none;background:#fff}
+.lx-inv::before{inset:1.8mm}
+.lx-stamp{mix-blend-mode:normal}
+`;
+
+        function ensureInvoiceStyles() {
+          if (document.getElementById("lx-invoice-css")) return;
+          const st = document.createElement("style");
+          st.id = "lx-invoice-css";
+          st.textContent = LX_INVOICE_CSS;
+          document.head.appendChild(st);
+        }
+
+        async function getInvoiceBranding(restaurantId, force) {
+          if (
+            invoiceBrandingCache &&
+            !force &&
+            invoiceBrandingCache.id === (restaurantId || null)
+          ) {
+            return invoiceBrandingCache;
+          }
+          const b = {
+            id: restaurantId || null,
+            name: "",
+            stamp: "",
+            address: "",
+            phone: "",
+          };
+          if (restaurantId) {
+            try {
+              const { data } = await supabase
+                .from("restaurants")
+                .select("*")
+                .eq("id", restaurantId)
+                .single();
+              if (data) {
+                b.name = String(data.name || "").trim();
+                b.stamp = String(data.invoice_stamp || "");
+                b.address = String(data.address || "").trim();
+                b.phone = String(data.phone || "").trim();
+              }
+            } catch (e) {
+              console.warn("Invoice branding load failed:", e);
+            }
+          }
+          if (!b.name) {
+            b.name = String(
+              window.currentRestaurant?.name ||
+                localStorage.getItem("EduPulse_RestaurantName") ||
+                "",
+            ).trim();
+          }
+          invoiceBrandingCache = b;
+          return b;
+        }
+
+        function buildInvoiceHTML(t, order, brand) {
+          const esc = escapeInvoiceText;
+          const issuedAt = new Date(
+            order.created_at ||
+              order.createdAt ||
+              order.startedAt ||
+              Date.now(),
+          );
+          const dateText = issuedAt.toLocaleDateString("en-GB");
+          const timeText = issuedAt.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          const invoiceNumber =
+            order.invoiceNumber ||
+            (order.order_number
+              ? "INV-" + String(order.order_number).padStart(5, "0")
+              : "");
+          const orderNumber = order.order_number || order.number || "—";
+          const paymentMethodLabels = {
+            cash: "نقدي",
+            electronic: "دفع إلكتروني",
+            points: "نقاط الولاء",
+          };
+          const paymentStatusLabels = {
+            cashier_pending: "بانتظار الدفع",
+            pending_review: "بانتظار مراجعة الدفع",
+            verified: "مدفوعة",
+            rejected: "مرفوضة",
+          };
+          const paymentMethod = paymentMethodLabels[order.payment_method];
+          const paymentStatus =
+            order.status === "cancelled"
+              ? "ملغاة"
+              : paymentStatusLabels[order.payment_status] ||
+                (order.payment_method === "points" ? "مدفوعة بالنقاط" : "");
+          const items = order.items || [];
+          let totalQty = 0;
+          const rows = items
+            .map(function (item) {
+              const qty = Number(item.qty) || 0;
+              const price = Number(item.price) || 0;
+              totalQty += qty;
+              return (
+                '<div class="lx-row"><span class="lx-name">' +
+                esc(item.name) +
+                '</span><span dir="ltr">' +
+                qty +
+                '</span><span dir="ltr">₪' +
+                price.toFixed(2) +
+                '</span><span dir="ltr">₪' +
+                (price * qty).toFixed(2) +
+                "</span></div>"
+              );
+            })
+            .join("");
+
+          const contact = [brand.address, brand.phone]
+            .filter(Boolean)
+            .map(esc)
+            .join(" • ");
+          const hasStamp = INVOICE_STAMP_RE.test(brand.stamp || "");
+
+          return (
+            '<div class="lx-inv">' +
+            '<div class="lx-brand">' +
+            '<div class="lx-sys">' +
+            esc(INVOICE_SYSTEM_NAME) +
+            "</div>" +
+            '<div class="lx-sys-sub">RESTAURANT MANAGEMENT SYSTEM</div>' +
+            '<div class="lx-orn"><i></i><b>◆</b><i></i></div>' +
+            (brand.name
+              ? '<h2 class="lx-rest">' + esc(brand.name) + "</h2>"
+              : "") +
+            (contact ? '<div class="lx-contact">' + contact + "</div>" : "") +
+            "</div>" +
+            '<div class="lx-title"><span>فاتورة مبيعات</span></div>' +
+            '<div class="lx-info">' +
+            (invoiceNumber
+              ? '<div class="lx-cell"><small>رقم الفاتورة</small><strong dir="ltr">' +
+                esc(invoiceNumber) +
+                "</strong></div>"
+              : "") +
+            '<div class="lx-cell"><small>رقم الطلب</small><strong dir="ltr">#' +
+            esc(orderNumber) +
+            "</strong></div>" +
+            '<div class="lx-cell"><small>الطاولة</small><strong>' +
+            esc(t?.name || "طلب خارج الطاولة") +
+            (t?.code ? " · " + esc(t.code) : "") +
+            "</strong></div>" +
+            '<div class="lx-cell"><small>التاريخ</small><strong dir="ltr">' +
+            dateText +
+            "</strong></div>" +
+            '<div class="lx-cell"><small>الوقت</small><strong dir="ltr">' +
+            timeText +
+            "</strong></div>" +
+            (order.customer_name
+              ? '<div class="lx-cell"><small>العميل</small><strong>' +
+                esc(order.customer_name) +
+                "</strong></div>"
+              : "") +
+            (paymentMethod
+              ? '<div class="lx-cell"><small>طريقة الدفع</small><strong>' +
+                esc(paymentMethod) +
+                "</strong></div>"
+              : "") +
+            "</div>" +
+            '<div class="lx-head"><span>الصنف</span><span>الكمية</span><span>السعر</span><span>الإجمالي</span></div>' +
+            rows +
+            '<div class="lx-count"><span>عدد الأصناف</span><b dir="ltr">' +
+            totalQty +
+            "</b></div>" +
+            (order.notes
+              ? '<div class="lx-notes"><strong>ملاحظات:</strong> ' +
+                esc(order.notes) +
+                "</div>"
+              : "") +
+            '<div class="lx-total"><span>الإجمالي النهائي</span><strong dir="ltr">₪' +
+            (Number(order.total) || 0).toFixed(2) +
+            "</strong></div>" +
+            (paymentStatus
+              ? '<div class="lx-cell" style="margin-top:8px"><small>حالة الدفع</small><strong>' +
+                esc(paymentStatus) +
+                "</strong></div>"
+              : "") +
+            '<div class="lx-thanks"><h3>شكراً لزيارتكم</h3><p>نتشرف بخدمتكم دائماً</p></div>' +
+            (hasStamp
+              ? '<div class="lx-stamp-wrap"><img class="lx-stamp" alt="ختم المطعم" src="' +
+                brand.stamp +
+                '"><span class="lx-stamp-cap">ختم المطعم</span></div>'
+              : "") +
+            '<div class="lx-powered">صدرت بواسطة نظام <b>' +
+            esc(INVOICE_SYSTEM_NAME) +
+            "</b></div>" +
+            "</div>"
+          );
+        }
+
+        function invoiceNumberForOrder(orderNumber) {
+          return "INV-" + String(orderNumber ?? "").padStart(5, "0");
+        }
+
+        function invoiceAmountCents(value) {
+          const amount = Number(value);
+          return Number.isFinite(amount) ? Math.round(amount * 100) : 0;
+        }
+
+        function formatInvoiceAmount(valueOrCents, isCents) {
+          const amount = isCents
+            ? Number(valueOrCents || 0) / 100
+            : Number(valueOrCents || 0);
+          return (
+            "₪" +
+            amount.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          );
+        }
+
+        function formatInvoiceDate(value, includeTime) {
+          if (!value) return "—";
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) return "—";
+          return date.toLocaleString(
+            "ar",
+            includeTime
+              ? { dateStyle: "medium", timeStyle: "short" }
+              : { dateStyle: "medium" },
+          );
+        }
+
+        function invoicePaymentState(order) {
+          if (order.status === "cancelled") {
+            return { label: "ملغاة", className: "is-cancelled" };
+          }
+          if (
+            order.payment_method === "points" ||
+            order.payment_status === "verified"
+          ) {
+            return {
+              label:
+                order.payment_method === "points" ? "مدفوعة بالنقاط" : "مدفوعة",
+              className: "is-paid",
+            };
+          }
+          if (order.payment_status === "pending_review") {
+            return { label: "بانتظار المراجعة", className: "is-pending" };
+          }
+          if (order.payment_status === "rejected") {
+            return { label: "مرفوضة", className: "is-unpaid" };
+          }
+          return { label: "غير مدفوعة", className: "is-unpaid" };
+        }
+
+        function makeInvoiceCell(label, value, className) {
+          const cell = document.createElement("td");
+          cell.dataset.label = label;
+          if (value instanceof Node) cell.appendChild(value);
+          else cell.textContent = value == null ? "—" : String(value);
+          if (className) cell.className = className;
+          return cell;
+        }
+
+        function renderInvoiceListRows(rows) {
+          const body = document.getElementById("invoiceListBody");
+          const empty = document.getElementById("invoiceListEmpty");
+          body.replaceChildren();
+          empty.hidden = rows.length > 0;
+          rows.forEach(function (order) {
+            const table = Array.isArray(order.restaurant_tables)
+              ? order.restaurant_tables[0]
+              : order.restaurant_tables;
+            const snapshot = order.invoice_snapshot || {};
+            const tableName = order.invoice_snapshot
+              ? snapshot.table_name
+              : table?.name;
+            const tableCode = order.invoice_snapshot
+              ? snapshot.table_code
+              : table?.code;
+            const invoiceRef = invoiceNumberForOrder(order.order_number);
+            const status = invoicePaymentState(order);
+            const tr = document.createElement("tr");
+            tr.className = "invoice-row";
+            tr.tabIndex = 0;
+            tr.dataset.invoiceId = order.id;
+            tr.setAttribute("aria-label", `فتح الفاتورة ${invoiceRef}`);
+
+            const number = document.createElement("strong");
+            number.className = "invoice-number";
+            number.textContent = invoiceRef;
+            tr.appendChild(makeInvoiceCell("رقم الفاتورة", number));
+            tr.appendChild(
+              makeInvoiceCell("رقم الطلب", `#${order.order_number}`),
+            );
+            tr.appendChild(
+              makeInvoiceCell(
+                "التاريخ والوقت",
+                formatInvoiceDate(
+                  order.invoice_issued_at || order.created_at,
+                  true,
+                ),
+              ),
+            );
+            tr.appendChild(
+              makeInvoiceCell(
+                "الطاولة",
+                tableName || tableCode
+                  ? `${tableName || ""}${tableCode ? ` · ${tableCode}` : ""}`
+                  : "خارج الطاولة",
+              ),
+            );
+            tr.appendChild(
+              makeInvoiceCell(
+                "الإجمالي",
+                formatInvoiceAmount(order.total),
+                "invoice-total-cell",
+              ),
+            );
+
+            const statusBadge = document.createElement("span");
+            statusBadge.className = `invoice-status-badge ${status.className}`;
+            statusBadge.textContent = status.label;
+            tr.appendChild(makeInvoiceCell("حالة الدفع", statusBadge));
+
+            const open = document.createElement("button");
+            open.type = "button";
+            open.className = "invoice-row-open";
+            open.dataset.openInvoice = order.id;
+            open.innerHTML =
+              '<i data-lucide="arrow-up-left" class="lucide-icon" aria-hidden="true"></i><span>عرض</span>';
+            tr.appendChild(makeInvoiceCell("التفاصيل", open));
+            body.appendChild(tr);
+          });
+          window.lucide?.createIcons?.();
+        }
+
+        function invoiceDateStart(value) {
+          if (!value) return null;
+          const date = new Date(`${value}T00:00:00`);
+          return Number.isNaN(date.getTime()) ? null : date.toISOString();
+        }
+
+        function invoiceDateEndExclusive(value) {
+          if (!value) return null;
+          const date = new Date(`${value}T00:00:00`);
+          if (Number.isNaN(date.getTime())) return null;
+          date.setDate(date.getDate() + 1);
+          return date.toISOString();
+        }
+
+        async function loadInvoices() {
+          const body = document.getElementById("invoiceListBody");
+          if (!body) return;
+          const requestToken = ++invoicesRequestToken;
+          body.innerHTML =
+            '<tr><td colspan="7" class="empty-row">جاري تحميل الفواتير...</td></tr>';
+          document.getElementById("invoiceListEmpty").hidden = true;
+          document.getElementById("invoicePrevPage").disabled = true;
+          document.getElementById("invoiceNextPage").disabled = true;
+
+          try {
+            if (!window.supabase)
+              throw new Error("Supabase client is unavailable");
+            const restaurantId = await getCurrentRestaurantId();
+            if (!restaurantId)
+              throw new Error("INVOICE_RESTAURANT_UNAVAILABLE");
+
+            let query = supabase
+              .from("orders")
+              .select(
+                "id, restaurant_id, table_id, order_number, customer_name, total, status, payment_method, payment_status, created_at, invoice_issued_at, notes, invoice_issued, invoice_snapshot, restaurant_tables(name, code)",
+                { count: "exact" },
+              )
+              .eq("restaurant_id", restaurantId)
+              .eq("invoice_issued", true)
+              .order("invoice_issued_at", { ascending: false });
+
+            const search = document
+              .getElementById("invoiceSearch")
+              .value.trim();
+            if (search) {
+              const numericReference = search
+                .replace(/^INV[-\s]*/i, "")
+                .replace(/^#/, "");
+              if (/^\d+$/.test(numericReference)) {
+                query = query.eq("order_number", Number(numericReference));
+              } else {
+                const escaped = search.replace(/[\\%_]/g, "\\$&");
+                query = query.ilike("customer_name", `%${escaped}%`);
+              }
+            }
+
+            const from = invoiceDateStart(
+              document.getElementById("invoiceDateFrom").value,
+            );
+            const to = invoiceDateEndExclusive(
+              document.getElementById("invoiceDateTo").value,
+            );
+            if (from) query = query.gte("invoice_issued_at", from);
+            if (to) query = query.lt("invoice_issued_at", to);
+
+            const start = invoicesPage * invoicesPageSize;
+            const { data, error, count } = await query.range(
+              start,
+              start + invoicesPageSize - 1,
+            );
+            if (error) throw error;
+            if (requestToken !== invoicesRequestToken) return;
+
+            invoicesTotal = Number(count) || 0;
+            renderInvoiceListRows(data || []);
+            document.getElementById("invoiceListCount").textContent =
+              invoicesTotal.toLocaleString("ar");
+            const pages = Math.max(
+              1,
+              Math.ceil(invoicesTotal / invoicesPageSize),
+            );
+            document.getElementById("invoicePageLabel").textContent =
+              `صفحة ${invoicesPage + 1} من ${pages}`;
+            document.getElementById("invoicePrevPage").disabled =
+              invoicesPage <= 0;
+            document.getElementById("invoiceNextPage").disabled =
+              invoicesPage + 1 >= pages;
+          } catch (error) {
+            if (requestToken !== invoicesRequestToken) return;
+            console.error("Invoice list load failed:", error);
+            body.innerHTML =
+              '<tr><td colspan="7" class="empty-row">تعذر تحميل الفواتير. تحقق من الاتصال والصلاحيات ثم أعد المحاولة.</td></tr>';
+            document.getElementById("invoiceListCount").textContent = "—";
+            document.getElementById("invoicePageLabel").textContent = "—";
+            const detail = String(error?.message || "").includes(
+              "invoice_snapshot",
+            )
+              ? "يلزم تطبيق تحديث قاعدة البيانات الخاص بحفظ بيانات الفاتورة التاريخية."
+              : "تحقق من الاتصال والصلاحيات ثم أعد المحاولة.";
+            body.innerHTML = `<tr><td colspan="7" class="empty-row">${escapeInvoiceText(detail)}</td></tr>`;
+            Notifications.error("تعذر تحميل الفواتير", detail);
+          }
+        }
+
+        function invoiceMetaRow(label, value) {
+          if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === ""
+          )
+            return null;
+          const row = document.createElement("div");
+          row.className = "invoice-meta-row";
+          const caption = document.createElement("span");
+          caption.textContent = label;
+          const valueNode = document.createElement("strong");
+          valueNode.textContent = String(value);
+          row.append(caption, valueNode);
+          return row;
+        }
+
+        function appendInvoiceMeta(target, fields) {
+          target.replaceChildren();
+          fields.forEach(function (field) {
+            const row = invoiceMetaRow(field[0], field[1]);
+            if (row) target.appendChild(row);
+          });
+        }
+
+        function renderInvoiceDetails(order, items, brand) {
+          selectedInvoice = {
+            ...order,
+            items: items || [],
+            restaurant_tables: Array.isArray(order.restaurant_tables)
+              ? order.restaurant_tables[0]
+              : order.restaurant_tables,
+            invoiceNumber: invoiceNumberForOrder(order.order_number),
+            brand,
+          };
+          const snapshot = order.invoice_snapshot || {};
+          selectedInvoice.created_at =
+            order.invoice_issued_at || order.created_at;
+          const table = {
+            name: snapshot.table_name || "",
+            code: snapshot.table_code || "",
+          };
+          selectedInvoice.restaurant_tables =
+            table.name || table.code ? table : null;
+          const invoiceDate = order.invoice_issued_at || order.created_at;
+          const invoiceDateLabel = snapshot.legacy_backfill
+            ? "تاريخ الطلب"
+            : "تاريخ الإصدار";
+          const status = invoicePaymentState(order);
+          const statusBadge = document.getElementById("invoiceDetailStatus");
+          statusBadge.className = `invoice-status-badge ${status.className}`;
+          statusBadge.textContent = status.label;
+
+          const paper = document.getElementById("invoiceDetailPaper");
+          const itemRows = selectedInvoice.items
+            .map(function (item, index) {
+              const quantity = Number(item.quantity) || 0;
+              const unitCents = invoiceAmountCents(item.unit_price);
+              const lineCents = unitCents * quantity;
+              return `<tr><td>${index + 1}</td><td>${escapeInvoiceText(item.item_name || "صنف")}</td><td dir="ltr">${quantity}</td><td dir="ltr">${formatInvoiceAmount(unitCents, true)}</td><td dir="ltr"><strong>${formatInvoiceAmount(lineCents, true)}</strong></td></tr>`;
+            })
+            .join("");
+          const subtotalCents = selectedInvoice.items.reduce(function (
+            sum,
+            item,
+          ) {
+            return (
+              sum +
+              invoiceAmountCents(item.unit_price) * (Number(item.quantity) || 0)
+            );
+          }, 0);
+          const totalCents = invoiceAmountCents(order.total);
+          const paidCents =
+            order.payment_method === "points" ||
+            order.payment_status === "verified"
+              ? totalCents
+              : 0;
+          const outstandingCents = Math.max(0, totalCents - paidCents);
+          const itemContent =
+            itemRows ||
+            '<tr><td colspan="5">تفاصيل الأصناف غير متاحة لهذا الطلب.</td></tr>';
+
+          paper.innerHTML =
+            `<header class="invoice-paper-head"><div><h2 class="invoice-brand-name">${escapeInvoiceText(brand.name || "المطعم")}</h2><div class="invoice-brand-contact">${[brand.address, brand.phone].filter(Boolean).map(escapeInvoiceText).join(" · ")}</div></div><div class="invoice-paper-number"><span>رقم الفاتورة</span><strong>${selectedInvoice.invoiceNumber}</strong></div></header>` +
+            `<div class="invoice-paper-meta"><div><span>رقم الطلب</span><strong dir="ltr">#${escapeInvoiceText(order.order_number)}</strong></div><div><span>${invoiceDateLabel}</span><strong>${escapeInvoiceText(formatInvoiceDate(invoiceDate, true))}</strong></div><div><span>الطاولة</span><strong>${escapeInvoiceText(selectedInvoice.restaurant_tables ? `${table.name}${table.code ? ` · ${table.code}` : ""}` : "خارج الطاولة")}</strong></div><div><span>نوع الطلب</span><strong>${selectedInvoice.restaurant_tables ? "طلب طاولة" : "طلب خارج الطاولة"}</strong></div></div>` +
+            `<div class="invoice-items-wrap"><table class="invoice-items-table"><thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>${itemContent}</tbody></table></div>` +
+            `<div class="invoice-totals"><div class="invoice-total-row"><span>مجموع الأصناف حسب الأسعار المسجلة</span><strong>${formatInvoiceAmount(subtotalCents, true)}</strong></div><div class="invoice-total-row"><span>المبلغ المدفوع</span><strong>${formatInvoiceAmount(paidCents, true)}</strong></div><div class="invoice-total-row"><span>المتبقي</span><strong>${formatInvoiceAmount(outstandingCents, true)}</strong></div><div class="invoice-total-row is-grand"><span>الإجمالي النهائي</span><strong>${formatInvoiceAmount(totalCents, true)}</strong></div></div>` +
+            (order.notes
+              ? `<p class="invoice-paper-notes"><strong>ملاحظات الطلب:</strong> ${escapeInvoiceText(order.notes)}</p>`
+              : "");
+
+          const methodLabels = {
+            cash: "نقدي",
+            electronic: "دفع إلكتروني",
+            points: "نقاط الولاء",
+          };
+          const paymentLabels = {
+            cashier_pending: "بانتظار الدفع عند الكاشير",
+            pending_review: "بانتظار مراجعة الدفع",
+            verified: "تم تأكيد الدفع",
+            rejected: "تم رفض الدفع",
+          };
+          appendInvoiceMeta(document.getElementById("invoicePaymentMeta"), [
+            ["طريقة الدفع", methodLabels[order.payment_method] || null],
+            [
+              "حالة الدفع",
+              paymentLabels[order.payment_status] ||
+                (order.payment_method === "points" ? "مدفوعة بالنقاط" : null),
+            ],
+            ["مزود الدفع", order.payment_provider || null],
+            ["المبلغ المدفوع", formatInvoiceAmount(paidCents, true)],
+            ["المبلغ المتبقي", formatInvoiceAmount(outstandingCents, true)],
+          ]);
+          renderInvoicePaymentActions(order);
+          appendInvoiceMeta(document.getElementById("invoiceOrderMeta"), [
+            ["رقم الفاتورة", selectedInvoice.invoiceNumber],
+            ["رقم الطلب", `#${order.order_number}`],
+            ["العميل", order.customer_name || null],
+            ["هاتف العميل", order.customer_phone || null],
+            [
+              "الطاولة",
+              selectedInvoice.restaurant_tables
+                ? `${table.name}${table.code ? ` · ${table.code}` : ""}`
+                : "خارج الطاولة",
+            ],
+            [
+              "حالة الطلب",
+              order.status === "cancelled"
+                ? "ملغى"
+                : order.status === "served"
+                  ? "تم التقديم"
+                  : order.status,
+            ],
+          ]);
+        }
+
+        function renderInvoicePaymentActions(order) {
+          const container = document.getElementById("invoicePaymentActions");
+          if (!container) return;
+          container.replaceChildren();
+
+          if (
+            !isOrderPaymentEligible(order) ||
+            order.status === "cancelled" ||
+            order.payment_status === "verified" ||
+            order.payment_method === "points"
+          ) {
+            container.hidden = true;
+            return;
+          }
+
+          const addButton = function (label, targetStatus, className) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = className;
+            button.dataset.paymentStatus = targetStatus;
+            button.textContent = label;
+            container.appendChild(button);
+          };
+
+          if (
+            order.payment_method === "cash" &&
+            order.payment_status === "cashier_pending"
+          ) {
+            addButton(
+              "تأكيد استلام المبلغ النقدي",
+              "verified",
+              "button-primary",
+            );
+          } else if (
+            order.payment_method === "electronic" &&
+            order.payment_status === "pending_review"
+          ) {
+            if (order.payment_proof_data) {
+              const proofButton = document.createElement("button");
+              proofButton.type = "button";
+              proofButton.className = "button-secondary";
+              proofButton.dataset.paymentProof = order.payment_proof_data;
+              proofButton.textContent = "عرض إثبات التحويل";
+              container.appendChild(proofButton);
+            }
+            addButton("اعتماد الدفع الإلكتروني", "verified", "button-primary");
+            addButton("رفض إثبات الدفع", "rejected", "button-secondary");
+          }
+
+          container.hidden = container.childElementCount === 0;
+        }
+
+        let pendingOrderPaymentUpdate = null;
+        let paymentConfirmReturnFocus = null;
+
+        function closePaymentConfirmModal() {
+          const modal = document.getElementById("paymentConfirmModal");
+          if (!modal) return;
+          modal.classList.remove("open");
+          modal.setAttribute("aria-hidden", "true");
+          pendingOrderPaymentUpdate = null;
+          if (paymentConfirmReturnFocus?.isConnected) {
+            paymentConfirmReturnFocus.focus();
+          }
+          paymentConfirmReturnFocus = null;
+        }
+
+        function setOrderPaymentStatus(orderId, targetStatus) {
+          const order =
+            orders.find(function (entry) {
+              return entry.id === orderId;
+            }) ||
+            (selectedInvoice?.id === orderId ? selectedInvoice : null);
+          if (!order) return;
+          if (!isOrderPaymentEligible(order)) {
+            Notifications.warning(
+              "اقبل الطلب أولًا",
+              "يتاح تأكيد الدفع بعد قبول الطلب.",
+            );
+            return;
+          }
+          if (
+            !["verified", "rejected"].includes(targetStatus) ||
+            (targetStatus === "verified" &&
+              order.payment_status === "verified")
+          ) {
+            return;
+          }
+
+          const isVerifying = targetStatus === "verified";
+          const modal = document.getElementById("paymentConfirmModal");
+          paymentConfirmReturnFocus = document.activeElement;
+          pendingOrderPaymentUpdate = { orderId, targetStatus };
+          document.getElementById("paymentConfirmTitle").textContent =
+            isVerifying ? "تأكيد استلام الدفع" : "رفض إثبات الدفع";
+          document.getElementById("paymentConfirmDescription").textContent =
+            isVerifying
+              ? order.payment_method === "cash"
+                ? "يرجى التأكد من استلام كامل المبلغ نقدًا. بعد التأكيد ستُسجّل الفاتورة كمدفوعة."
+                : "بعد التحقق من إشعار التحويل، اعتمد الدفع لتسجيل الفاتورة كمدفوعة."
+              : "سيُرفض إثبات التحويل وستبقى الفاتورة غير مدفوعة.";
+          document.getElementById("paymentConfirmOrder").textContent =
+            order.order_number != null ? `#${order.order_number}` : "—";
+          document.getElementById("paymentConfirmMethod").textContent =
+            order.payment_method === "electronic"
+              ? "دفع إلكتروني"
+              : order.payment_method === "cash"
+                ? "نقدي"
+                : "—";
+          const total = Number(order.total);
+          document.getElementById("paymentConfirmAmount").textContent =
+            formatInvoiceAmount(
+              Number.isFinite(total) && total > 0
+                ? total
+                : orderTotal(order),
+            );
+          document.getElementById("paymentConfirmSubmit").textContent =
+            isVerifying ? "تأكيد استلام الدفع" : "تأكيد الرفض";
+          modal.classList.toggle("is-rejecting", !isVerifying);
+          modal.setAttribute("aria-hidden", "false");
+          modal.classList.add("open");
+          window.lucide?.createIcons?.();
+          document.getElementById("paymentConfirmSubmit").focus();
+        }
+
+        async function submitOrderPaymentStatus() {
+          const pendingUpdate = pendingOrderPaymentUpdate;
+          if (!pendingUpdate) return;
+          const { orderId, targetStatus } = pendingUpdate;
+          const submitButton = document.getElementById(
+            "paymentConfirmSubmit",
+          );
+          submitButton.disabled = true;
+          submitButton.textContent = "جارٍ تحديث الدفع...";
+          try {
+            const { data, error } = await supabase.rpc(
+              "admin_set_order_payment_status",
+              {
+                p_order_id: orderId,
+                p_payment_status: targetStatus,
+              },
+            );
+            if (error) throw error;
+            if (data !== targetStatus) {
+              throw new Error("لم يتم تحديث حالة الدفع كما هو متوقع.");
+            }
+
+            closePaymentConfirmModal();
+            Notifications.success(
+              targetStatus === "verified" ? "تم تأكيد الدفع" : "تم رفض الدفع",
+              targetStatus === "verified"
+                ? "تم تحديث حالة الفاتورة إلى مدفوعة."
+                : "بقيت الفاتورة غير مدفوعة، وتم تسجيل رفض الإثبات.",
+            );
+            await loadOrdersFromSupabase();
+            if (selectedInvoice?.id === orderId) {
+              await openInvoiceDetails(orderId);
+              await loadInvoices();
+            } else if (
+              document
+                .getElementById("orderDetailsModal")
+                ?.classList.contains("open")
+            ) {
+              openOrderDetails(orderId);
+            }
+          } catch (error) {
+            console.error("Invoice payment status update failed:", error);
+            Notifications.error(
+              "تعذر تحديث حالة الدفع",
+              error.message || "تحقق من الاتصال والصلاحيات ثم أعد المحاولة.",
+            );
+          } finally {
+            submitButton.disabled = false;
+            submitButton.textContent =
+              targetStatus === "verified"
+                ? "تأكيد استلام الدفع"
+                : "تأكيد الرفض";
+          }
+        }
+
+        async function setInvoicePaymentStatus(targetStatus) {
+          if (!selectedInvoice) return;
+          await setOrderPaymentStatus(selectedInvoice.id, targetStatus);
+        }
+
+        async function openInvoiceDetails(orderId) {
+          if (!isValidUuid(String(orderId || ""))) {
+            Notifications.warning(
+              "رقم فاتورة غير صالح",
+              "تعذر فتح سجل الفاتورة المطلوب.",
+            );
+            return;
+          }
+          document.getElementById("invoiceListView").hidden = true;
+          document.getElementById("invoiceDetailView").hidden = false;
+          document.getElementById("invoiceDetailLoading").hidden = false;
+          document.getElementById("invoiceDetailError").hidden = true;
+          document.getElementById("invoiceDetailContent").hidden = true;
+          const requestToken = ++invoicesRequestToken;
+          try {
+            const restaurantId = await getCurrentRestaurantId();
+            if (!restaurantId)
+              throw new Error("INVOICE_RESTAURANT_UNAVAILABLE");
+            const { data: order, error } = await supabase
+              .from("orders")
+              .select(
+                "id, restaurant_id, table_id, order_number, customer_name, customer_phone, notes, total, status, payment_method, payment_provider, payment_status, payment_proof_data, created_at, invoice_issued_at, invoice_issued, invoice_snapshot, restaurant_tables(name, code)",
+              )
+              .eq("id", orderId)
+              .eq("restaurant_id", restaurantId)
+              .eq("invoice_issued", true)
+              .maybeSingle();
+            if (error) throw error;
+            if (!order) throw new Error("INVOICE_NOT_FOUND");
+            if (!order.invoice_snapshot) {
+              throw new Error("INVOICE_SNAPSHOT_MIGRATION_REQUIRED");
+            }
+
+            const { data: items, error: itemError } = await supabase
+              .from("order_items")
+              .select("id, item_name, quantity, unit_price")
+              .eq("order_id", order.id)
+              .order("id", { ascending: true });
+            if (itemError) throw itemError;
+            const snapshot = order.invoice_snapshot;
+            const brand = {
+              id: restaurantId,
+              name: snapshot.restaurant_name || "المطعم",
+              stamp: snapshot.invoice_stamp || "",
+              address: snapshot.restaurant_address || "",
+              phone: snapshot.restaurant_phone || "",
+            };
+            if (requestToken !== invoicesRequestToken) return;
+
+            renderInvoiceDetails(order, items || [], brand);
+            document.getElementById("invoiceDetailLoading").hidden = true;
+            document.getElementById("invoiceDetailContent").hidden = false;
+            window.lucide?.createIcons?.();
+            history.replaceState(
+              null,
+              "",
+              `${location.pathname}${location.search}#invoice=${encodeURIComponent(order.id)}`,
+            );
+          } catch (error) {
+            if (requestToken !== invoicesRequestToken) return;
+            console.error("Invoice details load failed:", error);
+            document.getElementById("invoiceDetailLoading").hidden = true;
+            const errorNode = document.getElementById("invoiceDetailError");
+            errorNode.textContent =
+              error?.message === "INVOICE_NOT_FOUND"
+                ? "الفاتورة غير موجودة أو لا تملك صلاحية الوصول إليها."
+                : error?.message === "INVOICE_SNAPSHOT_MIGRATION_REQUIRED" ||
+                    String(error?.message || "").includes("invoice_snapshot")
+                  ? "يلزم تطبيق تحديث قاعدة البيانات الخاص بحفظ بيانات الفاتورة التاريخية."
+                  : "تعذر تحميل تفاصيل الفاتورة. تحقق من الاتصال والصلاحيات ثم أعد المحاولة.";
+            errorNode.hidden = false;
+          }
+        }
+
+        function returnToInvoiceList(updateRoute) {
+          invoicesRequestToken += 1;
+          selectedInvoice = null;
+          document.getElementById("invoiceDetailView").hidden = true;
+          document.getElementById("invoiceListView").hidden = false;
+          if (updateRoute && location.hash.startsWith("#invoice=")) {
+            history.replaceState(
+              null,
+              "",
+              `${location.pathname}${location.search}`,
+            );
+          }
+        }
+
+        async function printHistoricalInvoice(asPdf) {
+          if (!selectedInvoice) return;
+          const printWindow = window.open("", "_blank", "width=900,height=900");
+          if (!printWindow) {
+            Notifications.error(
+              "تعذر فتح الطباعة",
+              "اسمح بالنوافذ المنبثقة لهذا الموقع ثم حاول مرة أخرى.",
+            );
+            return;
+          }
+          try {
+            const printCss = asPdf
+              ? "@page{size:A4;margin:12mm}html,body{width:auto;min-height:100%;margin:0;padding:0;background:#fff}.lx-inv{width:100%;max-width:none;margin:0;padding:8mm;border:0;border-radius:0;box-shadow:none}.lx-inv::before{inset:2mm}.lx-info{grid-template-columns:repeat(3,1fr)}"
+              : LX_INVOICE_PRINT_CSS;
+            const fontStylesheet = Array.from(
+              document.querySelectorAll('link[rel="stylesheet"]'),
+            ).find(function (link) {
+              return link.href.includes("local-fonts.css");
+            })?.href;
+            printWindow.document.write(
+              '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+                (fontStylesheet
+                  ? '<link rel="stylesheet" href="' +
+                    escapeInvoiceText(fontStylesheet) +
+                    '">'
+                  : "") +
+                "<title>" +
+                escapeInvoiceText(selectedInvoice.invoiceNumber) +
+                "</title><style>" +
+                LX_INVOICE_CSS +
+                printCss +
+                "body{font-family:Cairo,Tahoma,Arial,sans-serif}.lx-inv{page-break-inside:avoid}" +
+                "</style></head><body>" +
+                buildInvoiceHTML(
+                  {
+                    name: selectedInvoice.restaurant_tables?.name || "",
+                    code: selectedInvoice.restaurant_tables?.code || "",
+                  },
+                  {
+                    ...selectedInvoice,
+                    number: selectedInvoice.order_number,
+                    invoiceNumber: selectedInvoice.invoiceNumber,
+                    items: selectedInvoice.items.map(function (item) {
+                      return {
+                        name: item.item_name,
+                        qty: item.quantity,
+                        price: item.unit_price,
+                      };
+                    }),
+                  },
+                  selectedInvoice.brand || { name: "المطعم" },
+                ) +
+                "</body></html>",
+            );
+            printWindow.document.close();
+            printWindow.focus();
+            await Promise.race([
+              printWindow.document.fonts?.ready || Promise.resolve(),
+              new Promise(function (resolve) {
+                setTimeout(resolve, 1800);
+              }),
+            ]);
+            printWindow.setTimeout(function () {
+              printWindow.focus();
+              printWindow.print();
+            }, 250);
+            printWindow.addEventListener(
+              "afterprint",
+              function () {
+                printWindow.close();
+              },
+              { once: true },
+            );
+          } catch (error) {
+            console.error("Invoice print preparation failed:", error);
+            printWindow.close();
+            Notifications.error(
+              "تعذرت الطباعة",
+              "حدث خطأ أثناء تجهيز الفاتورة للطباعة.",
+            );
+          }
+        }
+
+        async function shareOrCopyInvoiceReference() {
+          if (!selectedInvoice) return;
+          const text = `فاتورة ${selectedInvoice.invoiceNumber} · الطلب #${selectedInvoice.order_number}`;
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: "فاتورة", text });
+              return;
+            }
+            if (navigator.clipboard?.writeText) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const field = document.createElement("textarea");
+              field.value = text;
+              field.setAttribute("readonly", "");
+              field.style.position = "fixed";
+              field.style.opacity = "0";
+              document.body.appendChild(field);
+              field.select();
+              const copied = document.execCommand("copy");
+              field.remove();
+              if (!copied) throw new Error("Clipboard copy was rejected");
+            }
+            Notifications.success("تم نسخ المرجع", text);
+          } catch (error) {
+            if (error?.name === "AbortError") return;
+            console.error("Invoice reference share failed:", error);
+            Notifications.error(
+              "تعذر نسخ المرجع",
+              "انسخ رقم الفاتورة يدويًا: " + selectedInvoice.invoiceNumber,
+            );
+          }
+        }
+
+        function handleInvoiceRoute() {
+          const match = location.hash.match(/^#invoice=(.+)$/);
+          if (!match) return;
+          let orderId = "";
+          try {
+            orderId = decodeURIComponent(match[1]);
+          } catch (_) {
+            return;
+          }
+          switchSection("invoices");
+          void openInvoiceDetails(orderId);
+        }
+
+        document
+          .getElementById("invoiceSearch")
+          ?.addEventListener("input", function () {
+            clearTimeout(invoiceSearchTimer);
+            invoiceSearchTimer = setTimeout(function () {
+              invoicesPage = 0;
+              loadInvoices();
+            }, 280);
+          });
+        ["invoiceDateFrom", "invoiceDateTo"].forEach(function (id) {
+          document.getElementById(id)?.addEventListener("change", function () {
+            invoicesPage = 0;
+            loadInvoices();
+          });
+        });
+        document
+          .getElementById("invoiceFiltersClear")
+          ?.addEventListener("click", function () {
+            document.getElementById("invoiceSearch").value = "";
+            document.getElementById("invoiceDateFrom").value = "";
+            document.getElementById("invoiceDateTo").value = "";
+            updateReportDateValue("invoiceDateFrom");
+            updateReportDateValue("invoiceDateTo");
+            invoicesPage = 0;
+            loadInvoices();
+          });
+        document
+          .getElementById("invoicePrevPage")
+          ?.addEventListener("click", function () {
+            if (invoicesPage <= 0) return;
+            invoicesPage -= 1;
+            loadInvoices();
+          });
+        document
+          .getElementById("invoiceNextPage")
+          ?.addEventListener("click", function () {
+            if ((invoicesPage + 1) * invoicesPageSize >= invoicesTotal) return;
+            invoicesPage += 1;
+            loadInvoices();
+          });
+        document
+          .getElementById("invoiceListBody")
+          ?.addEventListener("click", function (event) {
+            const trigger = event.target.closest("[data-open-invoice]");
+            const row = event.target.closest("[data-invoice-id]");
+            const id = trigger?.dataset.openInvoice || row?.dataset.invoiceId;
+            if (id) void openInvoiceDetails(id);
+          });
+        document
+          .getElementById("invoiceListBody")
+          ?.addEventListener("keydown", function (event) {
+            const row = event.target.closest("[data-invoice-id]");
+            if (row && (event.key === "Enter" || event.key === " ")) {
+              event.preventDefault();
+              void openInvoiceDetails(row.dataset.invoiceId);
+            }
+          });
+        document
+          .getElementById("invoiceBackToList")
+          ?.addEventListener("click", function () {
+            returnToInvoiceList(true);
+          });
+        document
+          .getElementById("invoicePaymentActions")
+          ?.addEventListener("click", function (event) {
+            const button = event.target.closest("[data-payment-status]");
+            if (button) {
+              void setInvoicePaymentStatus(button.dataset.paymentStatus);
+            }
+          });
+        document
+          .getElementById("invoiceReprintBtn")
+          ?.addEventListener("click", function () {
+            void printHistoricalInvoice(false);
+          });
+        document
+          .getElementById("invoicePdfBtn")
+          ?.addEventListener("click", function () {
+            Notifications.info(
+              "حفظ PDF",
+              "في نافذة الطباعة اختر «حفظ كملف PDF» كوجهة للطباعة.",
+            );
+            void printHistoricalInvoice(true);
+          });
+        document
+          .getElementById("invoiceShareBtn")
+          ?.addEventListener("click", function () {
+            void shareOrCopyInvoiceReference();
+          });
+        window.addEventListener("hashchange", handleInvoiceRoute);
+        if (location.hash.startsWith("#invoice=")) handleInvoiceRoute();
+
+        async function issueInvoice(id) {
           const t = tables.find(function (x) {
             return x.id === id;
           });
@@ -20002,220 +21995,19 @@
           }
           const order = t.currentOrder;
           invoicePreviewTableId = id;
-          const rows = (order.items || [])
-            .map(function (item) {
-              const quantity = Number(item.qty) || 0;
-              const unitPrice = Number(item.price) || 0;
-              const itemTotal = unitPrice * quantity;
-              return (
-                '<div class="invoice-item-row"><span>' +
-                escapeInvoiceText(item.name) +
-                '</span><span dir="ltr">' +
-                quantity +
-                '</span><span dir="ltr">₪' +
-                unitPrice.toFixed(2) +
-                '</span><span dir="ltr">₪' +
-                itemTotal.toFixed(2) +
-                "</span></div>"
-              );
-            })
-            .join("");
-          document.getElementById("invoicePreviewBody").innerHTML = `
-        <div class="invoice-preview">
-
-          <!-- =========================
-               Header
-          ========================== -->
-          <div class="invoice-preview-header">
-
-            <div class="invoice-brand">
-              <div class="invoice-brand-icon">
-                <span class="material-symbols-outlined">restaurant</span>
-              </div>
-
-              <div>
-                <h2></h2>
-                <span>RESTAURANT & CAFE</span>
-              </div>
-            </div>
-
-            <div class="invoice-title">
-              <div class="invoice-title-icon">
-                <span class="material-symbols-outlined">receipt_long</span>
-              </div>
-
-              <div>
-                <h1>فاتورة مبيعات</h1>
-                <p>شكراً لاختياركم </p>
-              </div>
-            </div>
-
-          </div>
-
-
-          <!-- =========================
-               Order Info
-          ========================== -->
-          <div class="invoice-preview-info">
-
-            <div class="invoice-info-item">
-              <div class="invoice-info-icon">
-                <span class="material-symbols-outlined">tag</span>
-              </div>
-
-              <div>
-                <span>رقم الطلب</span>
-                <strong>
-                  #${escapeInvoiceText(order.number)}
-                </strong>
-              </div>
-            </div>
-
-
-            <div class="invoice-info-item">
-              <div class="invoice-info-icon">
-                <span class="material-symbols-outlined">table_restaurant</span>
-              </div>
-
-              <div>
-                <span>الطاولة</span>
-                <strong>
-                  ${escapeInvoiceText(t.name)}
-                </strong>
-
-                <small>
-                  ${escapeInvoiceText(t.code)}
-                </small>
-              </div>
-            </div>
-
-
-            <div class="invoice-info-item">
-              <div class="invoice-info-icon">
-                <span class="material-symbols-outlined">calendar_month</span>
-              </div>
-
-              <div>
-                <span>التاريخ</span>
-                <strong>
-                  ${new Date().toLocaleDateString("ar-PS")}
-                </strong>
-
-                <small>
-                  ${new Date().toLocaleTimeString("ar-PS", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </small>
-              </div>
-            </div>
-
-
-            <div class="invoice-info-item">
-              <div class="invoice-info-icon">
-                <span class="material-symbols-outlined">person</span>
-              </div>
-
-              <div>
-                <span>مدخل الطلب</span>
-                <strong></strong>
-              </div>
-            </div>
-
-          </div>
-
-
-          <!-- =========================
-               Items
-          ========================== -->
-          <div class="invoice-items-card">
-
-            <div class="invoice-items-head">
-              <span>الصنف</span>
-              <span>الكمية</span>
-              <span>سعر الوحدة</span>
-              <span>الإجمالي</span>
-            </div>
-
-            <div class="invoice-items-body">
-              ${rows}
-            </div>
-
-          </div>
-
-
-          <!-- =========================
-               Totals
-          ========================== -->
-          <div class="invoice-summary">
-
-            <div class="invoice-summary-row">
-              <span>المجموع الفرعي</span>
-
-              <strong dir="ltr">
-                ₪${Number(order.total).toFixed(2)}
-              </strong>
-            </div>
-
-            <div class="invoice-summary-row">
-              <span>الخصم</span>
-
-              <strong dir="ltr">
-                ₪0.00
-              </strong>
-            </div>
-
-            <div class="invoice-summary-row">
-              <span>الضريبة</span>
-
-              <strong dir="ltr">
-                ₪0.00
-              </strong>
-            </div>
-
-
-            <div class="invoice-final-total">
-
-              <span>
-                <span class="material-symbols-outlined">
-                  payments
-                </span>
-
-                الإجمالي النهائي
-              </span>
-
-              <strong dir="ltr">
-                ₪${Number(order.total).toFixed(2)}
-              </strong>
-
-            </div>
-
-          </div>
-
-
-          <!-- =========================
-               Thank You
-          ========================== -->
-          <div class="invoice-thankyou">
-
-            <div class="invoice-heart">
-              <span class="material-symbols-outlined">
-                favorite
-              </span>
-            </div>
-
-            <h3>شكراً لزيارتكم</h3>
-
-            <p>
-              نتشرف بخدمتكم دائماً
-            </p>
-
-            <div class="invoice-thankyou-line"></div>
-
-          </div>
-
-        </div>
-      `;
+          ensureInvoiceStyles();
+          let brand = { name: "", stamp: "" };
+          try {
+            const rid =
+              t.restaurantId ||
+              window.currentRestaurant?.id ||
+              (await Auth.getCurrentUser())?.restaurantId;
+            brand = await getInvoiceBranding(rid);
+          } catch (e) {
+            console.warn("Invoice branding unavailable:", e);
+          }
+          document.getElementById("invoicePreviewBody").innerHTML =
+            buildInvoiceHTML(t, order, brand);
           document.getElementById("invoicePreviewModal").classList.add("open");
         }
 
@@ -20242,323 +22034,36 @@
             return;
           }
           printWindow.document.write(
-            "<!doctype html>" +
-              '<html lang="ar" dir="rtl">' +
-              "<head>" +
-              '<meta charset="UTF-8">' +
+            '<!doctype html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">' +
               "<title>فاتورة #" +
               escapeInvoiceText(t.currentOrder.number) +
-              "</title>" +
-              "<style>" +
-              "@page{" +
-              "size:80mm auto;" +
-              "margin:0;" +
-              "}" +
-              "*{" +
-              "box-sizing:border-box;" +
-              "}" +
-              "html,body{" +
-              "margin:0;" +
-              "padding:0;" +
-              "width:80mm;" +
-              "max-width:80mm;" +
-              "background:#fff;" +
-              "}" +
-              "body{" +
-              "font-family:Arial,Tahoma,sans-serif;" +
-              "color:#111;" +
-              "font-size:11px;" +
-              "line-height:1.5;" +
-              "padding:5mm 4mm;" +
-              "}" +
-              /* =========================
-           Main invoice
-        ========================== */
-
-              ".invoice-preview{" +
-              "width:100%;" +
-              "max-width:none;" +
-              "padding:0;" +
-              "margin:0;" +
-              "background:#fff;" +
-              "border:0;" +
-              "border-radius:0;" +
-              "color:#111;" +
-              "}" +
-              /* =========================
-           Header
-        ========================== */
-
-              ".invoice-preview-header{" +
-              "display:block;" +
-              "padding:0 0 10px;" +
-              "border-bottom:1px dashed #222;" +
-              "text-align:center;" +
-              "}" +
-              ".invoice-brand{" +
-              "display:block;" +
-              "}" +
-              ".invoice-brand-icon," +
-              ".invoice-title-icon{" +
-              "display:none;" +
-              "}" +
-              ".invoice-brand h2{" +
-              "margin:0;" +
-              "font-size:20px;" +
-              "font-weight:900;" +
-              "color:#111;" +
-              "}" +
-              ".invoice-brand span{" +
-              "display:block;" +
-              "margin-top:2px;" +
-              "font-size:8px;" +
-              "letter-spacing:1px;" +
-              "color:#555;" +
-              "direction:ltr;" +
-              "}" +
-              ".invoice-title{" +
-              "display:block;" +
-              "margin-top:8px;" +
-              "}" +
-              ".invoice-title h1{" +
-              "margin:0;" +
-              "font-size:15px;" +
-              "font-weight:900;" +
-              "color:#111;" +
-              "}" +
-              ".invoice-title p{" +
-              "margin:2px 0 0;" +
-              "font-size:9px;" +
-              "color:#666;" +
-              "}" +
-              /* =========================
-           Order information
-        ========================== */
-
-              ".invoice-preview-info{" +
-              "display:grid;" +
-              "grid-template-columns:1fr 1fr;" +
-              "margin-top:9px;" +
-              "border:0;" +
-              "border-radius:0;" +
-              "background:none;" +
-              "}" +
-              ".invoice-info-item{" +
-              "display:block;" +
-              "padding:4px 2px;" +
-              "min-width:0;" +
-              "border:0 !important;" +
-              "}" +
-              ".invoice-info-icon{" +
-              "display:none;" +
-              "}" +
-              ".invoice-info-item span{" +
-              "display:block;" +
-              "margin:0;" +
-              "font-size:8px;" +
-              "color:#666;" +
-              "}" +
-              ".invoice-info-item strong{" +
-              "display:block;" +
-              "margin-top:1px;" +
-              "font-size:10px;" +
-              "font-weight:700;" +
-              "color:#111;" +
-              "white-space:normal;" +
-              "}" +
-              ".invoice-info-item small{" +
-              "display:block;" +
-              "margin:0;" +
-              "font-size:8px;" +
-              "color:#555;" +
-              "}" +
-              /* =========================
-           Items
-        ========================== */
-
-              ".invoice-items-card{" +
-              "margin-top:8px;" +
-              "border:0;" +
-              "border-radius:0;" +
-              "background:none;" +
-              "overflow:visible;" +
-              "}" +
-              ".invoice-items-head{" +
-              "display:grid;" +
-              "grid-template-columns:2fr .55fr .9fr 1fr;" +
-              "padding:5px 0;" +
-              "background:none;" +
-              "border-top:1px solid #222;" +
-              "border-bottom:1px solid #222;" +
-              "color:#222;" +
-              "font-size:8px;" +
-              "font-weight:700;" +
-              "}" +
-              ".invoice-items-head span:not(:first-child){" +
-              "text-align:center;" +
-              "}" +
-              ".invoice-items-body{" +
-              "padding:0;" +
-              "}" +
-              ".invoice-items-body table{" +
-              "width:100%;" +
-              "border-collapse:collapse;" +
-              "}" +
-              ".invoice-items-body tr{" +
-              "border-bottom:1px dashed #ccc;" +
-              "}" +
-              ".invoice-items-body td{" +
-              "padding:5px 2px;" +
-              "font-size:9px;" +
-              "font-weight:500;" +
-              "color:#111;" +
-              "border:0;" +
-              "}" +
-              ".invoice-items-body td:not(:first-child){" +
-              "text-align:center;" +
-              "}" +
-              ".invoice-items-body td:last-child{" +
-              "font-weight:700;" +
-              "color:#111;" +
-              "}" +
-              ".invoice-item-row{" +
-              "display:grid;" +
-              "grid-template-columns:2fr .55fr .9fr 1fr;" +
-              "align-items:center;" +
-              "border-bottom:1px dashed #ccc;" +
-              "}" +
-              ".invoice-item-row:last-child{" +
-              "border-bottom:0;" +
-              "}" +
-              ".invoice-item-row span{" +
-              "padding:5px 2px;" +
-              "font-size:9px;" +
-              "font-weight:500;" +
-              "color:#111;" +
-              "}" +
-              ".invoice-item-row span:not(:first-child){" +
-              "text-align:center;" +
-              "}" +
-              ".invoice-item-row span:last-child{" +
-              "font-weight:700;" +
-              "color:#111;" +
-              "}" +
-              /* =========================
-           Summary
-        ========================== */
-
-              ".invoice-summary{" +
-              "margin-top:8px;" +
-              "padding:7px 0 0;" +
-              "border:0;" +
-              "border-top:1px dashed #222;" +
-              "border-radius:0;" +
-              "background:none;" +
-              "}" +
-              ".invoice-summary-row{" +
-              "display:flex;" +
-              "align-items:center;" +
-              "justify-content:space-between;" +
-              "padding:3px 0;" +
-              "border:0;" +
-              "}" +
-              ".invoice-summary-row span{" +
-              "font-size:9px;" +
-              "color:#555;" +
-              "}" +
-              ".invoice-summary-row strong{" +
-              "font-size:9px;" +
-              "color:#111;" +
-              "}" +
-              /* =========================
-           Final total
-        ========================== */
-
-              ".invoice-final-total{" +
-              "display:flex;" +
-              "align-items:center;" +
-              "justify-content:space-between;" +
-              "margin-top:6px;" +
-              "padding:8px 0;" +
-              "border-top:2px solid #111;" +
-              "border-bottom:2px solid #111;" +
-              "border-radius:0;" +
-              "background:none;" +
-              "box-shadow:none;" +
-              "}" +
-              ".invoice-final-total > span{" +
-              "display:flex;" +
-              "align-items:center;" +
-              "gap:4px;" +
-              "font-size:11px;" +
-              "font-weight:900;" +
-              "color:#111;" +
-              "}" +
-              ".invoice-final-total .material-symbols-outlined{" +
-              "display:none;" +
-              "}" +
-              ".invoice-final-total strong{" +
-              "font-size:14px;" +
-              "font-weight:900;" +
-              "color:#111;" +
-              "}" +
-              /* =========================
-           Thank you
-        ========================== */
-
-              ".invoice-thankyou{" +
-              "position:relative;" +
-              "overflow:visible;" +
-              "margin-top:12px;" +
-              "padding:8px 0 0;" +
-              "text-align:center;" +
-              "border:0;" +
-              "border-radius:0;" +
-              "background:none;" +
-              "}" +
-              ".invoice-thankyou::before{" +
-              "display:none;" +
-              "}" +
-              ".invoice-heart{" +
-              "display:none;" +
-              "}" +
-              ".invoice-thankyou h3{" +
-              "position:static;" +
-              "margin:0;" +
-              "font-size:11px;" +
-              "font-weight:700;" +
-              "color:#111;" +
-              "}" +
-              ".invoice-thankyou p{" +
-              "position:static;" +
-              "margin:2px 0 0;" +
-              "font-size:8px;" +
-              "color:#666;" +
-              "}" +
-              ".invoice-thankyou-line{" +
-              "display:none;" +
-              "}" +
-              /* =========================
-           Print
-        ========================== */
-
-              "@media print{" +
-              "body{" +
-              "padding:5mm 4mm;" +
-              "}" +
-              ".invoice-preview{" +
-              "page-break-inside:avoid;" +
-              "}" +
-              "}" +
-              "</style>" +
-              "</head>" +
-              "<body>" +
+              "</title><style>" +
+              LX_INVOICE_CSS +
+              LX_INVOICE_PRINT_CSS +
+              "</style></head><body>" +
               document.getElementById("invoicePreviewBody").innerHTML +
-              "</body>" +
-              "</html>",
+              "</body></html>",
           );
           printWindow.document.close();
           printWindow.focus();
+
+          // wait for the stamp image (if any) before printing
+          const imgs = Array.from(printWindow.document.images || []);
+          await Promise.race([
+            Promise.all(
+              imgs.map(function (img) {
+                return img.complete
+                  ? Promise.resolve()
+                  : new Promise(function (resolve) {
+                      img.onload = img.onerror = resolve;
+                    });
+              }),
+            ),
+            new Promise(function (resolve) {
+              setTimeout(resolve, 1500);
+            }),
+          ]);
+
           printWindow.print();
           printWindow.close();
 
@@ -20568,6 +22073,159 @@
 
           showReleaseTableConfirm(invoicePreviewTableId);
         }
+
+        /* ===== Invoice stamp (per restaurant) — settings card logic ===== */
+        (function initInvoiceStampSettings() {
+          const pickBtn = document.getElementById("invoiceStampPickBtn");
+          if (!pickBtn) return;
+          const fileInput = document.getElementById("invoiceStampFile");
+          const removeBtn = document.getElementById("invoiceStampRemoveBtn");
+          const saveBtn = document.getElementById("invoiceStampSaveBtn");
+          const preview = document.getElementById("invoiceStampPreview");
+          let restaurantId = null;
+          let savedStamp = "";
+          let draft; // undefined = no pending change, "" = remove, string = new stamp
+
+          function render() {
+            const shown = draft !== undefined ? draft : savedStamp;
+            preview.textContent = "";
+            if (shown && INVOICE_STAMP_RE.test(shown)) {
+              const img = document.createElement("img");
+              img.src = shown;
+              img.alt = "ختم المطعم";
+              preview.appendChild(img);
+            } else {
+              const s = document.createElement("span");
+              s.textContent = "لا يوجد ختم بعد";
+              preview.appendChild(s);
+            }
+            removeBtn.hidden = !shown;
+            saveBtn.disabled = draft === undefined;
+          }
+
+          function fileToStamp(file) {
+            return new Promise(function (resolve, reject) {
+              if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
+                reject(new Error("اختر صورة PNG أو JPG أو WEBP"));
+                return;
+              }
+              if (file.size > 3 * 1024 * 1024) {
+                reject(new Error("حجم الصورة كبير (الحد 3MB)"));
+                return;
+              }
+              const reader = new FileReader();
+              reader.onerror = function () {
+                reject(new Error("تعذر قراءة الملف"));
+              };
+              reader.onload = function () {
+                const img = new Image();
+                img.onerror = function () {
+                  reject(new Error("الملف ليس صورة صالحة"));
+                };
+                img.onload = function () {
+                  const MAX = 420;
+                  const scale = Math.min(
+                    1,
+                    MAX / Math.max(img.width, img.height),
+                  );
+                  const w = Math.max(1, Math.round(img.width * scale));
+                  const h = Math.max(1, Math.round(img.height * scale));
+                  const c = document.createElement("canvas");
+                  c.width = w;
+                  c.height = h;
+                  c.getContext("2d").drawImage(img, 0, 0, w, h);
+                  const out = c.toDataURL("image/png");
+                  if (out.length > 700000) {
+                    reject(new Error("الصورة معقدة وكبيرة، جرّب ختمًا أبسط"));
+                    return;
+                  }
+                  resolve(out);
+                };
+                img.src = reader.result;
+              };
+              reader.readAsDataURL(file);
+            });
+          }
+
+          pickBtn.addEventListener("click", function () {
+            fileInput.click();
+          });
+
+          fileInput.addEventListener("change", async function () {
+            const file = fileInput.files && fileInput.files[0];
+            fileInput.value = "";
+            if (!file) return;
+            try {
+              draft = await fileToStamp(file);
+              render();
+            } catch (e) {
+              Notifications.error(
+                "ختم الفاتورة",
+                e.message || "تعذر معالجة الصورة",
+              );
+            }
+          });
+
+          removeBtn.addEventListener("click", function () {
+            draft = "";
+            render();
+          });
+
+          saveBtn.addEventListener("click", async function () {
+            if (draft === undefined) return;
+            if (!restaurantId) {
+              Notifications.error("خطأ", "لا يوجد مطعم مرتبط بهذا الحساب");
+              return;
+            }
+            const original = saveBtn.textContent;
+            saveBtn.disabled = true;
+            saveBtn.textContent = "جاري الحفظ...";
+            try {
+              const { data, error } = await supabase
+                .from("restaurants")
+                .update({ invoice_stamp: draft || null })
+                .eq("id", restaurantId)
+                .select("id");
+              if (error) throw error;
+              if (!data || !data.length)
+                throw new Error("لا تملك صلاحية تعديل بيانات المطعم");
+              savedStamp = draft;
+              draft = undefined;
+              invoiceBrandingCache = null;
+              Notifications.success(
+                "ختم الفاتورة",
+                savedStamp
+                  ? "تم حفظ الختم وسيظهر على الفواتير"
+                  : "تمت إزالة الختم",
+              );
+            } catch (e) {
+              const missing = /invoice_stamp/i.test(e.message || "");
+              Notifications.error(
+                "خطأ",
+                missing
+                  ? "عمود invoice_stamp غير موجود، نفّذ ملف SQL المرفق أولاً"
+                  : "فشل حفظ الختم: " + (e.message || ""),
+              );
+            } finally {
+              saveBtn.textContent = original;
+              render();
+            }
+          });
+
+          (async function load() {
+            try {
+              const user = await Auth.getCurrentUser();
+              restaurantId = user?.restaurantId || null;
+              if (restaurantId) {
+                const b = await getInvoiceBranding(restaurantId, true);
+                savedStamp = b.stamp || "";
+              }
+            } catch (e) {
+              console.warn("Stamp settings load failed:", e);
+            }
+            render();
+          })();
+        })();
 
         function showReleaseTableConfirm(tableId) {
           const t = tables.find(function (x) {
@@ -21065,6 +22723,33 @@
             active: formData.get("active") === "on",
             sizes: sizes,
           };
+          const existingItem = id
+            ? state.menuItems.find(function (entry) {
+                return String(entry.id) === String(id);
+              })
+            : null;
+          let uploadedImageUrl = "";
+          if (pendingMenuItemImageBlob) {
+            try {
+              const restaurantId = await getCurrentRestaurantId();
+              if (!restaurantId) {
+                throw new Error("لم يتم العثور على معرف المطعم الحالي.");
+              }
+              uploadedImageUrl = await uploadMenuItemImage(
+                restaurantId,
+                item.id,
+                pendingMenuItemImageBlob,
+              );
+              item.image = uploadedImageUrl;
+            } catch (error) {
+              console.error("Menu item image upload failed:", error);
+              Notifications.error(
+                "تعذر رفع الصورة",
+                error.message || "حاول رفع الصورة مرة أخرى.",
+              );
+              return;
+            }
+          }
 
           const menuItemsToSave = state.menuItems.slice();
           const menuCategoriesToSave = state.menuCategories.slice();
@@ -21095,7 +22780,43 @@
             menuItemsToSave,
             menuCategoriesToSave,
           );
-          if (!saved) return;
+          if (!saved) {
+            if (uploadedImageUrl) {
+              try {
+                const restaurantId = await getCurrentRestaurantId();
+                await deleteManagedMenuItemImage(
+                  restaurantId,
+                  uploadedImageUrl,
+                );
+              } catch (error) {
+                console.error(
+                  "Could not clean up an unused menu image:",
+                  error,
+                );
+                Notifications.warning(
+                  "تعذر تنظيف الصورة",
+                  "قد تبقى نسخة غير مستخدمة من الصورة في التخزين.",
+                );
+              }
+            }
+            return;
+          }
+          pendingMenuItemImageBlob = null;
+          if (uploadedImageUrl && existingItem?.image) {
+            try {
+              const restaurantId = await getCurrentRestaurantId();
+              await deleteManagedMenuItemImage(
+                restaurantId,
+                existingItem.image,
+              );
+            } catch (error) {
+              console.error("Could not remove the previous menu image:", error);
+              Notifications.warning(
+                "تم حفظ الصنف",
+                "تعذر حذف النسخة السابقة من الصورة.",
+              );
+            }
+          }
           state.menuItems = menuItemsToSave;
           state.menuCategories = menuCategoriesToSave;
           renderMenuItems();
@@ -21132,10 +22853,6 @@
             if (errorMessage) errorMessage.textContent = "";
             if (file.size > 5000000) {
               input.value = "";
-              if (name) name.textContent = "لم يتم اختيار صورة";
-              if (hiddenInput) hiddenInput.value = "";
-              if (preview) preview.src = "";
-              if (previewWrap) previewWrap.style.display = "none";
               if (errorMessage) {
                 errorMessage.textContent =
                   "حجم الصورة أكبر من 5 MB. اختر صورة أصغر.";
@@ -21150,9 +22867,10 @@
             input.dataset.processing = "true";
             if (name) name.textContent = "جاري تجهيز الصورة...";
             try {
-              const imageData = await compressMenuItemImage(file);
-              if (hiddenInput) hiddenInput.value = imageData;
-              if (preview) preview.src = imageData;
+              const imageBlob = await compressMenuItemImage(file);
+              pendingMenuItemImageBlob = imageBlob;
+              if (hiddenInput) hiddenInput.value = "";
+              if (preview) preview.src = URL.createObjectURL(imageBlob);
               if (previewWrap) previewWrap.style.display = "block";
               if (name) name.textContent = file.name;
             } catch (error) {
@@ -21194,12 +22912,109 @@
                 canvas
                   .getContext("2d")
                   .drawImage(image, 0, 0, canvas.width, canvas.height);
-                resolve(canvas.toDataURL("image/jpeg", 0.82));
+                canvas.toBlob(
+                  function (blob) {
+                    if (!blob) {
+                      reject(new Error("تعذر ضغط الصورة."));
+                      return;
+                    }
+                    resolve(blob);
+                  },
+                  "image/jpeg",
+                  0.82,
+                );
               };
               image.src = String(reader.result || "");
             };
             reader.readAsDataURL(file);
           });
+        }
+
+        async function getMenuImageAccessToken() {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
+          if (!data.session?.access_token) {
+            throw new Error("انتهت الجلسة. سجّل الدخول ثم حاول مجددًا.");
+          }
+          return data.session.access_token;
+        }
+
+        async function uploadMenuItemImage(restaurantId, itemId, imageBlob) {
+          const accessToken = await getMenuImageAccessToken();
+          const response = await fetch(
+            `/api/menu-images/${encodeURIComponent(restaurantId)}/${encodeURIComponent(itemId)}`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "image/jpeg",
+              },
+              body: imageBlob,
+            },
+          );
+          let result = {};
+          const responseBody = await response.text();
+          try {
+            result = JSON.parse(responseBody);
+          } catch {
+            if (!response.ok) {
+              throw new Error(
+                `خدمة الصور غير متاحة (${response.status}). شغّل Cloudflare Worker المحلي وحاول مجددًا.`,
+              );
+            }
+            throw new Error("تعذر قراءة استجابة خدمة الصور.");
+          }
+          if (!response.ok) {
+            throw new Error(result.error || "فشل رفع الصورة.");
+          }
+          const imageUrl = new URL(result.url, window.location.origin);
+          if (
+            imageUrl.origin !== window.location.origin ||
+            !imageUrl.pathname.startsWith("/images/menu/") ||
+            imageUrl.search ||
+            imageUrl.hash
+          ) {
+            throw new Error("أعادت خدمة الصور رابطًا غير صالح.");
+          }
+          return imageUrl.pathname;
+        }
+
+        async function deleteManagedMenuItemImage(restaurantId, imageUrl) {
+          if (!imageUrl) return;
+          let parsedUrl;
+          try {
+            parsedUrl = new URL(imageUrl, window.location.origin);
+          } catch {
+            return;
+          }
+          if (parsedUrl.origin !== window.location.origin) return;
+          const match = parsedUrl.pathname.match(
+            /^\/images\/menu\/([^/]+)\/([^/]+)\/([^/]+\.jpg)$/i,
+          );
+          if (
+            !match ||
+            match[1].toLowerCase() !== String(restaurantId).toLowerCase()
+          ) {
+            return;
+          }
+
+          const accessToken = await getMenuImageAccessToken();
+          const response = await fetch(
+            `/api/menu-images/${encodeURIComponent(match[1])}/${encodeURIComponent(match[2])}/${encodeURIComponent(match[3])}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${accessToken}` },
+            },
+          );
+          if (!response.ok) {
+            let result = {};
+            try {
+              result = await response.json();
+            } catch {
+              throw new Error("تعذر قراءة استجابة حذف الصورة.");
+            }
+            throw new Error(result.error || "فشل حذف الصورة.");
+          }
         }
 
         // Table details modal actions (delegation)
@@ -21539,7 +23354,7 @@
             const encodedSlug = encodeURIComponent(slug);
             return window.location.protocol === "file:"
               ? `Menu.html?slug=${encodedSlug}&mode=public`
-              : `/${encodedSlug}`;
+              : `https://mersalak.com/${encodedSlug}`;
           }
         } catch (error) {
           console.warn("Could not load public menu slug:", error);
@@ -21552,7 +23367,7 @@
 
       // ═══════════════════════════════════════════════════════════════
       //  REPORTS MODULE
-      // ═══════════════════════════════════════════════════════════════
+      // ═══════════════════════════════════════════════════════════════ssss
       (function initReportsModule() {
         let _reportRange = "today";
         let _reportOrdersCache = [];
@@ -21772,15 +23587,43 @@
               document
                 .querySelector(`[data-date-target="${target}"]`)
                 ?.setAttribute("aria-expanded", "false");
+              restoreReportCalendar(calendar);
             });
         }
 
-        function positionReportCalendar(calendar) {
+        function restoreReportCalendar(calendar) {
+          const parent = calendar.__reportCalendarParent;
+          if (parent) {
+            const nextSibling = calendar.__reportCalendarNextSibling;
+            parent.insertBefore(
+              calendar,
+              nextSibling?.parentElement === parent ? nextSibling : null,
+            );
+            delete calendar.__reportCalendarParent;
+            delete calendar.__reportCalendarNextSibling;
+          }
+          [
+            "position",
+            "top",
+            "left",
+            "right",
+            "bottom",
+            "transform",
+            "width",
+            "max-width",
+            "max-height",
+            "overflow-y",
+            "z-index",
+          ].forEach((property) => calendar.style.removeProperty(property));
+        }
+
+        function positionReportCalendar(calendar, trigger, target) {
           if (!calendar) return;
 
-          if (window.innerWidth <= 760) {
-            // Move it outside the report card so fixed positioning is relative
-            // to the viewport, not to a transformed/scrolling parent.
+          const isRedemptionCalendar =
+            target === "redemptionFrom" || target === "redemptionTo";
+          if (isRedemptionCalendar || window.innerWidth <= 760) {
+            calendar.classList.remove("opens-up");
             if (calendar.parentElement !== document.body) {
               calendar.__reportCalendarParent = calendar.parentElement;
               calendar.__reportCalendarNextSibling = calendar.nextSibling;
@@ -21788,42 +23631,67 @@
             }
 
             calendar.style.setProperty("position", "fixed", "important");
-            calendar.style.setProperty("top", "50%", "important");
-            calendar.style.setProperty("left", "50%", "important");
             calendar.style.setProperty("right", "auto", "important");
             calendar.style.setProperty("bottom", "auto", "important");
             calendar.style.setProperty(
-              "transform",
-              "translate(-50%, -50%)",
-              "important",
-            );
-            calendar.style.setProperty(
               "width",
-              "calc(100vw - 32px)",
+              isRedemptionCalendar
+                ? "min(300px, calc(100vw - 24px))"
+                : "calc(100vw - 32px)",
               "important",
             );
             calendar.style.setProperty("max-width", "330px", "important");
-            calendar.style.setProperty(
-              "max-height",
-              "calc(100vh - 32px)",
-              "important",
-            );
             calendar.style.setProperty("overflow-y", "auto", "important");
             calendar.style.setProperty("z-index", "2147483000", "important");
+            if (isRedemptionCalendar) {
+              calendar.style.setProperty("transform", "none", "important");
+              calendar.style.setProperty(
+                "max-height",
+                "calc(100vh - 24px)",
+                "important",
+              );
+              const triggerRect = trigger.getBoundingClientRect();
+              const calendarWidth = calendar.offsetWidth;
+              const calendarHeight = calendar.offsetHeight;
+              const margin = 12;
+              const left = Math.max(
+                margin,
+                Math.min(
+                  triggerRect.right - calendarWidth,
+                  window.innerWidth - calendarWidth - margin,
+                ),
+              );
+              const below = triggerRect.bottom + 8;
+              const top =
+                below + calendarHeight <= window.innerHeight - margin
+                  ? below
+                  : Math.max(margin, triggerRect.top - calendarHeight - 8);
+              calendar.style.setProperty("left", `${left}px`, "important");
+              calendar.style.setProperty("top", `${top}px`, "important");
+            } else {
+              calendar.style.setProperty("top", "50%", "important");
+              calendar.style.setProperty("left", "50%", "important");
+              calendar.style.setProperty(
+                "transform",
+                "translate(-50%, -50%)",
+                "important",
+              );
+              calendar.style.setProperty(
+                "max-height",
+                "calc(100vh - 32px)",
+                "important",
+              );
+            }
           } else {
-            [
-              "position",
-              "top",
-              "left",
-              "right",
-              "bottom",
-              "transform",
-              "width",
-              "max-width",
-              "max-height",
-              "overflow-y",
-              "z-index",
-            ].forEach((property) => calendar.style.removeProperty(property));
+            const triggerRect = trigger.getBoundingClientRect();
+            const spaceAbove = triggerRect.top;
+            const spaceBelow = window.innerHeight - triggerRect.bottom;
+            const calendarHeight = calendar.offsetHeight;
+            calendar.classList.toggle(
+              "opens-up",
+              spaceBelow < calendarHeight + 10 &&
+                spaceAbove >= calendarHeight + 10,
+            );
           }
         }
 
@@ -21842,7 +23710,7 @@
 
           if (!wasOpen) {
             renderReportCalendar(target);
-            positionReportCalendar(calendar);
+            positionReportCalendar(calendar, trigger, target);
             calendar.classList.add("open");
             trigger.setAttribute("aria-expanded", "true");
           }
@@ -21856,20 +23724,6 @@
           event.stopPropagation();
           openReportCalendar(trigger.dataset.dateTarget, trigger);
         });
-
-        // Redemption filters can be rebuilt when switching dashboard sections;
-        // bind these two controls directly as well so their click always opens.
-        document
-          .querySelectorAll(
-            '[data-date-target="redemptionFrom"], [data-date-target="redemptionTo"]',
-          )
-          .forEach(function (trigger) {
-            trigger.addEventListener("click", function (event) {
-              event.preventDefault();
-              event.stopPropagation();
-              openReportCalendar(trigger.dataset.dateTarget, trigger);
-            });
-          });
 
         document
           .querySelectorAll("[data-calendar-prev], [data-calendar-next]")
@@ -21894,6 +23748,7 @@
             const input = document.getElementById(target);
             if (!input) return;
             input.value = reportDateKey(new Date());
+            input.dispatchEvent(new Event("change", { bubbles: true }));
             updateReportDateValue(target);
             renderReportCalendar(target);
           });
@@ -21905,6 +23760,7 @@
             const input = document.getElementById(target);
             if (!input) return;
             input.value = "";
+            input.dispatchEvent(new Event("change", { bubbles: true }));
             updateReportDateValue(target);
             renderReportCalendar(target);
           });
@@ -21913,7 +23769,7 @@
         document.addEventListener("click", function (event) {
           if (
             !event.target.closest(
-              ".reports-date-field, .mission-datetime-picker, .rx-field:has(.reports-date-trigger)",
+              ".reports-date-field, .invoice-date-field, .mission-datetime-picker, .rx-field:has(.reports-date-trigger), .reports-calendar",
             )
           )
             closeReportCalendars();
@@ -21921,6 +23777,8 @@
 
         updateReportDateValue("reportsStartDate");
         updateReportDateValue("reportsEndDate");
+        updateReportDateValue("invoiceDateFrom");
+        updateReportDateValue("invoiceDateTo");
         ["redemptionFrom", "redemptionTo"].forEach(function (id) {
           document.getElementById(id)?.addEventListener("change", function () {
             updateReportDateValue(id);
