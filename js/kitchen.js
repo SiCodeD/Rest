@@ -334,7 +334,7 @@
               <span class="material-symbols-outlined text-xs muted">table_restaurant</span>
               <span>${escapeHtml(tableName)}</span>
             </div>
-            ${order.customer_name ? `<span>👤 ${escapeHtml(order.customer_name)}</span>` : ''}
+            ${order.customer_name ? `<span> ${escapeHtml(order.customer_name)}</span>` : ''}
           </div>
 
           <div class="kds-card-body">

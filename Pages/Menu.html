@@ -7791,8 +7791,11 @@
          first. The tapped action then runs once feedback is closed.
          If feedback was already answered/dismissed, the action runs at once. */
       let pendingAfterFeedbackAction = null;
+      let pendingAfterFeedbackTimer = null;
 
       function cancelPendingAfterFeedback() {
+        clearTimeout(pendingAfterFeedbackTimer);
+        pendingAfterFeedbackTimer = null;
         pendingAfterFeedbackAction = null;
       }
 
@@ -8288,6 +8291,21 @@
         document
           .getElementById("order-feedback-success")
           ?.classList.remove("hidden");
+        if (pendingAfterFeedbackAction && !pendingAfterFeedbackTimer) {
+          pendingAfterFeedbackTimer = setTimeout(
+            continueAfterFeedbackAction,
+            900,
+          );
+        }
+      }
+
+      function continueAfterFeedbackAction() {
+        pendingAfterFeedbackTimer = null;
+        const next = pendingAfterFeedbackAction;
+        pendingAfterFeedbackAction = null;
+        if (!next) return;
+        closeOrderFeedback(false);
+        setTimeout(next, 250);
       }
 
       async function submitOrderFeedback() {
@@ -8379,6 +8397,8 @@
       }
 
       function closeOrderFeedback(restoreSuccess = false) {
+        clearTimeout(pendingAfterFeedbackTimer);
+        pendingAfterFeedbackTimer = null;
         if (
           !orderFeedbackSubmitting &&
           activeOrderFeedbackId &&

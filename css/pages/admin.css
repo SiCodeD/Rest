@@ -2976,6 +2976,471 @@
     flex-shrink: 0;
 }
 
+.cashier-order-modal .cashier-order-content {
+    width: min(760px, calc(100vw - 32px));
+    max-width: 760px;
+    max-height: min(90vh, 920px);
+    overflow-y: auto;
+    padding: clamp(20px, 4vw, 32px);
+    border: 1px solid rgba(113, 0, 20, .12);
+    border-radius: 22px;
+    background:
+        radial-gradient(ellipse at 100% 0, rgba(184, 134, 11, .08), transparent 38%),
+        var(--panel, #fff);
+    box-shadow: 0 28px 90px rgba(25, 18, 12, .24);
+}
+
+.cashier-order-modal .modal-header {
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.cashier-order-eyebrow {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--primary, #710014);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.cashier-order-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.cashier-order-fields label,
+.cashier-order-notes {
+    display: grid;
+    gap: 7px;
+    min-width: 0;
+    color: var(--text, #1e293b);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.cashier-order-fields label span,
+.cashier-order-notes > span {
+    display: block;
+}
+
+.cashier-order-fields small,
+.cashier-order-notes small {
+    color: var(--muted, #64748b);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.cashier-order-fields input,
+.cashier-order-notes textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 11px;
+    background: var(--panel-bg, #f8fafc);
+    color: var(--text, #1e293b);
+    font: inherit;
+    font-size: 14px;
+}
+
+.cashier-menu-browser {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 14px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 15px;
+    background: rgba(248, 250, 252, .72);
+}
+
+.cashier-menu-search {
+    display: flex;
+    height: 46px;
+    align-items: center;
+    gap: 10px;
+    padding: 0 13px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 12px;
+    background: var(--panel, #fff);
+    color: var(--muted, #64748b);
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.cashier-menu-search:focus-within {
+    border-color: var(--primary, #710014);
+    box-shadow: 0 0 0 3px rgba(113, 0, 20, .08);
+}
+
+.cashier-menu-search > .lucide-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+}
+
+.cashier-menu-search input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text, #1e293b);
+    font: inherit;
+    font-size: 14px;
+}
+
+.cashier-menu-search kbd {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 6px;
+    background: var(--panel-bg, #f8fafc);
+    color: var(--muted, #64748b);
+    font: inherit;
+    font-size: 12px;
+}
+
+.cashier-menu-categories {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 1px 1px 4px;
+    scrollbar-width: thin;
+}
+
+.cashier-menu-category {
+    min-height: 34px;
+    flex: 0 0 auto;
+    padding: 0 13px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 999px;
+    background: var(--panel, #fff);
+    color: var(--muted, #64748b);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color .15s, background .15s, border-color .15s;
+}
+
+.cashier-menu-category.is-active {
+    border-color: var(--primary, #710014);
+    background: var(--primary, #710014);
+    color: #fff;
+}
+
+.cashier-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 9px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 1px;
+}
+
+.cashier-menu-item {
+    position: relative;
+    display: flex;
+    min-height: 70px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 7px;
+    padding: 12px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 12px;
+    background: var(--panel, #fff);
+    color: var(--text, #1e293b);
+    text-align: start;
+    cursor: pointer;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
+}
+
+.cashier-menu-item:hover {
+    transform: translateY(-1px);
+    border-color: rgba(113, 0, 20, .4);
+    box-shadow: 0 4px 14px rgba(25, 18, 12, .07);
+}
+
+.cashier-menu-item:focus-visible,
+.cashier-menu-category:focus-visible,
+.cashier-menu-size-option:focus-visible,
+.cashier-order-line-quantity:focus-visible {
+    outline: 2px solid var(--primary, #710014);
+    outline-offset: 2px;
+}
+
+.cashier-menu-item.is-selected {
+    border-color: var(--primary, #710014);
+    box-shadow: 0 0 0 2px rgba(113, 0, 20, .1);
+}
+
+.cashier-menu-item-name {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cashier-menu-item-price {
+    color: var(--primary, #710014);
+    font-size: 12px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.cashier-menu-item-quantity {
+    position: absolute;
+    inset-block-start: 7px;
+    inset-inline-end: 7px;
+    display: grid;
+    min-width: 21px;
+    height: 21px;
+    place-items: center;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--primary, #710014);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.cashier-menu-empty {
+    grid-column: 1 / -1;
+    padding: 24px 12px;
+    color: var(--muted, #64748b);
+    text-align: center;
+    font-size: 13px;
+}
+
+.cashier-menu-sizes {
+    display: grid;
+    gap: 9px;
+    padding-top: 11px;
+    border-top: 1px solid var(--stroke, #e2e8f0);
+}
+
+.cashier-menu-sizes[hidden] {
+    display: none;
+}
+
+.cashier-menu-sizes-title {
+    color: var(--text, #1e293b);
+    font-size: 13px;
+}
+
+.cashier-menu-size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cashier-menu-size-option {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 13px;
+    padding: 0 12px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 10px;
+    background: var(--panel, #fff);
+    color: var(--text, #1e293b);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+
+.cashier-menu-size-option:hover {
+    border-color: var(--primary, #710014);
+    background: rgba(113, 0, 20, .04);
+}
+
+.cashier-menu-size-option strong {
+    color: var(--primary, #710014);
+    font-size: 12px;
+}
+
+.cashier-order-cart {
+    display: grid;
+    gap: 8px;
+    max-height: 250px;
+    overflow: auto;
+    margin: 0 0 16px;
+}
+
+.cashier-order-empty {
+    padding: 22px 14px;
+    border: 1px dashed var(--stroke, #cbd5e1);
+    border-radius: 13px;
+    color: var(--muted, #64748b);
+    text-align: center;
+    font-size: 13px;
+}
+
+.cashier-order-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 13px;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 12px;
+    background: var(--panel, #fff);
+}
+
+.cashier-order-line-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.cashier-order-line-quantity {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border: 1px solid var(--stroke, #e2e8f0);
+    border-radius: 8px;
+    background: var(--panel, #fff);
+    color: var(--text, #1e293b);
+    font: inherit;
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.cashier-order-line-quantity:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.cashier-order-line-count {
+    min-width: 16px;
+    color: var(--text, #1e293b);
+    text-align: center;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.cashier-order-line-name {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--text, #1e293b);
+    font-size: 13px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cashier-order-line-detail {
+    color: var(--muted, #64748b);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.cashier-order-line-remove {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 0;
+    border-radius: 9px;
+    background: rgba(185, 28, 28, .08);
+    color: #b91c1c;
+    cursor: pointer;
+}
+
+.cashier-order-notes {
+    margin-bottom: 16px;
+}
+
+.cashier-order-notes textarea {
+    resize: vertical;
+}
+
+.cashier-order-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-top: 1px solid var(--stroke, #e2e8f0);
+    color: var(--muted, #64748b);
+    font-size: 14px;
+}
+
+.cashier-order-total strong {
+    color: var(--primary, #710014);
+    font-size: 21px;
+    font-variant-numeric: tabular-nums;
+}
+
+.cashier-order-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.cashier-order-actions button {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.cashier-order-actions button[type="submit"] {
+    min-width: 230px;
+}
+
+@media (max-width: 620px) {
+    .cashier-order-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cashier-menu-browser {
+        padding: 10px;
+    }
+
+    .cashier-menu-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-height: 235px;
+    }
+
+    .cashier-order-line {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+
+    .cashier-order-line-name {
+        grid-column: 1 / -1;
+    }
+
+    .cashier-order-line-detail {
+        justify-self: end;
+    }
+
+    .cashier-order-actions {
+        flex-direction: column-reverse;
+    }
+
+    .cashier-order-actions button,
+    .cashier-order-actions button[type="submit"] {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
 /* Count pill — pushed to end of row 2 */
 .orders-toolbar .orders-count-row {
     order: 2;
